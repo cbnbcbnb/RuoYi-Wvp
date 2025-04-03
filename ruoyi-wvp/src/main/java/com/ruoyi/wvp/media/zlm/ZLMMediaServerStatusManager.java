@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.wvp.conf.DynamicTask;
+import com.ruoyi.wvp.conf.MediaConfig;
 import com.ruoyi.wvp.gb28181.event.EventPublisher;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.event.mediaServer.MediaServerChangeEvent;
@@ -57,6 +58,9 @@ public class ZLMMediaServerStatusManager {
     private String serverServletContextPath;
 
     @Autowired
+    private MediaConfig mediaConfig;
+
+    @Autowired
     private EventPublisher eventPublisher;
 
     private final String type = "zlm";
@@ -72,6 +76,7 @@ public class ZLMMediaServerStatusManager {
             if (!type.equals(mediaServerItem.getType())) {
                 continue;
             }
+            mediaServerItem.setHttpPort(mediaConfig.getHttpPort());
             log.info("[ZLM-添加待上线节点] ID：" + mediaServerItem.getId());
             offlineZlmPrimaryMap.put(mediaServerItem.getId(), mediaServerItem);
             offlineZlmTimeMap.put(mediaServerItem.getId(), System.currentTimeMillis());
