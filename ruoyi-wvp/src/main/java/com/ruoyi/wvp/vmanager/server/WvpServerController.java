@@ -2,6 +2,8 @@ package com.ruoyi.wvp.vmanager.server;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.common.SystemAllInfo;
 import com.ruoyi.wvp.common.VersionPo;
 import com.ruoyi.wvp.common.enums.ChannelDataType;
@@ -23,9 +25,7 @@ import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.ResourceBaseInfo;
 import com.ruoyi.wvp.vmanager.bean.ResourceInfo;
 import com.ruoyi.wvp.vmanager.bean.SystemConfigInfo;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/server")
-public class WvpServerController {
+public class WvpServerController extends BaseController {
 
 
     @Autowired
@@ -85,11 +85,15 @@ public class WvpServerController {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
-
+    /**
+     * 获取流媒体服务列表
+     *
+     * @return
+     */
     @GetMapping(value = "/media_server/list")
     @ResponseBody
-    public List<MediaServer> getMediaServerList() {
-        return mediaServerService.getAll();
+    public AjaxResult getMediaServerList() {
+        return success(mediaServerService.getAll());
     }
 
     @GetMapping(value = "/media_server/online/list")
@@ -321,7 +325,7 @@ public class WvpServerController {
         platformMap.put("GIT地址", version.getGIT_URL());
         platformMap.put("GIT日期", version.getGIT_DATE());
         platformMap.put("GIT版本", version.getGIT_Revision_SHORT());
-        platformMap.put("DOCKER环境", new File("/.dockerenv").exists()?"是":"否");
+        platformMap.put("DOCKER环境", new File("/.dockerenv").exists() ? "是" : "否");
 
         return result;
     }

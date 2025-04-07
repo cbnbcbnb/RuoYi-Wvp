@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-            type="primary"
-            plain
-            icon="Plus"
-            @click="handleAdd"
-            v-hasPermi="['wvp:wvpMediaServer:add']"
-        >新增
-        </el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--            type="primary"-->
+<!--            plain-->
+<!--            icon="Plus"-->
+<!--            @click="handleAdd"-->
+<!--            v-hasPermi="['wvp:wvpMediaServer:add']"-->
+<!--        >新增-->
+<!--        </el-button>-->
+<!--      </el-col>-->
       <right-toolbar :search="false" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -23,25 +23,24 @@
             <div>
               <div style="font-size: 16px">{{ item.id }}</div>
               <div style="font-size: 14px; color: #999; margin-top: 5px; ">{{ item.ip }}</div>
-              <div style="font-size: 14px; color: #999; margin-top: 5px;">{{ item.createTime }}</div>
             </div>
 
             <div>
               <!--            v-if="!item.defaultServer"-->
-              <el-button type="text"
-                         @click="handleUpdate(item)">编辑
-              </el-button>
+<!--              <el-button type="text" v-if="!item.defaultServer"-->
+<!--                         @click="handleUpdate(item)">编辑-->
+<!--              </el-button>-->
               <el-button v-if="item.defaultServer" type="text"
                          @click="handleView(item)" v-hasPermi="['wvp:wvpMediaServer:view']">查看
               </el-button>
-              <el-button type="text" @click="handleDelete(item)">移除
-              </el-button>
+<!--              <el-button type="text" @click="handleDelete(item)" v-if="!item.defaultServer">移除-->
+<!--              </el-button>-->
             </div>
           </div>
-          <el-icon v-if="item.status" class="server-card-status-online" color="#F56C6C">
+          <el-icon v-if="!item.defaultServer" class="server-card-status-online" color="#F56C6C">
             <WarningFilled/>
           </el-icon>
-          <el-icon v-if="!item.status" class="server-card-status-offline" color="#67C23A">
+          <el-icon v-if="item.defaultServer" class="server-card-status-offline" color="#67C23A">
             <SuccessFilled/>
           </el-icon>
           <i v-if="item.defaultServer" class="server-card-default">默认</i>

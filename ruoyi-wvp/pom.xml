@@ -172,13 +172,6 @@
         <!--			<version>2.3.0</version>-->
         <!--		</dependency>-->
 
-        <!-- jwt实现 -->
-        <dependency>
-            <groupId>org.bitbucket.b_c</groupId>
-            <artifactId>jose4j</artifactId>
-            <version>0.9.3</version>
-        </dependency>
-
         <!--反向代理-->
         <dependency>
             <groupId>org.mitre.dsmiley.httpproxy</groupId>

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询媒体服务器列表
 export function listWvpMediaServer(query) {
   return request({
-    url: '/wvp/wvpMediaServer/list',
+    url: '/api/server/media_server/list',
     method: 'get',
     params: query
   })
