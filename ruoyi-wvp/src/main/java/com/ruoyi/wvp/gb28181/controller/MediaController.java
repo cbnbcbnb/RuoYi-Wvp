@@ -1,10 +1,9 @@
 package com.ruoyi.wvp.gb28181.controller;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
-import com.ruoyi.wvp.conf.security.SecurityUtils;
-import com.ruoyi.wvp.conf.security.dto.LoginUser;
 import com.ruoyi.wvp.media.service.IMediaServerService;
 import com.ruoyi.wvp.media.zlm.dto.StreamAuthorityInfo;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
@@ -44,7 +43,6 @@ public class MediaController {
      * @param stream 流id
      * @return
      */
-    @Operation(summary = "根据应用名和流id获取播放地址", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流id", required = true)
     @Parameter(name = "mediaServerId", description = "媒体服务器id")
@@ -70,7 +68,7 @@ public class MediaController {
             }
         }else {
             // 是否登陆用户, 登陆用户返回完整信息
-            LoginUser userInfo = SecurityUtils.getUserInfo();
+            LoginUser userInfo = SecurityUtils.getLoginUser();
             if (userInfo!= null) {
                 authority = true;
             }
@@ -121,7 +119,6 @@ public class MediaController {
      */
     @GetMapping(value = "/getPlayUrl")
     @ResponseBody
-    @Operation(summary = "获取推流播放地址", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流id", required = true)
     @Parameter(name = "mediaServerId", description = "媒体服务器id")
@@ -129,7 +126,7 @@ public class MediaController {
                                     @RequestParam(required = false) String mediaServerId){
         boolean authority = false;
         // 是否登陆用户, 登陆用户返回完整信息
-        LoginUser userInfo = SecurityUtils.getUserInfo();
+        LoginUser userInfo = SecurityUtils.getLoginUser();
         if (userInfo!= null) {
             authority = true;
         }

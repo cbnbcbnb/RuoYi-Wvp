@@ -4,7 +4,6 @@ import com.ruoyi.wvp.common.VideoManagerConstants;
 import com.ruoyi.wvp.conf.DynamicTask;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.SendRtpInfo;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.event.hook.Hook;
@@ -61,7 +60,6 @@ public class RtpController {
 
     @GetMapping(value = "/receive/open")
     @ResponseBody
-    @Operation(summary = "开启收流和获取发流信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "isSend", description = "是否发送，false时只开启收流， true同时返回推流信息", required = true)
     @Parameter(name = "callId", description = "整个过程的唯一标识，为了与后续接口关联", required = true)
     @Parameter(name = "ssrc", description = "来源流的SSRC，不传则不校验来源ssrc", required = false)
@@ -147,7 +145,6 @@ public class RtpController {
 
     @GetMapping(value = "/receive/close")
     @ResponseBody
-    @Operation(summary = "关闭收流", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "stream", description = "流的ID", required = true)
     public void closeRtpServer(String stream) {
         log.info("[第三方服务对接->关闭收流] stream->{}", stream);
@@ -166,7 +163,6 @@ public class RtpController {
 
     @GetMapping(value = "/send/start")
     @ResponseBody
-    @Operation(summary = "发送流", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "ssrc", description = "发送流的SSRC", required = true)
     @Parameter(name = "dstIpForAudio", description = "目标音频收流IP", required = false)
     @Parameter(name = "dstIpForVideo", description = "目标视频收流IP", required = false)
@@ -289,7 +285,6 @@ public class RtpController {
 
     @GetMapping(value = "/send/stop")
     @ResponseBody
-    @Operation(summary = "关闭发送流", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "callId", description = "整个过程的唯一标识，不传则使用随机端口发流", required = true)
     public void closeSendRTP(String callId) {
         log.info("[第三方服务对接->关闭发送流] callId->{}", callId);

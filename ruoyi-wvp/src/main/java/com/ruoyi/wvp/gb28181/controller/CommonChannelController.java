@@ -4,7 +4,6 @@ package com.ruoyi.wvp.gb28181.controller;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.CommonGBChannel;
 import com.ruoyi.wvp.gb28181.bean.DeviceType;
 import com.ruoyi.wvp.gb28181.bean.IndustryCodeType;
@@ -60,51 +59,43 @@ public class CommonChannelController {
     private UserSetting userSetting;
 
 
-    @Operation(summary = "查询通道信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "通道的数据库自增Id", required = true)
     @GetMapping(value = "/one")
     public CommonGBChannel getOne(int id){
         return channelService.getOne(id);
     }
 
-    @Operation(summary = "获取行业编码列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @GetMapping("/industry/list")
     public List<IndustryCodeType> getIndustryCodeList(){
         return channelService.getIndustryCodeList();
     }
 
-    @Operation(summary = "获取编码列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @GetMapping("/type/list")
     public List<DeviceType> getDeviceTypeList(){
         return channelService.getDeviceTypeList();
     }
 
-    @Operation(summary = "获取编码列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @GetMapping("/network/identification/list")
     public List<NetworkIdentificationType> getNetworkIdentificationTypeList(){
         return channelService.getNetworkIdentificationTypeList();
     }
 
-    @Operation(summary = "更新通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/update")
     public void update(@RequestBody CommonGBChannel channel){
         channelService.update(channel);
     }
 
-    @Operation(summary = "重置国标通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/reset")
     public void reset(Integer id){
         channelService.reset(id);
     }
 
-    @Operation(summary = "增加通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/add")
     public CommonGBChannel add(@RequestBody CommonGBChannel channel){
         channelService.add(channel);
         return channel;
     }
 
-    @Operation(summary = "获取通道列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page", description = "当前页", required = true)
     @Parameter(name = "count", description = "每页查询数量", required = true)
     @Parameter(name = "query", description = "查询内容")
@@ -123,7 +114,6 @@ public class CommonChannelController {
         return channelService.queryList(page, count, query, online, hasRecordPlan, channelType);
     }
 
-    @Operation(summary = "获取关联行政区划通道列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page", description = "当前页", required = true)
     @Parameter(name = "count", description = "每页查询数量", required = true)
     @Parameter(name = "query", description = "查询内容")
@@ -142,7 +132,6 @@ public class CommonChannelController {
         return channelService.queryListByCivilCode(page, count, query, online, channelType, civilCode);
     }
 
-    @Operation(summary = "获取关联业务分组通道列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page", description = "当前页", required = true)
     @Parameter(name = "count", description = "每页查询数量", required = true)
     @Parameter(name = "query", description = "查询内容")
@@ -161,7 +150,6 @@ public class CommonChannelController {
         return channelService.queryListByParentId(page, count, query, online, channelType, groupDeviceId);
     }
 
-    @Operation(summary = "通道设置行政区划", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/region/add")
     public void addChannelToRegion(@RequestBody ChannelToRegionParam param){
         Assert.notEmpty(param.getChannelIds(),"通道ID不可为空");
@@ -169,14 +157,12 @@ public class CommonChannelController {
         channelService.addChannelToRegion(param.getCivilCode(), param.getChannelIds());
     }
 
-    @Operation(summary = "通道删除行政区划", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/region/delete")
     public void deleteChannelToRegion(@RequestBody ChannelToRegionParam param){
         Assert.isTrue(!param.getChannelIds().isEmpty() || !ObjectUtils.isEmpty(param.getCivilCode()),"参数异常");
         channelService.deleteChannelToRegion(param.getCivilCode(), param.getChannelIds());
     }
 
-    @Operation(summary = "通道设置行政区划-根据国标设备", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/region/device/add")
     public void addChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param){
         Assert.notEmpty(param.getDeviceIds(),"参数异常");
@@ -184,14 +170,12 @@ public class CommonChannelController {
         channelService.addChannelToRegionByGbDevice(param.getCivilCode(), param.getDeviceIds());
     }
 
-    @Operation(summary = "通道删除行政区划-根据国标设备", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/region/device/delete")
     public void deleteChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param){
         Assert.notEmpty(param.getDeviceIds(),"参数异常");
         channelService.deleteChannelToRegionByGbDevice(param.getDeviceIds());
     }
 
-    @Operation(summary = "通道设置业务分组", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/group/add")
     public void addChannelToGroup(@RequestBody ChannelToGroupParam param){
         Assert.notEmpty(param.getChannelIds(),"通道ID不可为空");
@@ -200,7 +184,6 @@ public class CommonChannelController {
         channelService.addChannelToGroup(param.getParentId(), param.getBusinessGroup(), param.getChannelIds());
     }
 
-    @Operation(summary = "通道删除业务分组", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/group/delete")
     public void deleteChannelToGroup(@RequestBody ChannelToGroupParam param){
         Assert.isTrue(!param.getChannelIds().isEmpty()
@@ -209,7 +192,6 @@ public class CommonChannelController {
         channelService.deleteChannelToGroup(param.getParentId(), param.getBusinessGroup(), param.getChannelIds());
     }
 
-    @Operation(summary = "通道设置业务分组-根据国标设备", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/group/device/add")
     public void addChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param){
         Assert.notEmpty(param.getDeviceIds(),"参数异常");
@@ -218,14 +200,12 @@ public class CommonChannelController {
         channelService.addChannelToGroupByGbDevice(param.getParentId(), param.getBusinessGroup(), param.getDeviceIds());
     }
 
-    @Operation(summary = "通道删除业务分组-根据国标设备", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/group/device/delete")
     public void deleteChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param){
         Assert.notEmpty(param.getDeviceIds(),"参数异常");
         channelService.deleteChannelToGroupByGbDevice(param.getDeviceIds());
     }
 
-    @Operation(summary = "播放通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @GetMapping("/play")
     public DeferredResult<WVPResult<StreamContent>> deleteChannelToGroupByGbDevice(HttpServletRequest request, Integer channelId){
         Assert.notNull(channelId,"参数异常");

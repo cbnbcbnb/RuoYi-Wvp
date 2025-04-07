@@ -4,7 +4,6 @@ import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.conf.exception.SsrcTransactionNotFoundException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceChannel;
 import com.ruoyi.wvp.gb28181.service.IDeviceChannelService;
@@ -61,7 +60,6 @@ public class GBRecordController {
 	@Autowired
 	private UserSetting userSetting;
 
-	@Operation(summary = "录像查询", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "startTime", description = "开始时间", required = true)
@@ -115,7 +113,6 @@ public class GBRecordController {
 	}
 
 
-	@Operation(summary = "开始历史媒体下载", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "startTime", description = "开始时间", required = true)
@@ -174,7 +171,6 @@ public class GBRecordController {
 		return result;
 	}
 
-	@Operation(summary = "停止历史媒体下载", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "stream", description = "流ID", required = true)
@@ -201,7 +197,6 @@ public class GBRecordController {
 		}
 	}
 
-	@Operation(summary = "获取历史媒体下载进度", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "stream", description = "流ID", required = true)

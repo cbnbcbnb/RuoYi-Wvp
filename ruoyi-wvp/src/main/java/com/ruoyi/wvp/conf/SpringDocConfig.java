@@ -1,6 +1,5 @@
 package com.ruoyi.wvp.conf;
 
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -21,26 +20,6 @@ import org.springframework.core.annotation.Order;
 @Order(1)
 @ConditionalOnProperty(value = "user-settings.doc-enable", havingValue = "true", matchIfMissing = true)
 public class SpringDocConfig {
-
-    @Value("${doc.enabled: true}")
-    private boolean enable;
-
-    @Bean
-    public OpenAPI springShopOpenApi() {
-        Contact contact = new Contact();
-        contact.setName("pan");
-        contact.setEmail("648540858@qq.com");
-        return new OpenAPI()
-                .components(new Components()
-                        .addSecuritySchemes(JwtUtils.HEADER, new SecurityScheme()
-                                .type(SecurityScheme.Type.HTTP)
-                                .bearerFormat("JWT")))
-                .info(new Info().title("WVP-PRO 接口文档")
-                        .contact(contact)
-                        .description("开箱即用的28181协议视频平台")
-                        .version("v3.1.0")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
-    }
 
     /**
      * 添加分组

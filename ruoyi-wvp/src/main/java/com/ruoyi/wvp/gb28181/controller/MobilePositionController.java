@@ -3,7 +3,6 @@ package com.ruoyi.wvp.gb28181.controller;
 
 import com.github.pagehelper.util.StringUtil;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.MobilePosition;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
@@ -56,7 +55,6 @@ public class MobilePositionController {
      * @param end 结束时间
      * @return
      */
-    @Operation(summary = "查询历史轨迹", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号")
     @Parameter(name = "start", description = "开始时间")
@@ -81,7 +79,6 @@ public class MobilePositionController {
      * @param deviceId 设备ID
      * @return
      */
-    @Operation(summary = "查询设备最新位置", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @GetMapping("/latest/{deviceId}")
     public MobilePosition latestPosition(@PathVariable String deviceId) {
@@ -93,7 +90,6 @@ public class MobilePositionController {
      * @param deviceId 设备ID
      * @return
      */
-    @Operation(summary = "获取移动位置信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @GetMapping("/realtime/{deviceId}")
     public DeferredResult<MobilePosition> realTimePosition(@PathVariable String deviceId) {
@@ -133,7 +129,6 @@ public class MobilePositionController {
      * @param interval 上报时间间隔
      * @return true = 命令发送成功
      */
-    @Operation(summary = "订阅位置信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "expires", description = "订阅超时时间", required = true)
     @Parameter(name = "interval", description = "上报时间间隔", required = true)

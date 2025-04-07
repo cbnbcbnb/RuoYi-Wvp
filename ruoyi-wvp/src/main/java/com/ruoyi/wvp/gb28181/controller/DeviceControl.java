@@ -9,7 +9,6 @@ package com.ruoyi.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
 import com.ruoyi.wvp.gb28181.transmit.callback.DeferredResultHolder;
@@ -53,7 +52,6 @@ public class DeviceControl {
      *
      * @param deviceId 设备ID
      */
-	@Operation(summary = "远程启动控制命令", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @GetMapping("/teleboot/{deviceId}")
     public void teleBootApi(@PathVariable String deviceId) {
@@ -76,7 +74,6 @@ public class DeviceControl {
      * @param recordCmdStr  Record：手动录像，StopRecord：停止手动录像
      * @param channelId     通道编码（可选）
      */
-	@Operation(summary = "录像控制", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "recordCmdStr", description = "命令， 可选值：Record（手动录像），StopRecord（停止手动录像）", required = true)
@@ -125,7 +122,6 @@ public class DeviceControl {
 	 * @param	deviceId 设备ID
 	 * @param	guardCmdStr SetGuard：布防，ResetGuard：撤防
 	 */
-	@Operation(summary = "布防/撤防命令", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "guardCmdStr", description = "命令， 可选值：SetGuard（布防），ResetGuard（撤防）", required = true)
 	@GetMapping("/guard/{deviceId}/{guardCmdStr}")
@@ -170,7 +166,6 @@ public class DeviceControl {
 	 * @param	alarmMethod 报警方式（可选）
 	 * @param	alarmType   报警类型（可选）
 	 */
-	@Operation(summary = "报警复位", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "alarmMethod", description = "报警方式")
@@ -217,7 +212,6 @@ public class DeviceControl {
 	 * @param	deviceId 设备ID
 	 * @param	channelId  通道ID
 	 */
-	@Operation(summary = "强制关键帧", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号")
 	@GetMapping("/i_frame/{deviceId}")
@@ -249,7 +243,6 @@ public class DeviceControl {
      * @param presetIndex   调用预置位编号（可选）
      * @param channelId     通道编码（可选）
 	 */
-	@Operation(summary = "看守位控制", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "enabled", description = "是否开启看守位", required = true)
@@ -303,7 +296,6 @@ public class DeviceControl {
 	 * @param lengthy 拉框宽度像素值
 	 * @return
 	 */
-	@Operation(summary = "拉框放大", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "length", description = "播放窗口长度像素值", required = true)
@@ -353,7 +345,6 @@ public class DeviceControl {
 	 * @param lengthy 拉框宽度像素值
 	 * @return
 	 */
-	@Operation(summary = "拉框缩小", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号")
 	@Parameter(name = "length", description = "播放窗口长度像素值", required = true)

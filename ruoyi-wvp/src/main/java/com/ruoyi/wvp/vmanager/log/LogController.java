@@ -1,7 +1,6 @@
 package com.ruoyi.wvp.vmanager.log;
 
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.service.ILogService;
 import com.ruoyi.wvp.service.bean.LogFileInfo;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
@@ -37,7 +36,6 @@ public class LogController {
 
     @ResponseBody
     @GetMapping("/list")
-    @Operation(summary = "分页查询日志文件", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "query", description = "检索内容", required = false)
     @Parameter(name = "startTime", description = "开始时间(yyyy-MM-dd HH:mm:ss)", required = false)
     @Parameter(name = "endTime", description = "结束时间(yyyy-MM-dd HH:mm:ss)", required = false)

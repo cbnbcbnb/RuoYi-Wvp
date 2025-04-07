@@ -6,7 +6,6 @@ import com.ruoyi.wvp.common.InviteSessionType;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceChannel;
 import com.ruoyi.wvp.gb28181.bean.SsrcTransaction;
@@ -76,7 +75,6 @@ public class PlayController {
 	@Autowired
 	private IDeviceChannelService deviceChannelService;
 
-	@Operation(summary = "开始点播", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@GetMapping("/start/{deviceId}/{channelId}")
@@ -152,7 +150,6 @@ public class PlayController {
 		return result;
 	}
 
-	@Operation(summary = "停止点播", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@GetMapping("/stop/{deviceId}/{channelId}")
@@ -178,7 +175,6 @@ public class PlayController {
 	/**
 	 * 结束转码
 	 */
-	@Operation(summary = "结束转码", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "key", description = "视频流key", required = true)
 	@Parameter(name = "mediaServerId", description = "流媒体服务ID", required = true)
 	@PostMapping("/convertStop/{key}")
@@ -197,7 +193,6 @@ public class PlayController {
 		}
 	}
 
-	@Operation(summary = "语音广播命令", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "deviceId", description = "通道国标编号", required = true)
 	@Parameter(name = "timeout", description = "推流超时时间(秒)", required = true)
@@ -236,7 +231,6 @@ public class PlayController {
 		playService.stopAudioBroadcast(device, channel);
 	}
 
-	@Operation(summary = "获取所有的ssrc", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@GetMapping("/ssrc")
 	public JSONObject getSSRC() {
 		if (log.isDebugEnabled()) {
@@ -259,7 +253,6 @@ public class PlayController {
 		return jsonObject;
 	}
 
-	@Operation(summary = "获取截图", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@GetMapping("/snap")

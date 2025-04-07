@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wvp.mapper.DeviceMapper">
+
+    <resultMap type="com.ruoyi.wvp.gb28181.bean.Device" id="DeviceResult">
+        <id property="id" column="id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="name" column="name"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="model" column="model"/>
+        <result property="firmware" column="firmware"/>
+        <result property="transport" column="transport"/>
+        <result property="streamMode" column="stream_mode"/>
+        <result property="ip" column="ip"/>
+        <result property="port" column="port"/>
+        <result property="hostAddress" column="host_address"/>
+        <result property="onLine" column="on_line"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="keepaliveTime" column="keepalive_time"/>
+        <result property="heartBeatInterval" column="heart_beat_interval"/>
+        <result property="heartBeatCount" column="heart_beat_count"/>
+        <result property="positionCapability" column="position_capability"/>
+        <result property="channelCount" column="channel_count"/>
+        <result property="expires" column="expires"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="mediaServerId" column="media_server_id"/>
+        <result property="charset" column="charset"/>
+        <result property="subscribeCycleForCatalog" column="subscribe_cycle_for_catalog"/>
+        <result property="subscribeCycleForMobilePosition" column="subscribe_cycle_for_mobile_position"/>
+        <result property="mobilePositionSubmissionInterval" column="mobile_position_submission_interval"/>
+        <result property="subscribeCycleForAlarm" column="subscribe_cycle_for_alarm"/>
+        <result property="ssrcCheck" column="ssrc_check"/>
+        <result property="geoCoordSys" column="geo_coord_sys"/>
+        <result property="password" column="password"/>
+        <result property="sdpIp" column="sdp_ip"/>
+        <result property="localIp" column="local_ip"/>
+        <result property="asMessageChannel" column="as_message_channel"/>
+        <result property="broadcastPushAfterAck" column="broadcast_push_after_ack"/>
+    </resultMap>
+
+    <select id="getOnlineDevices" resultMap="DeviceResult">
+        SELECT id,
+               device_id,
+               coalesce(custom_name, name) as name,
+               password,
+               manufacturer,
+               model,
+               firmware,
+               transport,
+               stream_mode,
+               ip,
+               sdp_ip,
+               local_ip,
+               port,
+               host_address,
+               expires,
+               register_time,
+               keepalive_time,
+               create_time,
+               update_time,
+               charset,
+               subscribe_cycle_for_catalog,
+               subscribe_cycle_for_mobile_position,
+               mobile_position_submission_interval,
+               subscribe_cycle_for_alarm,
+               ssrc_check,
+               as_message_channel,
+               broadcast_push_after_ack,
+               geo_coord_sys,
+               on_line
+        FROM wvp_device
+        WHERE on_line = true
+    </select>
+
+    <select id="getDeviceByDeviceId" resultMap="DeviceResult">
+        SELECT id,
+               device_id,
+               COALESCE(custom_name, name)       AS name,
+               password,
+               manufacturer,
+               model,
+               firmware,
+               transport,
+               stream_mode,
+               ip,
+               sdp_ip,
+               local_ip,
+               port,
+               host_address,
+               expires,
+               register_time,
+               keepalive_time,
+               create_time,
+               update_time,
+               charset,
+               subscribe_cycle_for_catalog,
+               subscribe_cycle_for_mobile_position,
+               mobile_position_submission_interval,
+               subscribe_cycle_for_alarm,
+               ssrc_check,
+               as_message_channel,
+               geo_coord_sys,
+               on_line,
+               media_server_id,
+               broadcast_push_after_ack,
+               (SELECT COUNT(0)
+                FROM wvp_device_channel dc
+                WHERE dc.data_type = 1
+                  AND dc.data_device_id = de.id) AS channel_count
+        FROM wvp_device de
+        WHERE de.device_id = #{deviceId}
+    </select>
+
+
+</mapper>

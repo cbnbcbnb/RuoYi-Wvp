@@ -305,7 +305,7 @@ public class MediaServerServiceImpl implements IMediaServerService {
         mediaServerMapper.update(mediaSerItem);
         MediaServer mediaServerInRedis = getOne(mediaSerItem.getId());
         // 获取完整数据
-        MediaServer mediaServerInDataBase = mediaServerMapper.queryOne(mediaSerItem.getId());
+        MediaServer mediaServerInDataBase = mediaServerMapper.getMediaServerById(mediaSerItem.getId());
         if (mediaServerInDataBase == null) {
             return;
         }
@@ -425,7 +425,7 @@ public class MediaServerServiceImpl implements IMediaServerService {
             log.info("[添加媒体节点] 失败, mediaServer的类型：为空");
             return;
         }
-        if (mediaServerMapper.queryOne(mediaServer.getId()) != null) {
+        if (mediaServerMapper.getMediaServerById(mediaServer.getId()) != null) {
             log.info("[添加媒体节点] 失败, 媒体服务ID已存在，请修改媒体服务器配置, {}", mediaServer.getId());
             throw new ControllerException(ErrorCode.ERROR100.getCode(),"保存失败，媒体服务ID [ " + mediaServer.getId() + " ] 已存在，请修改媒体服务器配置");
         }
@@ -534,7 +534,7 @@ public class MediaServerServiceImpl implements IMediaServerService {
         }
         MediaServer mediaServer = mediaNodeServerService.checkMediaServer(ip, port, secret);
         if (mediaServer != null) {
-            if (mediaServerMapper.queryOne(mediaServer.getId()) != null) {
+            if (mediaServerMapper.getMediaServerById(mediaServer.getId()) != null) {
                 throw new ControllerException(ErrorCode.ERROR100.getCode(), "媒体服务ID [" + mediaServer.getId() + " ] 已存在，请修改媒体服务器配置");
             }
         }
@@ -574,7 +574,7 @@ public class MediaServerServiceImpl implements IMediaServerService {
 
     @Override
     public MediaServer getOneFromDatabase(String mediaServerId) {
-        return mediaServerMapper.queryOne(mediaServerId);
+        return mediaServerMapper.getMediaServerById(mediaServerId);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.ruoyi.wvp.vmanager.recordPlan;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.CommonGBChannel;
 import com.ruoyi.wvp.gb28181.service.IDeviceChannelService;
 import com.ruoyi.wvp.service.IRecordPlanService;
@@ -37,7 +36,6 @@ public class RecordPlanController {
 
     @ResponseBody
     @PostMapping("/add")
-    @Operation(summary = "添加录制计划", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "plan", description = "计划", required = true)
     public void add(@RequestBody RecordPlan plan) {
         if (plan.getPlanItemList() == null || plan.getPlanItemList().isEmpty()) {
@@ -48,7 +46,6 @@ public class RecordPlanController {
 
     @ResponseBody
     @PostMapping("/link")
-    @Operation(summary = "通道关联录制计划", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "param", description = "通道关联录制计划", required = true)
     public void link(@RequestBody RecordPlanParam param) {
         if (param.getAllLink() != null) {
@@ -78,7 +75,6 @@ public class RecordPlanController {
 
     @ResponseBody
     @GetMapping("/get")
-    @Operation(summary = "查询录制计划", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "planId", description = "计划ID", required = true)
     public RecordPlan get(Integer planId) {
         if (planId == null) {
@@ -89,7 +85,6 @@ public class RecordPlanController {
 
     @ResponseBody
     @GetMapping("/query")
-    @Operation(summary = "查询录制计划列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "query", description = "检索内容", required = false)
     @Parameter(name = "page", description = "当前页", required = true)
     @Parameter(name = "count", description = "每页查询数量", required = true)
@@ -100,7 +95,6 @@ public class RecordPlanController {
         return recordPlanService.query(page, count, query);
     }
 
-    @Operation(summary = "分页查询级联平台的所有所有通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page", description = "当前页", required = true)
     @Parameter(name = "count", description = "每页条数", required = true)
     @Parameter(name = "planId", description = "录制计划ID")
@@ -127,7 +121,6 @@ public class RecordPlanController {
 
     @ResponseBody
     @PostMapping("/update")
-    @Operation(summary = "更新录制计划", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "plan", description = "计划", required = true)
     public void update(@RequestBody RecordPlan plan) {
         if (plan == null || plan.getId() == 0) {
@@ -138,7 +131,6 @@ public class RecordPlanController {
 
     @ResponseBody
     @DeleteMapping("/delete")
-    @Operation(summary = "删除录制计划", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "planId", description = "计划ID", required = true)
     public void delete(Integer planId) {
         if (planId == null) {

@@ -3,7 +3,6 @@ package com.ruoyi.wvp.gb28181.controller;
 
 
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
 import com.ruoyi.wvp.gb28181.service.IPTZService;
@@ -48,7 +47,6 @@ public class PtzController {
 	@Autowired
 	private DeferredResultHolder resultHolder;
 
-	@Operation(summary = "通用前端控制命令(参考国标文档A.3.1指令格式)", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "cmdCode", description = "指令码(对应国标文档指令格式中的字节4)", required = true)
@@ -79,7 +77,6 @@ public class PtzController {
 		ptzService.frontEndCommand(device, channelId, cmdCode, parameter1, parameter2, combindCode2);
 	}
 
-	@Operation(summary = "云台控制", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "command", description = "控制指令,允许值: left, right, up, down, upleft, upright, downleft, downright, zoomin, zoomout, stop", required = true)
@@ -152,7 +149,6 @@ public class PtzController {
 	}
 
 
-	@Operation(summary = "光圈控制", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "command", description = "控制指令,允许值: in, out, stop", required = true)
@@ -187,7 +183,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, cmdCode, 0, speed, 0);
 	}
 
-	@Operation(summary = "聚焦控制", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "command", description = "控制指令,允许值: near, far, stop", required = true)
@@ -222,7 +217,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, cmdCode, speed, 0, 0);
 	}
 
-	@Operation(summary = "查询预置位", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@GetMapping("/preset/query/{deviceId}/{channelId}")
@@ -262,7 +256,6 @@ public class PtzController {
 		return result;
 	}
 
-	@Operation(summary = "预置位指令-设置预置位", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "presetId", description = "预置位编号(1-255)", required = true)
@@ -274,7 +267,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x81, 1, presetId, 0);
 	}
 
-	@Operation(summary = "预置位指令-调用预置位", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "presetId", description = "预置位编号(1-255)", required = true)
@@ -286,7 +278,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x82, 1, presetId, 0);
 	}
 
-	@Operation(summary = "预置位指令-删除预置位", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "presetId", description = "预置位编号(1-255)", required = true)
@@ -298,7 +289,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x83, 1, presetId, 0);
 	}
 
-	@Operation(summary = "巡航指令-加入巡航点", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "cruiseId", description = "巡航组号(0-255)", required = true)
@@ -311,7 +301,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x84, cruiseId, presetId, 0);
 	}
 
-	@Operation(summary = "巡航指令-删除一个巡航点", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "cruiseId", description = "巡航组号(1-255)", required = true)
@@ -327,7 +316,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x85, cruiseId, presetId, 0);
 	}
 
-	@Operation(summary = "巡航指令-设置巡航速度", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "cruiseId", description = "巡航组号(0-255)", required = true)
@@ -345,7 +333,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x86, cruiseId, parameter2, combindCode2);
 	}
 
-	@Operation(summary = "巡航指令-设置巡航停留时间", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "cruiseId", description = "巡航组号", required = true)
@@ -363,7 +350,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x87, cruiseId, parameter2, combindCode2);
 	}
 
-	@Operation(summary = "巡航指令-开始巡航", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "cruiseId", description = "巡航组号)", required = true)
@@ -375,7 +361,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x88, cruiseId, 0, 0);
 	}
 
-	@Operation(summary = "巡航指令-停止巡航", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "cruiseId", description = "巡航组号", required = true)
@@ -387,7 +372,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0, 0, 0, 0);
 	}
 
-	@Operation(summary = "扫描指令-开始自动扫描", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "scanId", description = "扫描组号(0-255)", required = true)
@@ -399,7 +383,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x89, scanId, 0, 0);
 	}
 
-	@Operation(summary = "扫描指令-停止自动扫描", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "scanId", description = "扫描组号(0-255)", required = true)
@@ -411,7 +394,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0, 0, 0, 0);
 	}
 
-	@Operation(summary = "扫描指令-设置自动扫描左边界", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "scanId", description = "扫描组号(0-255)", required = true)
@@ -423,7 +405,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, 0x89, scanId, 1, 0);
 	}
 
-	@Operation(summary = "扫描指令-设置自动扫描右边界", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "scanId", description = "扫描组号(0-255)", required = true)
@@ -436,7 +417,6 @@ public class PtzController {
 	}
 
 
-	@Operation(summary = "扫描指令-设置自动扫描速度", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "scanId", description = "扫描组号(0-255)", required = true)
@@ -455,7 +435,6 @@ public class PtzController {
 	}
 
 
-	@Operation(summary = "辅助开关控制指令-雨刷控制", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "command", description = "控制指令,允许值: on, off", required = true)
@@ -480,7 +459,6 @@ public class PtzController {
 		frontEndCommand(deviceId, channelId, cmdCode, 1, 0, 0);
 	}
 
-	@Operation(summary = "辅助开关控制指令", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "command", description = "控制指令,允许值: on, off", required = true)

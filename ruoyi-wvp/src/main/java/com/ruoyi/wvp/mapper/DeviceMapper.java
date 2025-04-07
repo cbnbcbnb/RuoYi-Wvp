@@ -14,39 +14,6 @@ import java.util.List;
 @Repository
 public interface DeviceMapper {
 
-    @Select("SELECT " +
-            "id, " +
-            "device_id, " +
-            "coalesce(custom_name, name) as name, " +
-            "password, " +
-            "manufacturer, " +
-            "model, " +
-            "firmware, " +
-            "transport," +
-            "stream_mode," +
-            "ip," +
-            "sdp_ip," +
-            "local_ip," +
-            "port," +
-            "host_address," +
-            "expires," +
-            "register_time," +
-            "keepalive_time," +
-            "create_time," +
-            "update_time," +
-            "charset," +
-            "subscribe_cycle_for_catalog," +
-            "subscribe_cycle_for_mobile_position," +
-            "mobile_position_submission_interval," +
-            "subscribe_cycle_for_alarm," +
-            "ssrc_check," +
-            "as_message_channel," +
-            "geo_coord_sys," +
-            "on_line," +
-            "media_server_id," +
-            "broadcast_push_after_ack," +
-            "(SELECT count(0) FROM wvp_device_channel dc WHERE dc.data_type = 1 and dc.data_device_id= de.id) as channel_count "+
-            " FROM wvp_device de WHERE de.device_id = #{deviceId}")
     Device getDeviceByDeviceId(@Param("deviceId") String deviceId);
 
     @Insert("INSERT INTO wvp_device (" +
@@ -184,37 +151,6 @@ public interface DeviceMapper {
     @Delete("DELETE FROM wvp_device WHERE device_id=#{deviceId}")
     int del(String deviceId);
 
-    @Select("SELECT " +
-            "id, " +
-            "device_id, " +
-            "coalesce(custom_name, name) as name, " +
-            "password, " +
-            "manufacturer, " +
-            "model, " +
-            "firmware, " +
-            "transport," +
-            "stream_mode," +
-            "ip," +
-            "sdp_ip,"+
-            "local_ip,"+
-            "port,"+
-            "host_address,"+
-            "expires,"+
-            "register_time,"+
-            "keepalive_time,"+
-            "create_time,"+
-            "update_time,"+
-            "charset,"+
-            "subscribe_cycle_for_catalog,"+
-            "subscribe_cycle_for_mobile_position,"+
-            "mobile_position_submission_interval,"+
-            "subscribe_cycle_for_alarm,"+
-            "ssrc_check,"+
-            "as_message_channel,"+
-            "broadcast_push_after_ack,"+
-            "geo_coord_sys,"+
-            "on_line"+
-            " FROM wvp_device WHERE on_line = true")
     List<Device> getOnlineDevices();
 
     @Select("SELECT " +

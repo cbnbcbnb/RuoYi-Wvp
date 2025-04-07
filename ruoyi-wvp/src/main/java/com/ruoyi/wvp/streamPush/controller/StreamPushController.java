@@ -7,7 +7,6 @@ import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.common.enums.ChannelDataType;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.ruoyi.wvp.gb28181.transmit.callback.RequestMessage;
 import com.ruoyi.wvp.media.service.IMediaServerService;
@@ -68,7 +67,6 @@ public class StreamPushController {
 
     @GetMapping(value = "/list")
     @ResponseBody
-    @Operation(summary = "推流列表查询", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page", description = "当前页")
     @Parameter(name = "count", description = "每页查询数量")
     @Parameter(name = "query", description = "查询内容")
@@ -93,7 +91,6 @@ public class StreamPushController {
 
     @PostMapping(value = "/remove")
     @ResponseBody
-    @Operation(summary = "删除", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "应用名", required = true)
     public void delete(int id){
         if (streamPushService.delete(id) > 0){
@@ -202,7 +199,6 @@ public class StreamPushController {
      */
     @PostMapping(value = "/add")
     @ResponseBody
-    @Operation(summary = "添加推流信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public StreamPush add(@RequestBody StreamPush stream){
         if (ObjectUtils.isEmpty(stream.getGbId())) {
             throw new ControllerException(ErrorCode.ERROR400.getCode(), "国标ID不可为空");
@@ -222,7 +218,6 @@ public class StreamPushController {
 
     @PostMapping(value = "/update")
     @ResponseBody
-    @Operation(summary = "更新推流信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public void update(@RequestBody StreamPush stream){
         if (ObjectUtils.isEmpty(stream.getId())) {
             throw new ControllerException(ErrorCode.ERROR400.getCode(), "ID不可为空");
@@ -234,7 +229,6 @@ public class StreamPushController {
 
     @DeleteMapping(value = "/batchRemove")
     @ResponseBody
-    @Operation(summary = "删除多个推流", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public void batchStop(@RequestBody BatchRemoveParam ids){
         if(ids.getIds().isEmpty()) {
             return;
@@ -244,7 +238,6 @@ public class StreamPushController {
 
     @GetMapping(value = "/start")
     @ResponseBody
-    @Operation(summary = "开始播放", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public DeferredResult<WVPResult<StreamContent>> batchStop(Integer id){
         Assert.notNull(id, "推流ID不可为NULL");
         DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());

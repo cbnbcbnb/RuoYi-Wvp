@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.conf.SipConfig;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Platform;
 import com.ruoyi.wvp.gb28181.bean.PlatformChannel;
 import com.ruoyi.wvp.gb28181.bean.SubscribeHolder;
@@ -47,7 +46,6 @@ public class PlatformController {
 	private IPlatformService platformService;
 
 
-    @Operation(summary = "获取国标服务的配置", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @GetMapping("/server_config")
     public JSONObject serverConfig() {
         JSONObject result = new JSONObject();
@@ -58,7 +56,6 @@ public class PlatformController {
         return result;
     }
 
-    @Operation(summary = "获取级联服务器信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "平台国标编号", required = true)
     @GetMapping("/info/{id}")
     public Platform getPlatform(@PathVariable String id) {
@@ -71,7 +68,6 @@ public class PlatformController {
     }
 
     @GetMapping("/query")
-    @Operation(summary = "分页查询级联平台", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page", description = "当前页")
     @Parameter(name = "count", description = "每页查询数量")
     @Parameter(name = "query", description = "查询内容")
@@ -88,7 +84,6 @@ public class PlatformController {
         return parentPlatformPageInfo;
     }
 
-    @Operation(summary = "添加上级平台信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/add")
     @ResponseBody
     public void add(@RequestBody Platform platform) {
@@ -135,7 +130,6 @@ public class PlatformController {
         }
     }
 
-    @Operation(summary = "更新上级平台信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/update")
     @ResponseBody
     public void updatePlatform(@RequestBody Platform parentPlatform) {
@@ -159,7 +153,6 @@ public class PlatformController {
         platformService.update(parentPlatform);
     }
 
-    @Operation(summary = "删除上级平台", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "上级平台ID")
     @DeleteMapping("/delete")
     @ResponseBody
@@ -176,7 +169,6 @@ public class PlatformController {
         return deferredResult;
     }
 
-    @Operation(summary = "查询上级平台是否存在", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "serverGBId", description = "上级平台的国标编号")
     @GetMapping("/exit/{serverGBId}")
     @ResponseBody
@@ -185,7 +177,6 @@ public class PlatformController {
         return platform != null;
     }
 
-    @Operation(summary = "分页查询级联平台的所有所有通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page", description = "当前页", required = true)
     @Parameter(name = "count", description = "每页条数", required = true)
     @Parameter(name = "platformId", description = "上级平台的数据ID")
@@ -210,7 +201,6 @@ public class PlatformController {
         return platformChannelService.queryChannelList(page, count, query, channelType,  online, platformId, hasShare);
     }
 
-    @Operation(summary = "向上级平台添加国标通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/channel/add")
     @ResponseBody
     public void addChannel(@RequestBody UpdateChannelParam param) {
@@ -232,7 +222,6 @@ public class PlatformController {
         }
     }
 
-    @Operation(summary = "从上级平台移除国标通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @DeleteMapping("/channel/remove")
     @ResponseBody
     public void delChannelForGB(@RequestBody UpdateChannelParam param) {
@@ -254,7 +243,6 @@ public class PlatformController {
         }
     }
 
-    @Operation(summary = "推送通道", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "平台ID", required = true)
     @GetMapping("/channel/push")
     @ResponseBody
@@ -263,7 +251,6 @@ public class PlatformController {
         platformChannelService.pushChannel(id);
     }
 
-    @Operation(summary = "添加通道-通过设备", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/channel/device/add")
     @ResponseBody
     public void addChannelByDevice(@RequestBody UpdateChannelParam param) {
@@ -273,7 +260,6 @@ public class PlatformController {
         platformChannelService.addChannelByDevice(param.getPlatformId(), param.getDeviceIds());
     }
 
-    @Operation(summary = "移除通道-通过设备", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/channel/device/remove")
     @ResponseBody
     public void removeChannelByDevice(@RequestBody UpdateChannelParam param) {
@@ -283,7 +269,6 @@ public class PlatformController {
         platformChannelService.removeChannelByDevice(param.getPlatformId(), param.getDeviceIds());
     }
 
-    @Operation(summary = "自定义共享通道信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @PostMapping("/channel/custom/update")
     @ResponseBody
     public void updateCustomChannel(@RequestBody PlatformChannel channel) {

@@ -6,7 +6,6 @@ import com.ruoyi.wvp.common.InviteSessionType;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceChannel;
 import com.ruoyi.wvp.gb28181.service.IDeviceChannelService;
@@ -71,7 +70,6 @@ public class PlaybackController {
 	@Autowired
 	private IDeviceChannelService channelService;
 
-	@Operation(summary = "开始视频回放", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "startTime", description = "开始时间", required = true)
@@ -138,7 +136,6 @@ public class PlaybackController {
 	}
 
 
-	@Operation(summary = "停止视频回放", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "stream", description = "流ID", required = true)
@@ -162,7 +159,6 @@ public class PlaybackController {
 	}
 
 
-	@Operation(summary = "回放暂停", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "streamId", description = "回放流ID", required = true)
 	@GetMapping("/pause/{streamId}")
 	public void playPause(@PathVariable String streamId) {
@@ -180,7 +176,6 @@ public class PlaybackController {
 	}
 
 
-	@Operation(summary = "回放恢复", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "streamId", description = "回放流ID", required = true)
 	@GetMapping("/resume/{streamId}")
 	public void playResume(@PathVariable String streamId) {
@@ -197,7 +192,6 @@ public class PlaybackController {
 	}
 
 
-	@Operation(summary = "回放拖动播放", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "streamId", description = "回放流ID", required = true)
 	@Parameter(name = "seekTime", description = "拖动偏移量，单位s", required = true)
 	@GetMapping("/seek/{streamId}/{seekTime}")
@@ -218,7 +212,6 @@ public class PlaybackController {
 		}
 	}
 
-	@Operation(summary = "回放倍速播放", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "streamId", description = "回放流ID", required = true)
 	@Parameter(name = "speed", description = "倍速0.25 0.5 1、2、4", required = true)
 	@GetMapping("/speed/{streamId}/{speed}")

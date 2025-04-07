@@ -2,7 +2,6 @@ package com.ruoyi.wvp.gb28181.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceAlarm;
 import com.ruoyi.wvp.gb28181.bean.Platform;
@@ -59,7 +58,6 @@ public class AlarmController {
      * @return
      */
     @DeleteMapping("/delete")
-    @Operation(summary = "删除报警", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "ID")
     @Parameter(name = "deviceIds", description = "多个设备id,逗号分隔")
     @Parameter(name = "time", description = "结束时间")
@@ -96,7 +94,6 @@ public class AlarmController {
      * @return
      */
     @GetMapping("/test/notify/alarm")
-    @Operation(summary = "测试向上级/设备发送模拟报警通知", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "deviceId", description = "设备国标编号")
     public void delete(@RequestParam String deviceId) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
@@ -144,7 +141,6 @@ public class AlarmController {
      * @param endTime 结束时间
      * @return
      */
-    @Operation(summary = "分页查询报警", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page",description = "当前页",required = true)
     @Parameter(name = "count",description = "每页查询数量",required = true)
     @Parameter(name = "deviceId",description = "设备id")

@@ -87,7 +87,7 @@ spring:
     # 数据库索引
     database: 8
     # 密码
-    password: 123456
+    password:
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -161,11 +161,11 @@ sip:
 media:
   id: hxkj_zlm
   # [必须修改] zlm服务器的内网IP
-  ip: 192.168.2.39
+  ip: 192.168.158.39
   # [必须修改] zlm服务器的http.port
   http-port: 8092
   # [可选] zlm服务器的hook所使用的IP, 默认使用sip.ip
-  hook-ip: 192.168.2.39
+  hook-ip: 192.168.158.39
   # [必选选] zlm服务器的hook.admin_params=secret
   secret: hxkj_zlm
   # 启用多端口模式, 多端口模式使用端口区分每路流，兼容性更好。 单端口使用流的ssrc区分， 点播超时建议使用多端口测试

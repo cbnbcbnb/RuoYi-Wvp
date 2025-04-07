@@ -10,7 +10,6 @@ package com.ruoyi.wvp.gb28181.controller;
 import com.alibaba.fastjson2.JSONObject;
 
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
 import com.ruoyi.wvp.gb28181.transmit.callback.DeferredResultHolder;
@@ -58,7 +57,6 @@ public class DeviceConfig {
 	 * @return
 	 */
 	@GetMapping("/basicParam/{deviceId}")
-	@Operation(summary = "基本配置设置命令", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "name", description = "名称")
@@ -114,7 +112,6 @@ public class DeviceConfig {
 	 * @param channelId 通道ID
 	 * @return
 	 */
-	@Operation(summary = "设备配置查询请求", security = @SecurityRequirement(name = JwtUtils.HEADER))
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "configType", description = "配置类型")

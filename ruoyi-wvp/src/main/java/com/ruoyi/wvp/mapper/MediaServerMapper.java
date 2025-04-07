@@ -141,8 +141,14 @@ public interface MediaServerMapper {
             " </script>"})
     int updateByHostAndPort(MediaServer mediaServerItem);
 
+    /**
+     * 根据id查询
+     *
+     * @param id
+     * @return
+     */
     @Select("SELECT * FROM wvp_media_server WHERE id=#{id}")
-    MediaServer queryOne(String id);
+    MediaServer getMediaServerById(@Param("id") String id);
 
     @Select("SELECT * FROM wvp_media_server")
     List<MediaServer> queryAll();

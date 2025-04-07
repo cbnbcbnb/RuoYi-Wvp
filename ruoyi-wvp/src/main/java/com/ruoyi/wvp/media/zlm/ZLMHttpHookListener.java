@@ -2,6 +2,7 @@ package com.ruoyi.wvp.media.zlm;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.bean.ResultForOnPublish;
@@ -52,6 +53,7 @@ public class ZLMHttpHookListener {
     /**
      * 服务器定时上报时间，上报间隔可配置，默认10s上报一次
      */
+    @Anonymous
     @ResponseBody
     @PostMapping(value = "/on_server_keepalive", produces = "application/json;charset=UTF-8")
     public HookResult onServerKeepalive(@RequestBody OnServerKeepaliveHookParam param) {

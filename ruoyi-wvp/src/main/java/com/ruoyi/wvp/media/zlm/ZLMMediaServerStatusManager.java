@@ -210,17 +210,19 @@ public class ZLMMediaServerStatusManager {
             }
             mediaServerService.update(mediaServerItem);
         }
-        // 设置两次心跳未收到则认为zlm离线
-        String key = "zlm-keepalive-" + mediaServerItem.getId();
-        dynamicTask.startDelay(key, ()->{
-            log.warn("[ZLM-心跳超时] ID：{}", mediaServerItem.getId());
-            mediaServerItem.setStatus(false);
-            offlineZlmPrimaryMap.put(mediaServerItem.getId(), mediaServerItem);
-            offlineZlmTimeMap.put(mediaServerItem.getId(), System.currentTimeMillis());
-            // 发送离线通知
-            eventPublisher.mediaServerOfflineEventPublish(mediaServerItem);
-            mediaServerService.update(mediaServerItem);
-        }, (int)(mediaServerItem.getHookAliveInterval() * 2 * 1000));
+        if(mediaServerItem.getHookAliveInterval() != null){
+            // 设置两次心跳未收到则认为zlm离线
+            String key = "zlm-keepalive-" + mediaServerItem.getId();
+            dynamicTask.startDelay(key, ()->{
+                log.warn("[ZLM-心跳超时] ID：{}", mediaServerItem.getId());
+                mediaServerItem.setStatus(false);
+                offlineZlmPrimaryMap.put(mediaServerItem.getId(), mediaServerItem);
+                offlineZlmTimeMap.put(mediaServerItem.getId(), System.currentTimeMillis());
+                // 发送离线通知
+                eventPublisher.mediaServerOfflineEventPublish(mediaServerItem);
+                mediaServerService.update(mediaServerItem);
+            }, (int)(mediaServerItem.getHookAliveInterval() * 2 * 1000));
+        }
     }
     private void initPort(MediaServer mediaServerItem, ZLMServerConfig zlmServerConfig) {
         // 端口只会从配置中读取一次，一旦自己配置或者读取过了将不在配置

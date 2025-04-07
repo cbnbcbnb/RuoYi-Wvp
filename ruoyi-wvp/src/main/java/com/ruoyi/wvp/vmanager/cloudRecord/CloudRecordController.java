@@ -3,7 +3,6 @@ package com.ruoyi.wvp.vmanager.cloudRecord;
 import com.alibaba.fastjson2.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.service.ICloudRecordService;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.service.IMediaServerService;
@@ -49,7 +48,6 @@ public class CloudRecordController {
 
     @ResponseBody
     @GetMapping("/date/list")
-    @Operation(summary = "查询存在云端录像的日期", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流ID", required = true)
     @Parameter(name = "year", description = "年，置空则查询当年", required = false)
@@ -86,7 +84,6 @@ public class CloudRecordController {
 
     @ResponseBody
     @GetMapping("/list")
-    @Operation(summary = "分页查询云端录像", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "query", description = "检索内容", required = false)
     @Parameter(name = "app", description = "应用名", required = false)
     @Parameter(name = "stream", description = "流ID", required = false)
@@ -318,7 +315,6 @@ public class CloudRecordController {
      */
     @ResponseBody
     @GetMapping("/list-url")
-    @Operation(summary = "分页查询云端录像", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "query", description = "检索内容", required = false)
     @Parameter(name = "app", description = "应用名", required = false)
     @Parameter(name = "stream", description = "流ID", required = false)

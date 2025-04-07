@@ -17,7 +17,6 @@ import com.ruoyi.wvp.media.bean.ResultForOnPublish;
 import com.ruoyi.wvp.media.zlm.dto.StreamAuthorityInfo;
 import com.ruoyi.wvp.service.IMediaService;
 import com.ruoyi.wvp.service.IRecordPlanService;
-import com.ruoyi.wvp.service.IUserService;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.streamProxy.bean.StreamProxy;
 import com.ruoyi.wvp.streamProxy.service.IStreamProxyService;
@@ -49,8 +48,8 @@ public class MediaServiceImpl implements IMediaService {
     @Autowired
     private RedisTemplate<Object, Object> redisTemplate;
 
-    @Autowired
-    private IUserService userService;
+//    @Autowired
+//    private IUserService userService;
 
     @Autowired
     private IInviteStreamService inviteStreamService;
@@ -113,11 +112,11 @@ public class MediaServiceImpl implements IMediaService {
                 // 推流自定义播放鉴权码
                 String callId = paramMap.get("callId");
                 // 鉴权配置
-                boolean hasAuthority = userService.checkPushAuthority(callId, sign);
-                if (!hasAuthority) {
-                    log.info("推流鉴权失败： sign 无权限: callId={}. sign={}", callId, sign);
-                    throw new ControllerException(ErrorCode.ERROR401.getCode(), "Unauthorized");
-                }
+//                boolean hasAuthority = userService.checkPushAuthority(callId, sign);
+//                if (!hasAuthority) {
+//                    log.info("推流鉴权失败： sign 无权限: callId={}. sign={}", callId, sign);
+//                    throw new ControllerException(ErrorCode.ERROR401.getCode(), "Unauthorized");
+//                }
                 StreamAuthorityInfo streamAuthorityInfo = StreamAuthorityInfo.getInstanceByHook(app, stream, mediaServer.getId());
                 streamAuthorityInfo.setCallId(callId);
                 streamAuthorityInfo.setSign(sign);

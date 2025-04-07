@@ -102,6 +102,7 @@ public class SipLayer implements CommandLineRunner {
 			sipStack.setMessageParserFactory(new GbStringMsgParserFactory());
 		} catch (PeerUnavailableException e) {
 			log.error("[SIP SERVER] SIP服务启动失败， 监听地址{}失败,请检查ip是否正确", monitorIp);
+			System.out.println(e.getMessage());
 			return;
 		}
 

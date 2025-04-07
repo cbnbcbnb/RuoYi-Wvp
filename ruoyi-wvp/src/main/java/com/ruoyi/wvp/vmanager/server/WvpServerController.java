@@ -9,7 +9,6 @@ import com.ruoyi.wvp.conf.SipConfig;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.VersionInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.gb28181.service.IDeviceChannelService;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
 import com.ruoyi.wvp.media.bean.MediaInfo;
@@ -89,27 +88,23 @@ public class WvpServerController {
 
     @GetMapping(value = "/media_server/list")
     @ResponseBody
-    @Operation(summary = "流媒体服务列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public List<MediaServer> getMediaServerList() {
         return mediaServerService.getAll();
     }
 
     @GetMapping(value = "/media_server/online/list")
     @ResponseBody
-    @Operation(summary = "在线流媒体服务列表", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public List<MediaServer> getOnlineMediaServerList() {
         return mediaServerService.getAllOnline();
     }
 
     @GetMapping(value = "/media_server/one/{id}")
     @ResponseBody
-    @Operation(summary = "停止视频回放", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "流媒体服务ID", required = true)
     public MediaServer getMediaServer(@PathVariable String id) {
         return mediaServerService.getOne(id);
     }
 
-    @Operation(summary = "测试流媒体服务", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "ip", description = "流媒体服务IP", required = true)
     @Parameter(name = "port", description = "流媒体服务HTT端口", required = true)
     @Parameter(name = "secret", description = "流媒体服务secret", required = true)
@@ -119,7 +114,6 @@ public class WvpServerController {
         return mediaServerService.checkMediaServer(ip, port, secret, type);
     }
 
-    @Operation(summary = "测试流媒体录像管理服务", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "ip", description = "流媒体服务IP", required = true)
     @Parameter(name = "port", description = "流媒体服务HTT端口", required = true)
     @GetMapping(value = "/media_server/record/check")
@@ -131,7 +125,6 @@ public class WvpServerController {
         }
     }
 
-    @Operation(summary = "保存流媒体服务", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "mediaServerItem", description = "流媒体信息", required = true)
     @PostMapping(value = "/media_server/save")
     @ResponseBody
@@ -149,7 +142,6 @@ public class WvpServerController {
         }
     }
 
-    @Operation(summary = "移除流媒体服务", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "流媒体ID", required = true)
     @DeleteMapping(value = "/media_server/delete")
     @ResponseBody
@@ -161,7 +153,6 @@ public class WvpServerController {
         mediaServerService.delete(mediaServer);
     }
 
-    @Operation(summary = "获取流信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流ID", required = true)
     @Parameter(name = "mediaServerId", description = "流媒体ID", required = true)
@@ -176,7 +167,6 @@ public class WvpServerController {
     }
 
 
-    @Operation(summary = "重启服务", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @GetMapping(value = "/restart")
     @ResponseBody
     public void restart() {
@@ -201,9 +191,7 @@ public class WvpServerController {
 //        });
     }
 
-    ;
 
-    @Operation(summary = "获取系统配置信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @GetMapping(value = "/system/configInfo")
     @ResponseBody
     public SystemConfigInfo getConfigInfo() {
@@ -215,7 +203,6 @@ public class WvpServerController {
         return systemConfigInfo;
     }
 
-    @Operation(summary = "获取版本信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @GetMapping(value = "/version")
     @ResponseBody
     public VersionPo VersionPogetVersion() {
@@ -223,7 +210,6 @@ public class WvpServerController {
     }
 
     @GetMapping(value = "/config")
-    @Operation(summary = "获取配置信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "type", description = "配置类型（sip, base）", required = true)
     @ResponseBody
     public JSONObject getVersion(String type) {
@@ -250,7 +236,6 @@ public class WvpServerController {
 
     @GetMapping(value = "/system/info")
     @ResponseBody
-    @Operation(summary = "获取系统信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public SystemAllInfo getSystemInfo() {
         SystemAllInfo systemAllInfo = redisCatchStorage.getSystemInfo();
 
@@ -259,7 +244,6 @@ public class WvpServerController {
 
     @GetMapping(value = "/media_server/load")
     @ResponseBody
-    @Operation(summary = "获取负载信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public List<MediaServerLoad> getMediaLoad() {
         List<MediaServerLoad> result = new ArrayList<>();
         List<MediaServer> allOnline = mediaServerService.getAllOnline();
@@ -275,7 +259,6 @@ public class WvpServerController {
 
     @GetMapping(value = "/resource/info")
     @ResponseBody
-    @Operation(summary = "获取负载信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public ResourceInfo getResourceInfo() {
         ResourceInfo result = new ResourceInfo();
         ResourceBaseInfo deviceInfo = deviceService.getOverview();
@@ -292,7 +275,6 @@ public class WvpServerController {
 
     @GetMapping(value = "/info")
     @ResponseBody
-    @Operation(summary = "获取系统信息", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public Map<String, Map<String, String>> getInfo() {
         Map<String, Map<String, String>> result = new LinkedHashMap<>();
         Map<String, String> hardwareMap = new LinkedHashMap<>();
@@ -346,7 +328,6 @@ public class WvpServerController {
 
     @GetMapping(value = "/channel/datatype")
     @ResponseBody
-    @Operation(summary = "获取系统接入的数据类型", security = @SecurityRequirement(name = JwtUtils.HEADER))
     public List<Map<String, Object>> getDataType() {
         List<Map<String, Object>> result = new LinkedList<>();
         for (ChannelDataType item : ChannelDataType.values()) {

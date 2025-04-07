@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.security.JwtUtils;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.service.IMediaServerService;
 import com.ruoyi.wvp.streamProxy.bean.StreamProxy;
@@ -44,7 +43,6 @@ public class StreamProxyController {
     private IStreamProxyPlayService streamProxyPlayService;
 
 
-    @Operation(summary = "分页查询流代理", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "page", description = "当前页")
     @Parameter(name = "count", description = "每页查询数量")
     @Parameter(name = "query", description = "查询内容")
@@ -67,7 +65,6 @@ public class StreamProxyController {
         return streamProxyService.getAll(page, count, query, pulling, mediaServerId);
     }
 
-    @Operation(summary = "查询流代理", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "app", description = "应用名")
     @Parameter(name = "stream", description = "流Id")
     @GetMapping(value = "/one")
@@ -77,9 +74,6 @@ public class StreamProxyController {
         return streamProxyService.getStreamProxyByAppAndStream(app, stream);
     }
 
-    @Operation(summary = "保存代理(已存在会覆盖)", security = @SecurityRequirement(name = JwtUtils.HEADER), parameters = {
-            @Parameter(name = "param", description = "代理参数", required = true),
-    })
     @PostMapping(value = "/save")
     @ResponseBody
     public StreamContent save(@RequestBody StreamProxyParam param){
@@ -104,9 +98,6 @@ public class StreamProxyController {
 
     }
 
-    @Operation(summary = "新增代理", security = @SecurityRequirement(name = JwtUtils.HEADER), parameters = {
-            @Parameter(name = "param", description = "代理参数", required = true),
-    })
     @PostMapping(value = "/add")
     @ResponseBody
     public StreamProxy add(@RequestBody StreamProxy param){
@@ -124,9 +115,6 @@ public class StreamProxyController {
         return param;
     }
 
-    @Operation(summary = "更新代理", security = @SecurityRequirement(name = JwtUtils.HEADER), parameters = {
-            @Parameter(name = "param", description = "代理参数", required = true),
-    })
     @PostMapping(value = "/update")
     @ResponseBody
     public StreamProxy update(@RequestBody StreamProxy param){
@@ -146,7 +134,6 @@ public class StreamProxyController {
 
     @GetMapping(value = "/ffmpeg_cmd/list")
     @ResponseBody
-    @Operation(summary = "获取ffmpeg.cmd模板", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "mediaServerId", description = "流媒体ID", required = true)
     public Map<String, String> getFFmpegCMDs(@RequestParam String mediaServerId){
         log.debug("获取节点[ {} ]ffmpeg.cmd模板", mediaServerId );
@@ -160,7 +147,6 @@ public class StreamProxyController {
 
     @DeleteMapping(value = "/del")
     @ResponseBody
-    @Operation(summary = "移除代理", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流id", required = true)
     public void del(@RequestParam String app, @RequestParam String stream){
@@ -174,7 +160,6 @@ public class StreamProxyController {
 
     @DeleteMapping(value = "/delete")
     @ResponseBody
-    @Operation(summary = "移除代理", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "代理ID", required = true)
     public void delte(int id){
         log.info("移除代理： {}", id);
@@ -183,7 +168,6 @@ public class StreamProxyController {
 
     @GetMapping(value = "/start")
     @ResponseBody
-    @Operation(summary = "启用代理", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "代理Id", required = true)
     public StreamContent start(int id){
         log.info("播放代理： {}", id);
@@ -197,7 +181,6 @@ public class StreamProxyController {
 
     @GetMapping(value = "/stop")
     @ResponseBody
-    @Operation(summary = "停用代理", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "id", description = "代理Id", required = true)
     public void stop(int id){
         log.info("停用代理： {}", id);
