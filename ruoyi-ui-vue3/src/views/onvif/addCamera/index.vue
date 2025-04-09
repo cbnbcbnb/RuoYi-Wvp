@@ -35,9 +35,22 @@
             <el-form-item label="固件版本" prop="firmwareVersion">
               <el-input v-model="resultForm.firmwareVersion" placeholder="请输入固件版本" disabled/>
             </el-form-item>
-<!--            <el-form-item label="直播流地址" prop="streamUris">-->
-<!--              <el-input v-model="resultForm.streamUris" placeholder="请输入固件版本"/>-->
-<!--            </el-form-item>-->
+            <el-form-item label="直播流地址" prop="url">
+              <el-select
+                  v-model="resultForm.url"
+                  class="m-2"
+                  placeholder="请选择直播流地址"
+                  size="large"
+                  :disabled="disabledAdd"
+              >
+                <el-option
+                    v-for="item in resultForm.streamUris"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                />
+              </el-select>
+            </el-form-item>
             <div style="display: flex; justify-content: space-around;">
               <el-button type="primary" @click="submitResultForm" :disabled="disabledAdd">添 加</el-button>
             </div>
@@ -55,8 +68,14 @@ import {ref} from 'vue';
 
 const {proxy} = getCurrentInstance();
 
+const url = ref('');
 const disabledAdd = ref(true);
-const probeForm = ref({});
+const probeForm = ref({
+  name: '球机',
+  ip: '192.168.158.63',
+  username: 'admin',
+  password: 'admin123',
+});
 const resultForm = ref({});
 const rules = ref({
   id: [{required: true, message: "编号不能为空", trigger: "blur"}],
@@ -68,6 +87,7 @@ const rulesResult = ref({
   firm: [{required: true, message: "设备厂商不能为空", trigger: "blur"}],
   model: [{required: true, message: "设备型号不能为空", trigger: "blur"}],
   firmwareVersion: [{required: true, message: "固件版本不能为空", trigger: "blur"}],
+  url: [{required: true, message: "直播流地址不能为空", trigger: "blur"}],
 });
 
 const submitForm = () => {
@@ -82,6 +102,7 @@ const submitForm = () => {
       resultForm.value.firm = res.data.firm;
       resultForm.value.model = res.data.model;
       resultForm.value.firmwareVersion = res.data.firmwareVersion;
+      resultForm.value.streamUris = res.data.streamUris;
       disabledAdd.value = false;
       proxy.$modal.msgSuccess("操作成功");
       console.log("Probe result:", res);
