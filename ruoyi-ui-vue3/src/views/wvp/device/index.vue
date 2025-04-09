@@ -110,6 +110,24 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
+          <el-button link type="primary" :disabled="scope.row.online===0" icon="Edit"
+                     @click="refDevice(scope.row)"
+                     @mouseover="getTooltipContent(scope.row.deviceId)">刷新
+          </el-button>
+          <el-button type="text" icon="Edit"
+                     @click="showChannelList(scope.row)">通道
+          </el-button>
+          <el-button link type="primary" icon="Edit"
+                     @click="setGuard(scope.row)"
+          >布防
+          </el-button>
+          <el-button type="text" icon="Edit"
+                     @click="resetGuard(scope.row)">撤防
+          </el-button>
+          <el-button type="text" icon="Edit"
+                     @click="syncBasicParam(scope.row)">基础配置同步
+          </el-button>
+
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
                      v-hasPermi="['system:config:edit']">修改
           </el-button>
@@ -132,8 +150,7 @@
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="设备编号" prop="deviceId">
-          <el-input v-if="isEdit" v-model="form.deviceId" disabled></el-input>
-          <el-input v-if="!isEdit" v-model="form.deviceId" clearable></el-input>
+          <el-input v-model="form.deviceId" disabled></el-input>
         </el-form-item>
 
         <el-form-item label="设备名称" prop="name">
@@ -201,12 +218,14 @@
 <script setup name="Device">
 import {
   deleteDevice,
+  devicesSync,
   getDeviceById,
   listDevice,
   subscribeCatalog,
   subscribeMobilePosition,
+  syncStatus,
   updateDevice,
-  updateTransport
+  updateTransport,
 } from "../../../api/wvp/device.js";
 import {configInfo, getOnlineMediaServerList} from "../../../api/wvp/wvpMediaServer.js";
 
@@ -385,6 +404,124 @@ function showInfo() {
     showDialog.value = true
     configInfoData.value = response.data
   })
+}
+
+/**
+ * 刷新对应设备
+ *
+ * @param itemData
+ */
+function refDevice(itemData) {
+  console.log("刷新对应设备:" + itemData.deviceId);
+  devicesSync(itemData.deviceId).then(response => {
+
+  })
+}
+
+/**
+ * 设备国标编号
+ *
+ * @param deviceId
+ * @returns {Promise<void>}
+ */
+async function getTooltipContent(deviceId) {
+  syncStatus(deviceId).then(response => {
+
+  })
+}
+
+/**
+ * 显示通道列表
+ *
+ * @param row
+ */
+function showChannelList(row) {
+  this.$router.push(`/channelList/${row.deviceId}/0`);
+}
+
+/**
+ * 设置设备为布防
+ */
+function setGuard(){
+  // this.$axios({
+  //   method: 'get',
+  //   url: `/api/device/control/guard/${itemData.deviceId}/SetGuard`,
+  // }).then( (res)=> {
+  //   if (res.data.code === 0) {
+  //     this.$message.success({
+  //       showClose: true,
+  //       message: "布防成功"
+  //     })
+  //   }else {
+  //     this.$message.error({
+  //       showClose: true,
+  //       message: res.data.msg
+  //     })
+  //   }
+  // }).catch( (error)=> {
+  //   this.$message.error({
+  //     showClose: true,
+  //     message: error.message
+  //   })
+  // });
+}
+
+/**
+ * 设置设备为撤防
+ */
+function resetGuard(){
+  // this.$axios({
+  //   method: 'get',
+  //   url: `/api/device/control/guard/${itemData.deviceId}/ResetGuard`,
+  // }).then( (res)=> {
+  //   if (res.data.code === 0) {
+  //     this.$message.success({
+  //       showClose: true,
+  //       message: "撤防成功"
+  //     })
+  //   }else {
+  //     this.$message.error({
+  //       showClose: true,
+  //       message: res.data.msg
+  //     })
+  //   }
+  // }).catch( (error)=> {
+  //   this.$message.error({
+  //     showClose: true,
+  //     message: error.message
+  //   })
+  // });
+}
+
+/**
+ * 基础配置同步
+ */
+function syncBasicParam(){
+  console.log(data)
+  // this.$axios({
+  //   method: 'get',
+  //   url: `/api/device/config/query/${data.deviceId}/BasicParam`,
+  //   params: {
+  //     // channelId: data.deviceId
+  //   }
+  // }).then( (res)=> {
+  //   if (res.data.code === 0) {
+  //     this.$message.success({
+  //       showClose: true,
+  //       message: `配置已同步，当前心跳间隔： ${res.data.data.BasicParam.HeartBeatInterval} 心跳间隔:${res.data.data.BasicParam.HeartBeatCount}`
+  //     })
+  //   }else {
+  //     this.$message.error({
+  //       showClose: true,
+  //       message: res.data.msg
+  //     })
+  //   }
+  // }).catch( (error)=> {
+  //   this.$message.error({
+  //     showClose: true,
+  //     message: error.message
+  //   })
+  // });
 }
 
 getList();

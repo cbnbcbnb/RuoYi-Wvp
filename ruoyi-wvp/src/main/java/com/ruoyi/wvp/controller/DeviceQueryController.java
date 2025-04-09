@@ -120,10 +120,8 @@ public class DeviceQueryController extends BaseController {
     /**
      * 同步设备通道
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @GetMapping("/devices/{deviceId}/sync")
-    public WVPResult<SyncStatus> devicesSync(@PathVariable String deviceId) {
-
+    @PostMapping("/devices/{deviceId}/sync")
+    public AjaxResult devicesSync(@PathVariable String deviceId) {
         if (log.isDebugEnabled()) {
             log.debug("设备通道信息同步API调用，deviceId：" + deviceId);
         }
@@ -132,26 +130,16 @@ public class DeviceQueryController extends BaseController {
         // 已存在则返回进度
         if (deviceService.isSyncRunning(deviceId)) {
             SyncStatus channelSyncStatus = deviceService.getChannelSyncStatus(deviceId);
-            WVPResult wvpResult = new WVPResult();
             if (channelSyncStatus.getErrorMsg() != null) {
-                wvpResult.setCode(ErrorCode.ERROR100.getCode());
-                wvpResult.setMsg(channelSyncStatus.getErrorMsg());
+                return new AjaxResult(ErrorCode.ERROR100.getCode(), channelSyncStatus.getErrorMsg());
             } else if (channelSyncStatus.getTotal() == null || channelSyncStatus.getTotal() == 0) {
-                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-                wvpResult.setMsg("等待通道信息...");
+                return AjaxResult.success("等待通道信息...");
             } else {
-                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-                wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
-                wvpResult.setData(channelSyncStatus);
+                return AjaxResult.success("等待通道信息...", channelSyncStatus);
             }
-            return wvpResult;
         }
         deviceService.sync(device);
-
-        WVPResult<SyncStatus> wvpResult = new WVPResult<>();
-        wvpResult.setCode(0);
-        wvpResult.setMsg("开始同步");
-        return wvpResult;
+        return new AjaxResult(0, "开始同步");
     }
 
     /**
@@ -160,7 +148,6 @@ public class DeviceQueryController extends BaseController {
      * @param deviceId 设备id
      * @return
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @DeleteMapping("/devices/{deviceId}/delete")
     public AjaxResult delete(@PathVariable String deviceId) {
         if (log.isDebugEnabled()) {
@@ -264,10 +251,8 @@ public class DeviceQueryController extends BaseController {
      * @param device 设备信息
      * @return
      */
-    @Parameter(name = "device", description = "设备", required = true)
     @PostMapping("/device/add/")
-    public void addDevice(Device device) {
-
+    public void addDevice(@RequestBody  Device device) {
         if (device == null || device.getDeviceId() == null) {
             throw new ControllerException(ErrorCode.ERROR400);
         }
@@ -398,27 +383,24 @@ public class DeviceQueryController extends BaseController {
         return result;
     }
 
-
-    @GetMapping("/{deviceId}/sync_status")
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    public WVPResult<SyncStatus> getSyncStatus(@PathVariable String deviceId) {
+    /**
+     * 设备国标编号
+     *
+     * @param deviceId
+     * @return
+     */
+    @PostMapping("/{deviceId}/sync_status")
+    public AjaxResult getSyncStatus(@PathVariable String deviceId) {
         SyncStatus channelSyncStatus = deviceService.getChannelSyncStatus(deviceId);
-        WVPResult<SyncStatus> wvpResult = new WVPResult<>();
         if (channelSyncStatus == null) {
-            wvpResult.setCode(ErrorCode.ERROR100.getCode());
-            wvpResult.setMsg("同步不存在");
+            return new AjaxResult(ErrorCode.ERROR100.getCode(), "同步不存在");
         } else if (channelSyncStatus.getErrorMsg() != null) {
-            wvpResult.setCode(ErrorCode.ERROR100.getCode());
-            wvpResult.setMsg(channelSyncStatus.getErrorMsg());
+            return new AjaxResult(ErrorCode.ERROR100.getCode(), channelSyncStatus.getErrorMsg());
         } else if (channelSyncStatus.getTotal() == null || channelSyncStatus.getTotal() == 0) {
-            wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-            wvpResult.setMsg("等待通道信息...");
+            return AjaxResult.success("等待通道信息...");
         } else {
-            wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-            wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
-            wvpResult.setData(channelSyncStatus);
+            return AjaxResult.success("等待通道信息...");
         }
-        return wvpResult;
     }
 
     @GetMapping("/{deviceId}/subscribe_info")

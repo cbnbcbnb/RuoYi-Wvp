@@ -50,10 +50,19 @@ export function updateDevice(data) {
     })
 }
 
-// 移除设备
+// 刷新对应设备
 export function deleteDevice(deviceId) {
     return request({
         url: `/api/device/query/devices/${deviceId}/delete`,
         method: 'delete',
     })
 }
+
+// 移除设备
+export function syncStatus(deviceId) {
+    return request({
+        url: `/api/device/query/${deviceId}/sync_status`,
+        method: 'post',
+    })
+}
+

@@ -87,7 +87,8 @@ spring:
     # 数据库索引
     database: 8
     # 密码
-    password:
+#    password:
+    password: 123456
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -157,17 +158,37 @@ sip:
   # 是否存储alarm信息
   alarm: false
 
+##zlm 默认服务器配置
+#media:
+#  id: haoxin-zlm-1
+#  # [必须修改] zlm服务器的内网IP
+#  ip: 192.168.158.199
+#  # [必须修改] zlm服务器的http.port
+#  http-port: 8092
+#  # [可选] zlm服务器的hook所使用的IP, 默认使用sip.ip
+#  hook-ip: 192.168.158.199
+#  # [必选选] zlm服务器的hook.admin_params=secret
+#  secret: haoxin
+#  # 启用多端口模式, 多端口模式使用端口区分每路流，兼容性更好。 单端口使用流的ssrc区分， 点播超时建议使用多端口测试
+#  rtp:
+#    # [可选] 是否启用多端口模式, 开启后会在portRange范围内选择端口用于媒体流传输
+#    enable: true
+#    # [可选] 在此范围内选择端口用于媒体流传输, 必须提前在zlm上配置该属性，不然自动配置此属性可能不成功
+#    port-range: 30000,30500 # 端口范围
+#    # [可选] 国标级联在此范围内选择端口发送媒体流,
+#    send-port-range: 30000,30500 # 端口范围
+
 #zlm 默认服务器配置
 media:
-  id: haoxin-zlm-1
+  id: hxkj_zlm
   # [必须修改] zlm服务器的内网IP
-  ip: 192.168.158.199
+  ip: 192.168.2.199
   # [必须修改] zlm服务器的http.port
   http-port: 8092
   # [可选] zlm服务器的hook所使用的IP, 默认使用sip.ip
-  hook-ip: 192.168.158.199
+  hook-ip: 192.168.2.199
   # [必选选] zlm服务器的hook.admin_params=secret
-  secret: haoxin
+  secret: hxkj_zlm
   # 启用多端口模式, 多端口模式使用端口区分每路流，兼容性更好。 单端口使用流的ssrc区分， 点播超时建议使用多端口测试
   rtp:
     # [可选] 是否启用多端口模式, 开启后会在portRange范围内选择端口用于媒体流传输
@@ -176,6 +197,7 @@ media:
     port-range: 30000,30500 # 端口范围
     # [可选] 国标级联在此范围内选择端口发送媒体流,
     send-port-range: 30000,30500 # 端口范围
+
 # [根据业务需求配置]
 user-settings:
   # 点播/录像回放 等待超时时间,单位：毫秒
