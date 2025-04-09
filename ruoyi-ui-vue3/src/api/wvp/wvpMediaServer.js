@@ -51,3 +51,19 @@ export function checkMediaServer(data) {
     data: data
   })
 }
+
+// 获取平台配置信息
+export function configInfo() {
+  return request({
+    url: '/api/server/system/configInfo',
+    method: 'get',
+  })
+}
+
+// 获取流媒体服务列表
+export function getOnlineMediaServerList() {
+  return request({
+    url: '/api/server/media_server/online/list',
+    method: 'get',
+  })
+}

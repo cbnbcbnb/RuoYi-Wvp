@@ -4,190 +4,206 @@ import lombok.Data;
 
 /**
  * 国标设备/平台
+ *
  * @author lin
  */
 @Data
 public class Device {
 
-	/**
-	 * 国标-数据库自增ID
-	 */
-	private int id;
+    /**
+     * 当前页码
+     */
+    private int pageNum;
 
-	/**
-	 * 设备国标编号
-	 */
-	private String deviceId;
+    /**
+     * 每页大小
+     */
+    private int pageSize;
 
-	/**
-	 * 设备名
-	 */
-	private String name;
+    /**
+     * 国标-数据库自增ID
+     */
+    private int id;
 
-	/**
-	 * 生产厂商
-	 */
-	private String manufacturer;
+    /**
+     * 设备国标编号
+     */
+    private String deviceId;
 
-	/**
-	 * 型号
-	 */
-	private String model;
+    /**
+     * 设备名
+     */
+    private String name;
 
-	/**
-	 * 固件版本
-	 */
-	private String firmware;
+    /**
+     * 生产厂商
+     */
+    private String manufacturer;
 
-	/**
-	 * 传输协议
-	 * UDP/TCP
-	 */
-	private String transport;
+    /**
+     * 型号
+     */
+    private String model;
 
-	/**
-	 * 数据流传输模式
-	 * UDP:udp传输
-	 * TCP-ACTIVE：tcp主动模式
-	 * TCP-PASSIVE：tcp被动模式
-	 */
-	private String streamMode;
+    /**
+     * 固件版本
+     */
+    private String firmware;
 
-	/**
-	 * wan地址_ip
-	 */
-	private String ip;
+    /**
+     * 在线状态
+     */
+    private String status;
 
-	/**
-	 * wan地址_port
-	 */
-	private int port;
+    /**
+     * 传输协议
+     * UDP/TCP
+     */
+    private String transport;
 
-	/**
-	 * wan地址
-	 */
-	private String hostAddress;
+    /**
+     * 数据流传输模式
+     * UDP:udp传输
+     * TCP-ACTIVE：tcp主动模式
+     * TCP-PASSIVE：tcp被动模式
+     */
+    private String streamMode;
 
-	/**
-	 * 在线
-	 * 是否在线，true为在线，false为离线
-	 */
-	private boolean onLine;
+    /**
+     * wan地址_ip
+     */
+    private String ip;
 
-	/**
-	 * 注册时间
-	 */
-	private String registerTime;
+    /**
+     * wan地址_port
+     */
+    private int port;
 
-	/**
-	 * 心跳时间
-	 */
-	private String keepaliveTime;
+    /**
+     * wan地址
+     */
+    private String hostAddress;
 
-	/**
-	 * 心跳间隔
-	 */
-	private Integer heartBeatInterval;
+    /**
+     * 在线
+     * 是否在线，true为在线，false为离线
+     */
+    private boolean onLine;
 
-	/**
-	 * 心跳超时次数
-	 */
-	private Integer heartBeatCount;
+    /**
+     * 注册时间
+     */
+    private String registerTime;
 
-	/**
-	 * 定位功能支持情况
-	 * 取值:0-不支持;1-支持 GPS定位;2-支持北斗定位(可选,默认取值为0)
-	 */
-	private Integer positionCapability;
+    /**
+     * 心跳时间
+     */
+    private String keepaliveTime;
 
-	/**
-	 * 通道个数
-	 */
-	private int channelCount;
+    /**
+     * 心跳间隔
+     */
+    private Integer heartBeatInterval;
 
-	/**
-	 * 注册有效期
-	 */
-	private int expires;
+    /**
+     * 心跳超时次数
+     */
+    private Integer heartBeatCount;
 
-	/**
-	 * 创建时间
-	 */
-	private String createTime;
+    /**
+     * 定位功能支持情况
+     * 取值:0-不支持;1-支持 GPS定位;2-支持北斗定位(可选,默认取值为0)
+     */
+    private Integer positionCapability;
 
-	/**
-	 * 更新时间
-	 */
-	private String updateTime;
+    /**
+     * 通道个数
+     */
+    private int channelCount;
 
-	/**
-	 * 设备使用的媒体id, 默认为null
-	 */
-	private String mediaServerId;
+    /**
+     * 注册有效期
+     */
+    private int expires;
 
-	/**
-	 * 字符集, 支持 UTF-8 与 GB2312
-	 */
-	private String charset;
+    /**
+     * 创建时间
+     */
+    private String createTime;
 
-	/**
-	 * 目录订阅周期，0为不订阅
-	 */
-	private int subscribeCycleForCatalog;
+    /**
+     * 更新时间
+     */
+    private String updateTime;
 
-	/**
-	 * 移动设备位置订阅周期，0为不订阅
-	 */
-	private int subscribeCycleForMobilePosition;
+    /**
+     * 设备使用的媒体id, 默认为null
+     */
+    private String mediaServerId;
 
-	/**
-	 * 移动设备位置信息上报时间间隔,单位:秒,默认值5
-	 */
-	private int mobilePositionSubmissionInterval = 5;
+    /**
+     * 字符集, 支持 UTF-8 与 GB2312
+     */
+    private String charset;
 
-	/**
-	 * 报警订阅周期，0为不订阅
-	 */
-	private int subscribeCycleForAlarm;
+    /**
+     * 目录订阅周期，0为不订阅
+     */
+    private int subscribeCycleForCatalog;
 
-	/**
-	 * 是否开启ssrc校验，默认关闭，开启可以防止串流
-	 */
-	private boolean ssrcCheck = false;
+    /**
+     * 移动设备位置订阅周期，0为不订阅
+     */
+    private int subscribeCycleForMobilePosition;
 
-	/**
-	 * 地理坐标系， 目前支持 WGS84,GCJ02, 此字段保留，暂无用
-	 */
-	private String geoCoordSys;
+    /**
+     * 移动设备位置信息上报时间间隔,单位:秒,默认值5
+     */
+    private int mobilePositionSubmissionInterval = 5;
 
-	/**
-	 * 密码
-	 */
-	private String password;
+    /**
+     * 报警订阅周期，0为不订阅
+     */
+    private int subscribeCycleForAlarm;
 
-	/**
-	 * 收流IP
-	 */
-	private String sdpIp;
+    /**
+     * 是否开启ssrc校验，默认关闭，开启可以防止串流
+     */
+    private boolean ssrcCheck = false;
 
-	/**
-	 * SIP交互IP（设备访问平台的IP）
-	 */
-	private String localIp;
+    /**
+     * 地理坐标系， 目前支持 WGS84,GCJ02, 此字段保留，暂无用
+     */
+    private String geoCoordSys;
 
-	/**
-	 * 是否作为消息通道
-	 */
-	private boolean asMessageChannel;
+    /**
+     * 密码
+     */
+    private String password;
 
-	/**
-	 * 设备注册的事务信息
-	 */
-	private SipTransactionInfo sipTransactionInfo;
+    /**
+     * 收流IP
+     */
+    private String sdpIp;
 
-	/**
-	 * 控制语音对讲流程，释放收到ACK后发流
-	 */
-	private boolean broadcastPushAfterAck;
+    /**
+     * SIP交互IP（设备访问平台的IP）
+     */
+    private String localIp;
+
+    /**
+     * 是否作为消息通道
+     */
+    private boolean asMessageChannel;
+
+    /**
+     * 设备注册的事务信息
+     */
+    private SipTransactionInfo sipTransactionInfo;
+
+    /**
+     * 控制语音对讲流程，释放收到ACK后发流
+     */
+    private boolean broadcastPushAfterAck;
 
 }
