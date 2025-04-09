@@ -65,6 +65,12 @@
             <artifactId>ruoyi-wvp</artifactId>
         </dependency>
 
+        <!-- onvif模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-onvif</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
