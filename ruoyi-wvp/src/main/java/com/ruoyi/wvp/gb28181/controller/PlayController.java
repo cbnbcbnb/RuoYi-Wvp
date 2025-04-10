@@ -2,6 +2,8 @@ package com.ruoyi.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.common.InviteSessionType;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
@@ -26,7 +28,6 @@ import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,242 +46,242 @@ import java.util.UUID;
 /**
  * @author lin
  */
-@Tag(name  = "国标设备点播")
+@Tag(name = "国标设备点播")
 @Slf4j
 @RestController
 @RequestMapping("/api/play")
-public class PlayController {
+public class PlayController extends BaseController {
 
-	@Autowired
-	private SipInviteSessionManager sessionManager;
+    @Autowired
+    private SipInviteSessionManager sessionManager;
 
-	@Autowired
-	private IInviteStreamService inviteStreamService;
+    @Autowired
+    private IInviteStreamService inviteStreamService;
 
-	@Autowired
-	private DeferredResultHolder resultHolder;
+    @Autowired
+    private DeferredResultHolder resultHolder;
 
-	@Autowired
-	private IPlayService playService;
+    @Autowired
+    private IPlayService playService;
 
-	@Autowired
-	private IMediaServerService mediaServerService;
+    @Autowired
+    private IMediaServerService mediaServerService;
 
-	@Autowired
-	private UserSetting userSetting;
+    @Autowired
+    private UserSetting userSetting;
 
-	@Autowired
-	private IDeviceService deviceService;
+    @Autowired
+    private IDeviceService deviceService;
 
-	@Autowired
-	private IDeviceChannelService deviceChannelService;
+    @Autowired
+    private IDeviceChannelService deviceChannelService;
 
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "channelId", description = "通道国标编号", required = true)
-	@GetMapping("/start/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<StreamContent>> play(HttpServletRequest request, @PathVariable String deviceId,
-														 @PathVariable String channelId) {
+    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
+    @Parameter(name = "channelId", description = "通道国标编号", required = true)
+    @GetMapping("/start/{deviceId}/{channelId}")
+    public DeferredResult<WVPResult<StreamContent>> play(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId) {
 
-		log.info("[开始点播] deviceId：{}, channelId：{}, ", deviceId, channelId);
-		Assert.notNull(deviceId, "设备国标编号不可为NULL");
-		Assert.notNull(channelId, "通道国标编号不可为NULL");
-		// 获取可用的zlm
-		Device device = deviceService.getDeviceByDeviceId(deviceId);
-		Assert.notNull(deviceId, "设备不存在");
-		DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);
-		Assert.notNull(channel, "通道不存在");
-		MediaServer newMediaServerItem = playService.getNewMediaServerItem(device);
+        log.info("[开始点播] deviceId：{}, channelId：{}, ", deviceId, channelId);
+        Assert.notNull(deviceId, "设备国标编号不可为NULL");
+        Assert.notNull(channelId, "通道国标编号不可为NULL");
+        // 获取可用的zlm
+        Device device = deviceService.getDeviceByDeviceId(deviceId);
+        Assert.notNull(deviceId, "设备不存在");
+        DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);
+        Assert.notNull(channel, "通道不存在");
+        MediaServer newMediaServerItem = playService.getNewMediaServerItem(device);
 
-		RequestMessage requestMessage = new RequestMessage();
-		String key = DeferredResultHolder.CALLBACK_CMD_PLAY + deviceId + channelId;
-		requestMessage.setKey(key);
-		String uuid = UUID.randomUUID().toString();
-		requestMessage.setId(uuid);
-		DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        RequestMessage requestMessage = new RequestMessage();
+        String key = DeferredResultHolder.CALLBACK_CMD_PLAY + deviceId + channelId;
+        requestMessage.setKey(key);
+        String uuid = UUID.randomUUID().toString();
+        requestMessage.setId(uuid);
+        DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
 
-		result.onTimeout(()->{
-			log.info("[点播等待超时] deviceId：{}, channelId：{}, ", deviceId, channelId);
-			// 释放rtpserver
-			WVPResult<StreamInfo> wvpResult = new WVPResult<>();
-			wvpResult.setCode(ErrorCode.ERROR100.getCode());
-			wvpResult.setMsg("点播超时");
-			requestMessage.setData(wvpResult);
-			resultHolder.invokeAllResult(requestMessage);
-			inviteStreamService.removeInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getId());
-			deviceChannelService.stopPlay(channel.getId());
-		});
+        result.onTimeout(() -> {
+            log.info("[点播等待超时] deviceId：{}, channelId：{}, ", deviceId, channelId);
+            // 释放rtpserver
+            WVPResult<StreamInfo> wvpResult = new WVPResult<>();
+            wvpResult.setCode(ErrorCode.ERROR100.getCode());
+            wvpResult.setMsg("点播超时");
+            requestMessage.setData(wvpResult);
+            resultHolder.invokeAllResult(requestMessage);
+            inviteStreamService.removeInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getId());
+            deviceChannelService.stopPlay(channel.getId());
+        });
 
-		// 录像查询以channelId作为deviceId查询
-		resultHolder.put(key, uuid, result);
+        // 录像查询以channelId作为deviceId查询
+        resultHolder.put(key, uuid, result);
 
-		playService.play(newMediaServerItem, deviceId, channelId, null, (code, msg, streamInfo) -> {
-			WVPResult<StreamContent> wvpResult = new WVPResult<>();
-			if (code == InviteErrorCode.SUCCESS.getCode()) {
-				wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-				wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
+        playService.play(newMediaServerItem, deviceId, channelId, null, (code, msg, streamInfo) -> {
+            WVPResult<StreamContent> wvpResult = new WVPResult<>();
+            if (code == InviteErrorCode.SUCCESS.getCode()) {
+                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
+                wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
 
-				if (streamInfo != null) {
-					if (userSetting.getUseSourceIpAsStreamIp()) {
-						streamInfo=streamInfo.clone();//深拷贝
-						String host;
-						try {
-							URL url=new URL(request.getRequestURL().toString());
-							host=url.getHost();
-						} catch (MalformedURLException e) {
-							host=request.getLocalAddr();
-						}
-						streamInfo.channgeStreamIp(host);
-					}
-					if (!ObjectUtils.isEmpty(newMediaServerItem.getTranscodeSuffix()) && !"null".equalsIgnoreCase(newMediaServerItem.getTranscodeSuffix())) {
-						streamInfo.setStream(streamInfo.getStream() + "_" + newMediaServerItem.getTranscodeSuffix());
-					}
-					wvpResult.setData(new StreamContent(streamInfo));
-				}else {
-					wvpResult.setCode(code);
-					wvpResult.setMsg(msg);
-				}
-			}else {
-				wvpResult.setCode(code);
-				wvpResult.setMsg(msg);
-			}
-			requestMessage.setData(wvpResult);
-			// 此处必须释放所有请求
-			resultHolder.invokeAllResult(requestMessage);
-		});
-		return result;
-	}
+                if (streamInfo != null) {
+                    if (userSetting.getUseSourceIpAsStreamIp()) {
+                        streamInfo = streamInfo.clone();//深拷贝
+                        String host;
+                        try {
+                            URL url = new URL(request.getRequestURL().toString());
+                            host = url.getHost();
+                        } catch (MalformedURLException e) {
+                            host = request.getLocalAddr();
+                        }
+                        streamInfo.channgeStreamIp(host);
+                    }
+                    if (!ObjectUtils.isEmpty(newMediaServerItem.getTranscodeSuffix()) && !"null".equalsIgnoreCase(newMediaServerItem.getTranscodeSuffix())) {
+                        streamInfo.setStream(streamInfo.getStream() + "_" + newMediaServerItem.getTranscodeSuffix());
+                    }
+                    wvpResult.setData(new StreamContent(streamInfo));
+                } else {
+                    wvpResult.setCode(code);
+                    wvpResult.setMsg(msg);
+                }
+            } else {
+                wvpResult.setCode(code);
+                wvpResult.setMsg(msg);
+            }
+            requestMessage.setData(wvpResult);
+            // 此处必须释放所有请求
+            resultHolder.invokeAllResult(requestMessage);
+        });
+        return result;
+    }
 
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "channelId", description = "通道国标编号", required = true)
-	@GetMapping("/stop/{deviceId}/{channelId}")
-	public JSONObject playStop(@PathVariable String deviceId, @PathVariable String channelId) {
+    /**
+     * 停止点播
+     *
+     * @param deviceId  设备国标编号
+     * @param channelId 通道国标编号
+     * @return
+     */
+    @GetMapping("/stop/{deviceId}/{channelId}")
+    public AjaxResult playStop(@PathVariable String deviceId, @PathVariable String channelId) {
+        log.debug(String.format("设备预览/回放停止API调用，streamId：%s_%s", deviceId, channelId));
+        if (deviceId == null || channelId == null) {
+            throw new ControllerException(ErrorCode.ERROR400);
+        }
 
-		log.debug(String.format("设备预览/回放停止API调用，streamId：%s_%s", deviceId, channelId ));
+        Device device = deviceService.getDeviceByDeviceId(deviceId);
+        DeviceChannel channel = deviceChannelService.getOneForSource(deviceId, channelId);
+        Assert.notNull(device, "设备不存在");
+        Assert.notNull(channel, "通道不存在");
+        String streamId = String.format("%s_%s", device.getDeviceId(), channel.getDeviceId());
+        playService.stop(InviteSessionType.PLAY, device, channel, streamId);
+        return success();
+    }
 
-		if (deviceId == null || channelId == null) {
-			throw new ControllerException(ErrorCode.ERROR400);
-		}
+    /**
+     * 结束转码
+     */
+    @Parameter(name = "key", description = "视频流key", required = true)
+    @Parameter(name = "mediaServerId", description = "流媒体服务ID", required = true)
+    @PostMapping("/convertStop/{key}")
+    public void playConvertStop(@PathVariable String key, String mediaServerId) {
+        if (mediaServerId == null) {
+            throw new ControllerException(ErrorCode.ERROR400.getCode(), "流媒体：" + mediaServerId + "不存在");
+        }
+        MediaServer mediaInfo = mediaServerService.getOne(mediaServerId);
+        if (mediaInfo == null) {
+            throw new ControllerException(ErrorCode.ERROR100.getCode(), "使用的流媒体已经停止运行");
+        } else {
+            Boolean deleted = mediaServerService.delFFmpegSource(mediaInfo, key);
+            if (!deleted) {
+                throw new ControllerException(ErrorCode.ERROR100);
+            }
+        }
+    }
 
-		Device device = deviceService.getDeviceByDeviceId(deviceId);
-		DeviceChannel channel = deviceChannelService.getOneForSource(deviceId, channelId);
-		Assert.notNull(device, "设备不存在");
-		Assert.notNull(channel, "通道不存在");
-		String streamId = String.format("%s_%s", device.getDeviceId(), channel.getDeviceId());
-		playService.stop(InviteSessionType.PLAY, device, channel, streamId);
-		JSONObject json = new JSONObject();
-		json.put("deviceId", deviceId);
-		json.put("channelId", channelId);
-		return json;
-	}
-	/**
-	 * 结束转码
-	 */
-	@Parameter(name = "key", description = "视频流key", required = true)
-	@Parameter(name = "mediaServerId", description = "流媒体服务ID", required = true)
-	@PostMapping("/convertStop/{key}")
-	public void playConvertStop(@PathVariable String key, String mediaServerId) {
-		if (mediaServerId == null) {
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), "流媒体：" + mediaServerId + "不存在" );
-		}
-		MediaServer mediaInfo = mediaServerService.getOne(mediaServerId);
-		if (mediaInfo == null) {
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "使用的流媒体已经停止运行" );
-		}else {
-			Boolean deleted = mediaServerService.delFFmpegSource(mediaInfo, key);
-			if (!deleted) {
-				throw new ControllerException(ErrorCode.ERROR100 );
-			}
-		}
-	}
-
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "deviceId", description = "通道国标编号", required = true)
-	@Parameter(name = "timeout", description = "推流超时时间(秒)", required = true)
-	@GetMapping("/broadcast/{deviceId}/{channelId}")
-	@PostMapping("/broadcast/{deviceId}/{channelId}")
+    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
+    @Parameter(name = "deviceId", description = "通道国标编号", required = true)
+    @Parameter(name = "timeout", description = "推流超时时间(秒)", required = true)
+    @GetMapping("/broadcast/{deviceId}/{channelId}")
+    @PostMapping("/broadcast/{deviceId}/{channelId}")
     public AudioBroadcastResult broadcastApi(@PathVariable String deviceId, @PathVariable String channelId, Integer timeout, Boolean broadcastMode) {
-		if (log.isDebugEnabled()) {
-			log.debug("语音广播API调用");
-		}
-		Device device = deviceService.getDeviceByDeviceId(deviceId);
-		if (device == null) {
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), "未找到设备： " + deviceId);
-		}
-		DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);
-		if (channel == null) {
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), "未找到通道： " + channelId);
-		}
+        if (log.isDebugEnabled()) {
+            log.debug("语音广播API调用");
+        }
+        Device device = deviceService.getDeviceByDeviceId(deviceId);
+        if (device == null) {
+            throw new ControllerException(ErrorCode.ERROR400.getCode(), "未找到设备： " + deviceId);
+        }
+        DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);
+        if (channel == null) {
+            throw new ControllerException(ErrorCode.ERROR400.getCode(), "未找到通道： " + channelId);
+        }
 
-		return playService.audioBroadcast(device, channel, broadcastMode);
+        return playService.audioBroadcast(device, channel, broadcastMode);
 
-	}
+    }
 
-	@Operation(summary = "停止语音广播")
-	@Parameter(name = "deviceId", description = "设备Id", required = true)
-	@Parameter(name = "channelId", description = "通道Id", required = true)
-	@GetMapping("/broadcast/stop/{deviceId}/{channelId}")
-	@PostMapping("/broadcast/stop/{deviceId}/{channelId}")
-	public void stopBroadcast(@PathVariable String deviceId, @PathVariable String channelId) {
-		if (log.isDebugEnabled()) {
-			log.debug("停止语音广播API调用");
-		}
-		Device device = deviceService.getDeviceByDeviceId(deviceId);
-		Assert.notNull(device, "设备不存在");
-		DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);
-		Assert.notNull(channel, "通道不存在");
-		playService.stopAudioBroadcast(device, channel);
-	}
+    @Operation(summary = "停止语音广播")
+    @Parameter(name = "deviceId", description = "设备Id", required = true)
+    @Parameter(name = "channelId", description = "通道Id", required = true)
+    @GetMapping("/broadcast/stop/{deviceId}/{channelId}")
+    @PostMapping("/broadcast/stop/{deviceId}/{channelId}")
+    public void stopBroadcast(@PathVariable String deviceId, @PathVariable String channelId) {
+        if (log.isDebugEnabled()) {
+            log.debug("停止语音广播API调用");
+        }
+        Device device = deviceService.getDeviceByDeviceId(deviceId);
+        Assert.notNull(device, "设备不存在");
+        DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);
+        Assert.notNull(channel, "通道不存在");
+        playService.stopAudioBroadcast(device, channel);
+    }
 
-	@GetMapping("/ssrc")
-	public JSONObject getSSRC() {
-		if (log.isDebugEnabled()) {
-			log.debug("获取所有的ssrc");
-		}
-		JSONArray objects = new JSONArray();
-		List<SsrcTransaction> allSsrc = sessionManager.getAll();
-		for (SsrcTransaction transaction : allSsrc) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("deviceId", transaction.getDeviceId());
-			jsonObject.put("channelId", transaction.getChannelId());
-			jsonObject.put("ssrc", transaction.getSsrc());
-			jsonObject.put("streamId", transaction.getStream());
-			objects.add(jsonObject);
-		}
+    @GetMapping("/ssrc")
+    public JSONObject getSSRC() {
+        if (log.isDebugEnabled()) {
+            log.debug("获取所有的ssrc");
+        }
+        JSONArray objects = new JSONArray();
+        List<SsrcTransaction> allSsrc = sessionManager.getAll();
+        for (SsrcTransaction transaction : allSsrc) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("deviceId", transaction.getDeviceId());
+            jsonObject.put("channelId", transaction.getChannelId());
+            jsonObject.put("ssrc", transaction.getSsrc());
+            jsonObject.put("streamId", transaction.getStream());
+            objects.add(jsonObject);
+        }
 
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("data", objects);
-		jsonObject.put("count", objects.size());
-		return jsonObject;
-	}
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("data", objects);
+        jsonObject.put("count", objects.size());
+        return jsonObject;
+    }
 
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "channelId", description = "通道国标编号", required = true)
-	@GetMapping("/snap")
-	public DeferredResult<String> getSnap(String deviceId, String channelId) {
-		if (log.isDebugEnabled()) {
-			log.debug("获取截图: {}/{}", deviceId, channelId);
-		}
+    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
+    @Parameter(name = "channelId", description = "通道国标编号", required = true)
+    @GetMapping("/snap")
+    public DeferredResult<String> getSnap(String deviceId, String channelId) {
+        if (log.isDebugEnabled()) {
+            log.debug("获取截图: {}/{}", deviceId, channelId);
+        }
 
-		DeferredResult<String> result = new DeferredResult<>(3 * 1000L);
-		String key  = DeferredResultHolder.CALLBACK_CMD_SNAP + deviceId;
-		String uuid  = UUID.randomUUID().toString();
-		resultHolder.put(key, uuid,  result);
+        DeferredResult<String> result = new DeferredResult<>(3 * 1000L);
+        String key = DeferredResultHolder.CALLBACK_CMD_SNAP + deviceId;
+        String uuid = UUID.randomUUID().toString();
+        resultHolder.put(key, uuid, result);
 
-		RequestMessage message = new RequestMessage();
-		message.setKey(key);
-		message.setId(uuid);
+        RequestMessage message = new RequestMessage();
+        message.setKey(key);
+        message.setId(uuid);
 
-		String fileName = deviceId + "_" + channelId + "_" + DateUtil.getNowForUrl() + ".jpg";
-		playService.getSnap(deviceId, channelId, fileName, (code, msg, data) -> {
-			if (code == InviteErrorCode.SUCCESS.getCode()) {
-				message.setData(data);
-			}else {
-				message.setData(WVPResult.fail(code, msg));
-			}
-			resultHolder.invokeResult(message);
-		});
-		return result;
-	}
+        String fileName = deviceId + "_" + channelId + "_" + DateUtil.getNowForUrl() + ".jpg";
+        playService.getSnap(deviceId, channelId, fileName, (code, msg, data) -> {
+            if (code == InviteErrorCode.SUCCESS.getCode()) {
+                message.setData(data);
+            } else {
+                message.setData(WVPResult.fail(code, msg));
+            }
+            resultHolder.invokeResult(message);
+        });
+        return result;
+    }
 
 }
 

@@ -66,3 +66,48 @@ export function syncStatus(deviceId) {
     })
 }
 
+//  同步设备通道
+export function devicesSync(deviceId) {
+    return request({
+        url: `/api/device/query/devices/${deviceId}/sync`,
+        method: 'post',
+    })
+}
+
+// 分页查询国标设备
+export function listDeviceChannel(query) {
+    return request({
+        url: `/api/device/query/devices/channels`,
+        method: 'get',
+        params: query
+    })
+}
+
+// 修改通道音频
+export function changeAudio(data) {
+    return request({
+        url: `/api/device/query/channel/audio`,
+        method: 'post',
+        data: data
+    })
+}
+
+// 修改通道码流
+export function updateChannelStreamIdentification(data) {
+    return request({
+        url: `/api/device/query/channel/stream/identification/update/`,
+        method: 'post',
+        data: data
+    })
+}
+
+// 分页查询子目录通道
+export function subChannels(query) {
+    return request({
+        url: `/api/device/query/sub_channels/channels`,
+        method: 'get',
+        params: query
+    })
+}
+
+

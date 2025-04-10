@@ -1,12 +1,13 @@
 package com.ruoyi.wvp.controller;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.wvp.conf.DynamicTask;
 import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.wvp.gb28181.bean.ChangeAudio;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceChannel;
 import com.ruoyi.wvp.gb28181.bean.SyncStatus;
@@ -97,24 +98,22 @@ public class DeviceQueryController extends BaseController {
 
     /**
      * 分页查询通道数
+     *
+     * @param deviceId    设备国标编号
+     * @param pageNum     当前页
+     * @param pageSize    每页查询数量
+     * @param online      是否在线
+     * @param channelType 设备/子目录-> false/true
+     * @return
      */
-    @GetMapping("/devices/{deviceId}/channels")
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "channelType", description = "设备/子目录-> false/true")
-    public PageInfo<DeviceChannel> channels(@PathVariable String deviceId,
-                                            int page, int count,
-                                            @RequestParam(required = false) String query,
-                                            @RequestParam(required = false) Boolean online,
-                                            @RequestParam(required = false) Boolean channelType) {
+    @GetMapping("/devices/channels")
+    public TableDataInfo channels(String deviceId, int pageNum, int pageSize, @RequestParam(required = false) String query, @RequestParam(required = false) Boolean online, @RequestParam(required = false) Boolean channelType) {
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
-
-        return deviceChannelService.queryChannelsByDeviceId(deviceId, query, channelType, online, page, count);
+        startPage();
+        List<DeviceChannel> list = deviceChannelService.queryChannelsByDeviceId(deviceId, query, channelType, online, pageNum, pageSize);
+        return getDataTable(list);
     }
 
     /**
@@ -190,44 +189,39 @@ public class DeviceQueryController extends BaseController {
      * @param channelType 通道类型
      * @return 子通道列表
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号", required = true)
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "channelType", description = "设备/子目录-> false/true")
-    @GetMapping("/sub_channels/{deviceId}/{channelId}/channels")
-    public PageInfo<DeviceChannel> subChannels(@PathVariable String deviceId,
-                                               @PathVariable String channelId,
-                                               int page,
-                                               int count,
-                                               @RequestParam(required = false) String query,
-                                               @RequestParam(required = false) Boolean online,
-                                               @RequestParam(required = false) Boolean channelType) {
-
+    @GetMapping("/sub_channels/channels")
+    public TableDataInfo subChannels(String deviceId, String channelId, int page, int count, @RequestParam(required = false) String query, @RequestParam(required = false) Boolean online, @RequestParam(required = false) Boolean channelType) {
         DeviceChannel deviceChannel = deviceChannelService.getOne(deviceId, channelId);
         if (deviceChannel == null) {
-            PageInfo<DeviceChannel> deviceChannelPageResult = new PageInfo<>();
-            return deviceChannelPageResult;
+            return getDataTable(new ArrayList<>());
         }
-
-        return deviceChannelService.getSubChannels(deviceChannel.getDataDeviceId(), channelId, query, channelType, online, page, count);
+        startPage();
+        List<DeviceChannel> list = deviceChannelService.getSubChannels(deviceChannel.getDataDeviceId(), channelId, query, channelType, online, page, count);
+        return getDataTable(list);
     }
 
-    @Parameter(name = "channelId", description = "通道的数据库ID", required = true)
-    @Parameter(name = "audio", description = "开启/关闭音频", required = true)
+    /**
+     * 修改通道音频
+     *
+     * @param changeAudio 音频切换
+     */
     @PostMapping("/channel/audio")
-    public void changeAudio(Integer channelId, Boolean audio) {
-        Assert.notNull(channelId, "通道的数据库ID不可为NULL");
-        Assert.notNull(audio, "开启/关闭音频不可为NULL");
-        deviceChannelService.changeAudio(channelId, audio);
+    public AjaxResult changeAudio(@RequestBody ChangeAudio changeAudio) {
+        Assert.notNull(changeAudio.getChannelId(), "通道的数据库ID不可为NULL");
+        Assert.notNull(changeAudio.getAudio(), "开启/关闭音频不可为NULL");
+        deviceChannelService.changeAudio(changeAudio.getChannelId(), changeAudio.getAudio());
+        return success();
     }
 
-
+    /**
+     * 修改通道码流
+     *
+     * @param channel
+     */
     @PostMapping("/channel/stream/identification/update/")
-    public void updateChannelStreamIdentification(DeviceChannel channel) {
+    public AjaxResult updateChannelStreamIdentification(@RequestBody DeviceChannel channel) {
         deviceChannelService.updateChannelStreamIdentification(channel);
+        return success();
     }
 
     /**
@@ -252,7 +246,7 @@ public class DeviceQueryController extends BaseController {
      * @return
      */
     @PostMapping("/device/add/")
-    public void addDevice(@RequestBody  Device device) {
+    public void addDevice(@RequestBody Device device) {
         if (device == null || device.getDeviceId() == null) {
             throw new ControllerException(ErrorCode.ERROR400);
         }
@@ -344,13 +338,7 @@ public class DeviceQueryController extends BaseController {
     @Parameter(name = "startTime", description = "报警发生起始时间")
     @Parameter(name = "endTime", description = "报警发生终止时间")
     @GetMapping("/alarm/{deviceId}")
-    public DeferredResult<ResponseEntity<String>> alarmApi(@PathVariable String deviceId,
-                                                           @RequestParam(required = false) String startPriority,
-                                                           @RequestParam(required = false) String endPriority,
-                                                           @RequestParam(required = false) String alarmMethod,
-                                                           @RequestParam(required = false) String alarmType,
-                                                           @RequestParam(required = false) String startTime,
-                                                           @RequestParam(required = false) String endTime) {
+    public DeferredResult<ResponseEntity<String>> alarmApi(@PathVariable String deviceId, @RequestParam(required = false) String startPriority, @RequestParam(required = false) String endPriority, @RequestParam(required = false) String alarmMethod, @RequestParam(required = false) String alarmType, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime) {
         if (log.isDebugEnabled()) {
             log.debug("设备报警查询API调用");
         }
@@ -399,7 +387,7 @@ public class DeviceQueryController extends BaseController {
         } else if (channelSyncStatus.getTotal() == null || channelSyncStatus.getTotal() == 0) {
             return AjaxResult.success("等待通道信息...");
         } else {
-            return AjaxResult.success("等待通道信息...");
+            return AjaxResult.success(ErrorCode.SUCCESS.getMsg(), channelSyncStatus);
         }
     }
 
@@ -424,13 +412,18 @@ public class DeviceQueryController extends BaseController {
         return wvpResult;
     }
 
+    /**
+     * 请求截图
+     *
+     * @param resp      响应数据
+     * @param deviceId  设备国标编号
+     * @param channelId 通道国标编号
+     * @param mark      标识
+     */
+    @Anonymous
     @GetMapping("/snap/{deviceId}/{channelId}")
     @Operation(summary = "请求截图")
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号", required = true)
-    @Parameter(name = "mark", description = "标识", required = false)
     public void getSnap(HttpServletResponse resp, @PathVariable String deviceId, @PathVariable String channelId, @RequestParam(required = false) String mark) {
-
         try {
             final InputStream in = Files.newInputStream(new File("snap" + File.separator + deviceId + "_" + channelId + (mark == null ? ".jpg" : ("_" + mark + ".jpg"))).toPath());
             resp.setContentType(MediaType.IMAGE_PNG_VALUE);

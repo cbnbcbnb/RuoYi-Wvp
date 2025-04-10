@@ -2,6 +2,8 @@ package com.ruoyi.wvp.gb28181.controller;
 
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.gb28181.bean.CommonGBChannel;
@@ -20,9 +22,7 @@ import com.ruoyi.wvp.service.bean.InviteErrorCode;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +37,11 @@ import java.net.URL;
 import java.util.List;
 
 
-@Tag(name  = "全局通道管理")
+@Tag(name = "全局通道管理")
 @RestController
 @Slf4j
 @RequestMapping(value = "/api/common/channel")
-public class CommonChannelController {
+public class CommonChannelController extends BaseController {
 
     @Autowired
     private IRedisCatchStorage redisCatchStorage;
@@ -58,40 +58,59 @@ public class CommonChannelController {
     @Autowired
     private UserSetting userSetting;
 
-
-    @Parameter(name = "id", description = "通道的数据库自增Id", required = true)
-    @GetMapping(value = "/one")
-    public CommonGBChannel getOne(int id){
-        return channelService.getOne(id);
+    /**
+     * 获取通道信息
+     *
+     * @param id 通道的数据库自增Id
+     * @return
+     */
+    @GetMapping(value = "/one/{id}")
+    public AjaxResult getOne(@PathVariable int id) {
+        return success(channelService.getOne(id));
     }
 
+    /**
+     * 获取通道信息
+     *
+     * @return
+     */
     @GetMapping("/industry/list")
-    public List<IndustryCodeType> getIndustryCodeList(){
-        return channelService.getIndustryCodeList();
+    public AjaxResult getIndustryCodeList() {
+        return success(channelService.getIndustryCodeList());
     }
 
+    /**
+     * 获取通道类型列表
+     *
+     * @return
+     */
     @GetMapping("/type/list")
-    public List<DeviceType> getDeviceTypeList(){
-        return channelService.getDeviceTypeList();
+    public AjaxResult getDeviceTypeList() {
+        return success(channelService.getDeviceTypeList());
     }
 
+    /**
+     * 获取网络标识列表
+     *
+     * @return
+     */
     @GetMapping("/network/identification/list")
-    public List<NetworkIdentificationType> getNetworkIdentificationTypeList(){
-        return channelService.getNetworkIdentificationTypeList();
+    public AjaxResult getNetworkIdentificationTypeList() {
+        return success(channelService.getNetworkIdentificationTypeList());
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody CommonGBChannel channel){
+    public void update(@RequestBody CommonGBChannel channel) {
         channelService.update(channel);
     }
 
     @PostMapping("/reset")
-    public void reset(Integer id){
+    public void reset(Integer id) {
         channelService.reset(id);
     }
 
     @PostMapping("/add")
-    public CommonGBChannel add(@RequestBody CommonGBChannel channel){
+    public CommonGBChannel add(@RequestBody CommonGBChannel channel) {
         channelService.add(channel);
         return channel;
     }
@@ -104,11 +123,11 @@ public class CommonChannelController {
     @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
     @GetMapping("/list")
     public PageInfo<CommonGBChannel> queryList(int page, int count,
-                                                          @RequestParam(required = false) String query,
-                                                          @RequestParam(required = false) Boolean online,
-                                                          @RequestParam(required = false) Boolean hasRecordPlan,
-                                                          @RequestParam(required = false) Integer channelType){
-        if (ObjectUtils.isEmpty(query)){
+                                               @RequestParam(required = false) String query,
+                                               @RequestParam(required = false) Boolean online,
+                                               @RequestParam(required = false) Boolean hasRecordPlan,
+                                               @RequestParam(required = false) Integer channelType) {
+        if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
         return channelService.queryList(page, count, query, online, hasRecordPlan, channelType);
@@ -122,11 +141,11 @@ public class CommonChannelController {
     @Parameter(name = "civilCode", description = "行政区划")
     @GetMapping("/civilcode/list")
     public PageInfo<CommonGBChannel> queryListByCivilCode(int page, int count,
-                                               @RequestParam(required = false) String query,
-                                               @RequestParam(required = false) Boolean online,
-                                               @RequestParam(required = false) Integer channelType,
-                                               @RequestParam(required = false) String civilCode){
-        if (ObjectUtils.isEmpty(query)){
+                                                          @RequestParam(required = false) String query,
+                                                          @RequestParam(required = false) Boolean online,
+                                                          @RequestParam(required = false) Integer channelType,
+                                                          @RequestParam(required = false) String civilCode) {
+        if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
         return channelService.queryListByCivilCode(page, count, query, online, channelType, civilCode);
@@ -140,75 +159,75 @@ public class CommonChannelController {
     @Parameter(name = "groupDeviceId", description = "业务分组下的父节点ID")
     @GetMapping("/parent/list")
     public PageInfo<CommonGBChannel> queryListByParentId(int page, int count,
-                                               @RequestParam(required = false) String query,
-                                               @RequestParam(required = false) Boolean online,
-                                               @RequestParam(required = false) Integer channelType,
-                                               @RequestParam(required = false) String groupDeviceId){
-        if (ObjectUtils.isEmpty(query)){
+                                                         @RequestParam(required = false) String query,
+                                                         @RequestParam(required = false) Boolean online,
+                                                         @RequestParam(required = false) Integer channelType,
+                                                         @RequestParam(required = false) String groupDeviceId) {
+        if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
         return channelService.queryListByParentId(page, count, query, online, channelType, groupDeviceId);
     }
 
     @PostMapping("/region/add")
-    public void addChannelToRegion(@RequestBody ChannelToRegionParam param){
-        Assert.notEmpty(param.getChannelIds(),"通道ID不可为空");
-        Assert.hasLength(param.getCivilCode(),"未添加行政区划");
+    public void addChannelToRegion(@RequestBody ChannelToRegionParam param) {
+        Assert.notEmpty(param.getChannelIds(), "通道ID不可为空");
+        Assert.hasLength(param.getCivilCode(), "未添加行政区划");
         channelService.addChannelToRegion(param.getCivilCode(), param.getChannelIds());
     }
 
     @PostMapping("/region/delete")
-    public void deleteChannelToRegion(@RequestBody ChannelToRegionParam param){
-        Assert.isTrue(!param.getChannelIds().isEmpty() || !ObjectUtils.isEmpty(param.getCivilCode()),"参数异常");
+    public void deleteChannelToRegion(@RequestBody ChannelToRegionParam param) {
+        Assert.isTrue(!param.getChannelIds().isEmpty() || !ObjectUtils.isEmpty(param.getCivilCode()), "参数异常");
         channelService.deleteChannelToRegion(param.getCivilCode(), param.getChannelIds());
     }
 
     @PostMapping("/region/device/add")
-    public void addChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param){
-        Assert.notEmpty(param.getDeviceIds(),"参数异常");
-        Assert.hasLength(param.getCivilCode(),"未添加行政区划");
+    public void addChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param) {
+        Assert.notEmpty(param.getDeviceIds(), "参数异常");
+        Assert.hasLength(param.getCivilCode(), "未添加行政区划");
         channelService.addChannelToRegionByGbDevice(param.getCivilCode(), param.getDeviceIds());
     }
 
     @PostMapping("/region/device/delete")
-    public void deleteChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param){
-        Assert.notEmpty(param.getDeviceIds(),"参数异常");
+    public void deleteChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param) {
+        Assert.notEmpty(param.getDeviceIds(), "参数异常");
         channelService.deleteChannelToRegionByGbDevice(param.getDeviceIds());
     }
 
     @PostMapping("/group/add")
-    public void addChannelToGroup(@RequestBody ChannelToGroupParam param){
-        Assert.notEmpty(param.getChannelIds(),"通道ID不可为空");
-        Assert.hasLength(param.getParentId(),"未添加上级分组编号");
-        Assert.hasLength(param.getBusinessGroup(),"未添加业务分组");
+    public void addChannelToGroup(@RequestBody ChannelToGroupParam param) {
+        Assert.notEmpty(param.getChannelIds(), "通道ID不可为空");
+        Assert.hasLength(param.getParentId(), "未添加上级分组编号");
+        Assert.hasLength(param.getBusinessGroup(), "未添加业务分组");
         channelService.addChannelToGroup(param.getParentId(), param.getBusinessGroup(), param.getChannelIds());
     }
 
     @PostMapping("/group/delete")
-    public void deleteChannelToGroup(@RequestBody ChannelToGroupParam param){
+    public void deleteChannelToGroup(@RequestBody ChannelToGroupParam param) {
         Assert.isTrue(!param.getChannelIds().isEmpty()
-                || (!ObjectUtils.isEmpty(param.getParentId()) && !ObjectUtils.isEmpty(param.getBusinessGroup())),
+                        || (!ObjectUtils.isEmpty(param.getParentId()) && !ObjectUtils.isEmpty(param.getBusinessGroup())),
                 "参数异常");
         channelService.deleteChannelToGroup(param.getParentId(), param.getBusinessGroup(), param.getChannelIds());
     }
 
     @PostMapping("/group/device/add")
-    public void addChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param){
-        Assert.notEmpty(param.getDeviceIds(),"参数异常");
-        Assert.hasLength(param.getParentId(),"未添加上级分组编号");
-        Assert.hasLength(param.getBusinessGroup(),"未添加业务分组");
+    public void addChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param) {
+        Assert.notEmpty(param.getDeviceIds(), "参数异常");
+        Assert.hasLength(param.getParentId(), "未添加上级分组编号");
+        Assert.hasLength(param.getBusinessGroup(), "未添加业务分组");
         channelService.addChannelToGroupByGbDevice(param.getParentId(), param.getBusinessGroup(), param.getDeviceIds());
     }
 
     @PostMapping("/group/device/delete")
-    public void deleteChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param){
-        Assert.notEmpty(param.getDeviceIds(),"参数异常");
+    public void deleteChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param) {
+        Assert.notEmpty(param.getDeviceIds(), "参数异常");
         channelService.deleteChannelToGroupByGbDevice(param.getDeviceIds());
     }
 
     @GetMapping("/play")
-    public DeferredResult<WVPResult<StreamContent>> deleteChannelToGroupByGbDevice(HttpServletRequest request, Integer channelId){
-        Assert.notNull(channelId,"参数异常");
+    public DeferredResult<WVPResult<StreamContent>> deleteChannelToGroupByGbDevice(HttpServletRequest request, Integer channelId) {
+        Assert.notNull(channelId, "参数异常");
         CommonGBChannel channel = channelService.getOne(channelId);
         Assert.notNull(channel, "通道不存在");
 
@@ -219,13 +238,13 @@ public class CommonChannelController {
                 WVPResult<StreamContent> wvpResult = WVPResult.success();
                 if (streamInfo != null) {
                     if (userSetting.getUseSourceIpAsStreamIp()) {
-                        streamInfo=streamInfo.clone();//深拷贝
+                        streamInfo = streamInfo.clone();//深拷贝
                         String host;
                         try {
-                            URL url=new URL(request.getRequestURL().toString());
-                            host=url.getHost();
+                            URL url = new URL(request.getRequestURL().toString());
+                            host = url.getHost();
                         } catch (MalformedURLException e) {
-                            host=request.getLocalAddr();
+                            host = request.getLocalAddr();
                         }
                         streamInfo.channgeStreamIp(host);
                     }
@@ -234,13 +253,13 @@ public class CommonChannelController {
                         streamInfo.setStream(streamInfo.getStream() + "_" + streamInfo.getMediaServer().getTranscodeSuffix());
                     }
                     wvpResult.setData(new StreamContent(streamInfo));
-                }else {
+                } else {
                     wvpResult.setCode(code);
                     wvpResult.setMsg(msg);
                 }
 
                 result.setResult(wvpResult);
-            }else {
+            } else {
                 result.setResult(WVPResult.fail(code, msg));
             }
         };

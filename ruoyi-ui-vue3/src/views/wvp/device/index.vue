@@ -56,6 +56,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="deviceList">
+      <el-table-column type="index" label="编号" width="50" align="center"/>
       <el-table-column prop="name" label="名称" min-width="160" align="center">
       </el-table-column>
       <el-table-column prop="deviceId" label="设备编号" min-width="160" align="center">
@@ -110,22 +111,12 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-          <el-button link type="primary" :disabled="scope.row.online===0" icon="Edit"
-                     @click="refDevice(scope.row)"
-                     @mouseover="getTooltipContent(scope.row.deviceId)">刷新
-          </el-button>
+          <!--          <el-button link type="primary" :disabled="scope.row.online===0" icon="Edit"-->
+          <!--                     @click="refDevice(scope.row)"-->
+          <!--                     @mouseover="getTooltipContent(scope.row.deviceId)">刷新-->
+          <!--          </el-button>-->
           <el-button type="text" icon="Edit"
                      @click="showChannelList(scope.row)">通道
-          </el-button>
-          <el-button link type="primary" icon="Edit"
-                     @click="setGuard(scope.row)"
-          >布防
-          </el-button>
-          <el-button type="text" icon="Edit"
-                     @click="resetGuard(scope.row)">撤防
-          </el-button>
-          <el-button type="text" icon="Edit"
-                     @click="syncBasicParam(scope.row)">基础配置同步
           </el-button>
 
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
@@ -212,6 +203,17 @@
         </el-descriptions>
       </div>
     </el-dialog>
+
+    <el-dialog
+        title="刷新设备"
+        width="250px"
+        v-model="showProgress"
+        append-to-body
+    >
+      <div style="display:flex;align-items: center;justify-content: center">
+        <el-progress type="dashboard" :percentage="percentage" :color="colors"/>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -223,14 +225,13 @@ import {
   listDevice,
   subscribeCatalog,
   subscribeMobilePosition,
-  syncStatus,
   updateDevice,
   updateTransport,
 } from "../../../api/wvp/device.js";
 import {configInfo, getOnlineMediaServerList} from "../../../api/wvp/wvpMediaServer.js";
+import router from "@/router";
 
 const {proxy} = getCurrentInstance();
-const {sys_yes_no} = proxy.useDict("sys_yes_no");
 
 const deviceList = ref([]);
 const open = ref(false);
@@ -238,10 +239,19 @@ const loading = ref(true);
 const showSearch = ref(true);
 const total = ref(0);
 const title = ref("");
-const dateRange = ref([]);
 const configInfoData = ref({});
+const percentage = ref(0)
 
 const showDialog = ref(false);
+const showProgress = ref(false);
+
+const colors = [
+  {color: '#f56c6c', percentage: 20},
+  {color: '#e6a23c', percentage: 40},
+  {color: '#5cb87a', percentage: 60},
+  {color: '#1989fa', percentage: 80},
+  {color: '#6f7ad3', percentage: 100},
+]
 
 const mediaServerList = ref([]);
 
@@ -262,10 +272,10 @@ const data = reactive({
 
 const {queryParams, form, rules} = toRefs(data);
 
-/** 查询参数列表 */
+/** 查询列表 */
 function getList() {
   loading.value = true;
-  listDevice(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
+  listDevice(queryParams.value).then(response => {
     deviceList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -302,7 +312,6 @@ function handleQuery() {
 
 /** 重置按钮操作 */
 function resetQuery() {
-  dateRange.value = [];
   proxy.resetForm("queryRef");
   handleQuery();
 }
@@ -414,7 +423,8 @@ function showInfo() {
 function refDevice(itemData) {
   console.log("刷新对应设备:" + itemData.deviceId);
   devicesSync(itemData.deviceId).then(response => {
-
+    console.log(response)
+    showProgress.value = true
   })
 }
 
@@ -425,9 +435,9 @@ function refDevice(itemData) {
  * @returns {Promise<void>}
  */
 async function getTooltipContent(deviceId) {
-  syncStatus(deviceId).then(response => {
-
-  })
+  // syncStatus(deviceId).then(response => {
+  //
+  // })
 }
 
 /**
@@ -436,92 +446,7 @@ async function getTooltipContent(deviceId) {
  * @param row
  */
 function showChannelList(row) {
-  this.$router.push(`/channelList/${row.deviceId}/0`);
-}
-
-/**
- * 设置设备为布防
- */
-function setGuard(){
-  // this.$axios({
-  //   method: 'get',
-  //   url: `/api/device/control/guard/${itemData.deviceId}/SetGuard`,
-  // }).then( (res)=> {
-  //   if (res.data.code === 0) {
-  //     this.$message.success({
-  //       showClose: true,
-  //       message: "布防成功"
-  //     })
-  //   }else {
-  //     this.$message.error({
-  //       showClose: true,
-  //       message: res.data.msg
-  //     })
-  //   }
-  // }).catch( (error)=> {
-  //   this.$message.error({
-  //     showClose: true,
-  //     message: error.message
-  //   })
-  // });
-}
-
-/**
- * 设置设备为撤防
- */
-function resetGuard(){
-  // this.$axios({
-  //   method: 'get',
-  //   url: `/api/device/control/guard/${itemData.deviceId}/ResetGuard`,
-  // }).then( (res)=> {
-  //   if (res.data.code === 0) {
-  //     this.$message.success({
-  //       showClose: true,
-  //       message: "撤防成功"
-  //     })
-  //   }else {
-  //     this.$message.error({
-  //       showClose: true,
-  //       message: res.data.msg
-  //     })
-  //   }
-  // }).catch( (error)=> {
-  //   this.$message.error({
-  //     showClose: true,
-  //     message: error.message
-  //   })
-  // });
-}
-
-/**
- * 基础配置同步
- */
-function syncBasicParam(){
-  console.log(data)
-  // this.$axios({
-  //   method: 'get',
-  //   url: `/api/device/config/query/${data.deviceId}/BasicParam`,
-  //   params: {
-  //     // channelId: data.deviceId
-  //   }
-  // }).then( (res)=> {
-  //   if (res.data.code === 0) {
-  //     this.$message.success({
-  //       showClose: true,
-  //       message: `配置已同步，当前心跳间隔： ${res.data.data.BasicParam.HeartBeatInterval} 心跳间隔:${res.data.data.BasicParam.HeartBeatCount}`
-  //     })
-  //   }else {
-  //     this.$message.error({
-  //       showClose: true,
-  //       message: res.data.msg
-  //     })
-  //   }
-  // }).catch( (error)=> {
-  //   this.$message.error({
-  //     showClose: true,
-  //     message: error.message
-  //   })
-  // });
+  router.push(`/channel/list/index/${row.deviceId}/0`);
 }
 
 getList();

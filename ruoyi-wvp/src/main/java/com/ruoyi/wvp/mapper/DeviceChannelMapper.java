@@ -266,7 +266,7 @@ public interface DeviceChannelMapper {
             " WHERE id=#{item.id}" +
             "</foreach>" +
             "</script>"})
-    int batchUpdate(List<DeviceChannel> updateChannels);
+    int batchUpdate(@Param("updateChannels") List<DeviceChannel> updateChannels);
 
 
     @Update({"<script>" +

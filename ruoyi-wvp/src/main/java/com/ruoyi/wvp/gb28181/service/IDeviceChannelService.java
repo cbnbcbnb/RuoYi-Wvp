@@ -97,11 +97,11 @@ public interface IDeviceChannelService {
 
     boolean resetChannels(int deviceDbId, List<DeviceChannel> deviceChannels);
 
-    PageInfo<DeviceChannel> getSubChannels(int deviceDbId, String channelId, String query, Boolean channelType, Boolean online, int page, int count);
+    List<DeviceChannel> getSubChannels(int deviceDbId, String channelId, String query, Boolean channelType, Boolean online, int page, int count);
 
     List<DeviceChannelExtend> queryChannelExtendsByDeviceId(String deviceId, List<String> channelIds, Boolean online);
 
-    PageInfo<DeviceChannel> queryChannelsByDeviceId(String deviceId, String query, Boolean channelType, Boolean online, int page, int count);
+    List<DeviceChannel> queryChannelsByDeviceId(String deviceId, String query, Boolean channelType, Boolean online, int pageNum, int pageSize);
 
 
     List<Device> queryDeviceWithAsMessageChannel();
