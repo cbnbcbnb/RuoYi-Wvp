@@ -68,19 +68,6 @@ public interface RegionMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int batchAdd(List<Region> regionList);
 
-    @Select(" <script>" +
-            " SELECT " +
-            " *, " +
-            " concat('region', id) as tree_id," +
-            " 0 as type," +
-            " 'ON' as status," +
-            " false as is_leaf" +
-            " from wvp_common_region " +
-            " where " +
-            " <if test='parentId != null'> parent_id = #{parentId} </if> " +
-            " <if test='parentId == null'> parent_id is null </if> " +
-            " <if test='query != null'> AND (device_id LIKE concat('%',#{query},'%') escape '/' OR name LIKE concat('%',#{query},'%') escape '/')</if> " +
-            " </script>")
     List<RegionTree> queryForTree(@Param("query") String query, @Param("parentId") Integer parentId);
 
     @Delete("<script>" +

@@ -73,9 +73,12 @@ public class ApiDeviceController {
             devices = deviceService.getAllByStatus(online);
             result.put("DeviceCount", devices.size());
         }else {
-            PageInfo<Device> deviceList = deviceService.getAll(start/limit, limit,null, online);
-            result.put("DeviceCount", deviceList.getTotal());
-            devices = deviceList.getList();
+            Device device = new Device();
+            device.setPageNum(start / limit);
+            device.setPageSize(limit);
+            List<Device> list = deviceService.getAll(device);
+            result.put("DeviceCount", list.size());
+            devices = list;
         }
 
         JSONArray deviceJSONList = new JSONArray();

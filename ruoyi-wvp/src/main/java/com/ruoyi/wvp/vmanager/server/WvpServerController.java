@@ -96,10 +96,15 @@ public class WvpServerController extends BaseController {
         return success(mediaServerService.getAll());
     }
 
+    /**
+     * 获取流媒体服务列表
+     *
+     * @return
+     */
     @GetMapping(value = "/media_server/online/list")
     @ResponseBody
-    public List<MediaServer> getOnlineMediaServerList() {
-        return mediaServerService.getAllOnline();
+    public AjaxResult getOnlineMediaServerList() {
+        return success(mediaServerService.getAllOnline());
     }
 
     @GetMapping(value = "/media_server/one/{id}")
@@ -195,16 +200,20 @@ public class WvpServerController extends BaseController {
 //        });
     }
 
-
+    /**
+     * 获取平台配置信息
+     *
+     * @return
+     */
     @GetMapping(value = "/system/configInfo")
     @ResponseBody
-    public SystemConfigInfo getConfigInfo() {
+    public AjaxResult getConfigInfo() {
         SystemConfigInfo systemConfigInfo = new SystemConfigInfo();
         systemConfigInfo.setVersion(versionInfo.getVersion());
         systemConfigInfo.setSip(sipConfig);
         systemConfigInfo.setAddOn(userSetting);
         systemConfigInfo.setServerPort(serverPort);
-        return systemConfigInfo;
+        return success(systemConfigInfo);
     }
 
     @GetMapping(value = "/version")

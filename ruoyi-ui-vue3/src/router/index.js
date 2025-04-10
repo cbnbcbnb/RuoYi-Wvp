@@ -157,6 +157,21 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
+  },
+
+  {
+    path: '/channel/list',
+    component: Layout,
+    hidden: true,
+    permissions: ['tool:gen:edit'],
+    children: [
+      {
+        path: 'index/:deviceId(\\d+)/:parentChannelId(\\d+)',
+        component: () => import('@/views/wvp/channel/index'),
+        name: 'ChannelList',
+        meta: { title: '通道列表', activeMenu: '/device' }
+      }
+    ]
   }
 ]
 
