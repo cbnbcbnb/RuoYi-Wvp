@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>
+    EasyPlayer
+  </title>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="renderer" content="webkit"/>
+  <meta name="force-rendering" content="webkit"/>
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+</head>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  .box {
+    margin-top: 40px;
+    width: 800px;
+    height: 400px;
+    margin: auto;
+  }
+</style>
+
+<body>
+<div id="playerContainer">
+  <div class="box">
+    <easy-player
+      hidden-right-menu="false"
+      id="player"
+      muted="true"
+      autoplay="true"
+      debug="true"
+      video-title="视频测试标题"
+      live="false"
+      has-audio="true"
+      is-trans-coding="true"
+      fullscreen="true"
+      record-file-name="test-111"
+    />
+
+  </div>
+</div>
+<div style="padding: 8px;z-index: 999">
+  <div style="padding: 5px;display: flex;flex-direction: row;justify-content: space-between;align-items: center;flex:1">
+    <div>
+      流地址：
+      <input style="width: 800px" id="streamUrl"
+             value="http://106.55.188.61:10086/live/stream_2.flv"/>
+    </div>
+    <div>
+      <button id="btn">播放</button>
+    </div>
+  </div>
+</div>
+<!--<script src="https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js"></script>-->
+<!--<script>-->
+<!--  // VConsole 默认会挂载到 `window.VConsole` 上-->
+<!--  var vConsole = new window.VConsole();-->
+<!--</script>-->
+
+<script>
+  let vuePlayer = null
+  let isFirstPlay = true
+  const btn = document.getElementById('btn')
+  const playerEle = document.getElementById('player')
+  btn.onclick = () => {
+
+    let streamUrl = document.getElementById('streamUrl').value || null
+    if (streamUrl === null) playerEle.setAttribute('video-url', 'http://106.55.188.61:10086/live/stream_2.flv')
+    else playerEle.setAttribute('video-url', streamUrl);
+ 
+  }
+  window.onload = async() => {
+    playerEle.addEventListener("waiting", (message) => {
+      console.log('waiting', message);
+    })
+    playerEle.addEventListener("error", (message) => {
+      console.log('error', message);
+    })
+    playerEle.addEventListener("ended", () => {
+      console.log('ended');
+    })
+  }
+
+</script>
+<script type="text/javascript" src="EasyPlayer-element.min.js"></script></body>
+
+</html>

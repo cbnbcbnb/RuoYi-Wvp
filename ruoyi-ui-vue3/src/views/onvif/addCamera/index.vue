@@ -4,9 +4,6 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form ref="probeRef" :model="probeForm" :rules="rules" label-width="120px">
-<!--            <el-form-item label="编号" prop="id">-->
-<!--              <el-input v-model="probeForm.id" placeholder="请输入编号"/>-->
-<!--            </el-form-item>-->
             <el-form-item label="设备名称" prop="name">
               <el-input v-model="probeForm.name" placeholder="请输入设备名称"/>
             </el-form-item>
@@ -64,6 +61,7 @@
 
 <script setup name="addCamera">
 import {probe} from '@/api/onvif/addCamera';
+import { addDevice } from "@/api/onvif/device";
 import {ref} from 'vue';
 
 const {proxy} = getCurrentInstance();
@@ -98,6 +96,7 @@ const submitForm = () => {
         username: probeForm.value.username,
         password: probeForm.value.password,
       };
+      resultForm.value = {};
       const res = await probe(query);
       resultForm.value.firm = res.data.firm;
       resultForm.value.model = res.data.model;
@@ -105,13 +104,34 @@ const submitForm = () => {
       resultForm.value.streamUris = res.data.streamUris;
       disabledAdd.value = false;
       proxy.$modal.msgSuccess("操作成功");
-      console.log("Probe result:", res);
     }
   });
 };
 
+const submitResultForm = () => {
+  proxy.$refs["resultRef"].validate(async valid => {
+    if (valid) {
+      const data = {
+        id: null,
+        name: probeForm.value.name,
+        ip: probeForm.value.ip,
+        userName: probeForm.value.username,
+        password: probeForm.value.password,
+        firm: resultForm.value.firm,
+        url: resultForm.value.url,
+        model: resultForm.value.model,
+        firmwareVersion: resultForm.value.firmwareVersion,
+        streamUris: resultForm.value.streamUris,
+      };
+      await addDevice(data);
+      proxy.$modal.msgSuccess("操作成功");
+      probeForm.value = {};
+      resultForm.value = {};
+    }
+  });
+}
+
 </script>
 
 <style scoped>
-
 </style>
