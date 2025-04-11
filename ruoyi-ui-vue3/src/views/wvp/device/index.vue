@@ -61,7 +61,7 @@
       <el-table-column prop="deviceId" label="设备编号" align="center" width="150">
       </el-table-column>
       <el-table-column label="IP地址" width="160" align="center">
-        <template v-slot:default="scope">
+        <template #default="scope">
           <div slot="reference" class="name-wrapper">
             <el-tag v-if="scope.row.hostAddress" size="medium">{{ scope.row.hostAddress }}</el-tag>
             <el-tag v-if="!scope.row.hostAddress" size="medium">未知</el-tag>
@@ -73,7 +73,7 @@
       <el-table-column prop="transport" label="信令传输模式" width="120" align="center">
       </el-table-column>
       <el-table-column label="流传输模式" width="160" align="center">
-        <template v-slot:default="scope">
+        <template #default="scope">
           <el-select size="mini" @change="transportChange(scope.row)" v-model="scope.row.streamMode"
                      placeholder="请选择" style="width: 120px">
             <el-option key="UDP" label="UDP" value="UDP"></el-option>
@@ -83,12 +83,12 @@
         </template>
       </el-table-column>
       <el-table-column label="通道数" min-width="80" align="center">
-        <template v-slot:default="scope">
+        <template #default="scope">
           <span style="font-size: 1rem">{{ scope.row.channelCount }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" min-width="80" align="center">
-        <template v-slot:default="scope">
+        <template #default="scope">
           <div slot="reference" class="name-wrapper">
             <el-tag size="medium" v-if="scope.row.onLine">在线</el-tag>
             <el-tag size="medium" type="info" v-if="!scope.row.onLine">离线</el-tag>
@@ -96,7 +96,7 @@
         </template>
       </el-table-column>
       <el-table-column label="订阅" min-width="250" align="center">
-        <template v-slot:default="scope">
+        <template #default="scope">
           <el-checkbox label="目录" :checked="scope.row.subscribeCycleForCatalog > 0"
                        @change="(e)=>subscribeForCatalog(scope.row.id, e)"></el-checkbox>
           <el-checkbox label="位置" :checked="scope.row.subscribeCycleForMobilePosition > 0"

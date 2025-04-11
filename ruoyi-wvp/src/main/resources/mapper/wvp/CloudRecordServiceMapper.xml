@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wvp.mapper.CloudRecordServiceMapper">
+
+    <select id="getList" resultType="com.ruoyi.wvp.service.bean.CloudRecordItem">
+        select *
+        from wvp_cloud_record
+        <where>
+            <if test="query != null">
+                AND (app LIKE concat('%',#{query},'%') escape '/' OR stream LIKE concat('%',#{query},'%') escape '/')
+            </if>
+            <if test="app != null">
+                AND app = #{app}
+            </if>
+            <if test="stream != null">
+                AND stream = #{stream}
+            </if>
+            <if test="endTimeStamp != null">
+                AND end_time >= #{endTimeStamp}
+            </if>
+            <if test="startTimeStamp != null">
+                AND start_time &lt;= #{startTimeStamp}
+            </if>
+            <if test="callId != null">
+                AND call_id = #{callId}
+            </if>
+            <if test="mediaServerItemList != null">
+                AND media_server_id in
+                <foreach collection="mediaServerItemList" item="item" open="(" separator="," close=")">
+                    #{item.id}
+                </foreach>
+            </if>
+            <if test="ids != null">
+                AND id in
+                <foreach collection="ids" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by start_time desc
+    </select>
+</mapper>

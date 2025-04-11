@@ -1,7 +1,9 @@
 package com.ruoyi.wvp.vmanager.cloudRecord;
 
 import com.alibaba.fastjson2.JSONArray;
-import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.service.ICloudRecordService;
 import com.ruoyi.wvp.media.bean.MediaServer;
@@ -13,7 +15,6 @@ import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import com.ruoyi.wvp.vmanager.cloudRecord.bean.CloudRecordUrl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -36,7 +37,7 @@ import java.util.zip.ZipOutputStream;
 @Slf4j
 @RestController
 @RequestMapping("/api/cloud/record")
-public class CloudRecordController {
+public class CloudRecordController extends BaseController {
 
 
     @Autowired
@@ -82,22 +83,36 @@ public class CloudRecordController {
         return cloudRecordService.getDateList(app, stream, year, month, mediaServers);
     }
 
+    /**
+     * 查询云端录像
+     *
+     * @param query         检索内容
+     * @param app           应用名
+     * @param stream        流ID
+     * @param pageNum       当前页
+     * @param pageSize      每页查询数量
+     * @param startTime     开始时间(yyyy-MM-dd HH:mm:ss)
+     * @param endTime       结束时间(yyyy-MM-dd HH:mm:ss)
+     * @param mediaServerId 流媒体ID，置空则查询全部流媒体
+     * @param callId        每次录像的唯一标识，置空则查询全部流媒体
+     * @return
+     */
     @ResponseBody
     @GetMapping("/list")
-    @Parameter(name = "query", description = "检索内容", required = false)
-    @Parameter(name = "app", description = "应用名", required = false)
-    @Parameter(name = "stream", description = "流ID", required = false)
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    @Parameter(name = "startTime", description = "开始时间(yyyy-MM-dd HH:mm:ss)", required = false)
-    @Parameter(name = "endTime", description = "结束时间(yyyy-MM-dd HH:mm:ss)", required = false)
-    @Parameter(name = "mediaServerId", description = "流媒体ID，置空则查询全部流媒体", required = false)
-    @Parameter(name = "callId", description = "每次录像的唯一标识，置空则查询全部流媒体", required = false)
-    public PageInfo<CloudRecordItem> openRtpServer(@RequestParam(required = false) String query, @RequestParam(required = false) String app, @RequestParam(required = false) String stream, @RequestParam int page, @RequestParam int count, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) String mediaServerId, @RequestParam(required = false) String callId
+    public TableDataInfo openRtpServer(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String app,
+            @RequestParam(required = false) String stream,
+            @RequestParam int pageNum,
+            @RequestParam int pageSize,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
+            @RequestParam(required = false) String mediaServerId,
+            @RequestParam(required = false) String callId
 
     ) {
-        log.info("[云端录像] 查询 app->{}, stream->{}, mediaServerId->{}, page->{}, count->{}, startTime->{}, endTime->{}, callId->{}", app, stream, mediaServerId, page, count, startTime, endTime, callId);
-
+        log.info("[云端录像] 查询 app->{}, stream->{}, mediaServerId->{}, pageNum->{}, pageSize->{}, startTime->{}, endTime->{}, callId->{}",
+                app, stream, mediaServerId, pageNum, pageSize, startTime, endTime, callId);
         List<MediaServer> mediaServers;
         if (!ObjectUtils.isEmpty(mediaServerId)) {
             mediaServers = new ArrayList<>();
@@ -130,7 +145,9 @@ public class CloudRecordController {
         if (callId != null && ObjectUtils.isEmpty(callId.trim())) {
             callId = null;
         }
-        return cloudRecordService.getList(page, count, query, app, stream, startTime, endTime, mediaServers, callId);
+        startPage();
+        List<CloudRecordItem> list = cloudRecordService.getList(pageNum, pageSize, query, app, stream, startTime, endTime, mediaServers, callId);
+        return getDataTable(list);
     }
 
     @ResponseBody
@@ -212,26 +229,31 @@ public class CloudRecordController {
         }
     }
 
+    /**
+     * 获取播放地址
+     *
+     * @param recordId 录像记录的ID
+     * @return
+     */
     @ResponseBody
     @GetMapping("/play/path")
-    @Operation(summary = "获取播放地址")
-    @Parameter(name = "recordId", description = "录像记录的ID", required = true)
-    public DownloadFileInfo getPlayUrlPath(@RequestParam(required = true) Integer recordId) {
-        return cloudRecordService.getPlayUrlPath(recordId);
+    public AjaxResult getPlayUrlPath(@RequestParam(required = true) Integer recordId) {
+        return success(cloudRecordService.getPlayUrlPath(recordId));
     }
 
     /************************* 以下这些接口只适合wvp和zlm部署在同一台服务器的情况，且wvp只有一个zlm节点的情况 ***************************************/
 
     /**
      * 下载指定录像文件的压缩包
-     * @param query 检索内容
-     * @param app 应用名
-     * @param stream 流ID
-     * @param startTime 开始时间(yyyy-MM-dd HH:mm:ss)
-     * @param endTime 结束时间(yyyy-MM-dd HH:mm:ss)
+     *
+     * @param query         检索内容
+     * @param app           应用名
+     * @param stream        流ID
+     * @param startTime     开始时间(yyyy-MM-dd HH:mm:ss)
+     * @param endTime       结束时间(yyyy-MM-dd HH:mm:ss)
      * @param mediaServerId 流媒体ID，置空则查询全部流媒体
-     * @param callId 每次录像的唯一标识，置空则查询全部流媒体
-     * @param ids 指定的Id
+     * @param callId        每次录像的唯一标识，置空则查询全部流媒体
+     * @param ids           指定的Id
      */
     @ResponseBody
     @GetMapping("/zip")
@@ -303,31 +325,37 @@ public class CloudRecordController {
     }
 
     /**
+     * 查询云端录像列表
      *
-     * @param query 检索内容
-     * @param app 应用名
-     * @param stream 流ID
-     * @param startTime 开始时间(yyyy-MM-dd HH:mm:ss)
-     * @param endTime 结束时间(yyyy-MM-dd HH:mm:ss)
+     * @param query         检索内容
+     * @param app           应用名
+     * @param stream        流ID
+     * @param pageNum       当前页
+     * @param pageSize      每页查询数量
+     * @param startTime     开始时间(yyyy-MM-dd HH:mm:ss)
+     * @param endTime       结束时间(yyyy-MM-dd HH:mm:ss)
      * @param mediaServerId 流媒体ID，置空则查询全部流媒体
-     * @param callId 每次录像的唯一标识，置空则查询全部流媒体
-     * @param remoteHost 拼接播放地址时使用的远程地址
+     * @param callId        每次录像的唯一标识，置空则查询全部流媒体
+     * @param remoteHost    拼接播放地址时使用的远程地址
      */
     @ResponseBody
     @GetMapping("/list-url")
-    @Parameter(name = "query", description = "检索内容", required = false)
-    @Parameter(name = "app", description = "应用名", required = false)
-    @Parameter(name = "stream", description = "流ID", required = false)
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    @Parameter(name = "startTime", description = "开始时间(yyyy-MM-dd HH:mm:ss)", required = false)
-    @Parameter(name = "endTime", description = "结束时间(yyyy-MM-dd HH:mm:ss)", required = false)
-    @Parameter(name = "mediaServerId", description = "流媒体ID，置空则查询全部流媒体", required = false)
-    @Parameter(name = "callId", description = "每次录像的唯一标识，置空则查询全部流媒体", required = false)
-    public PageInfo<CloudRecordUrl> getListWithUrl(HttpServletRequest request, @RequestParam(required = false) String query, @RequestParam(required = false) String app, @RequestParam(required = false) String stream, @RequestParam int page, @RequestParam int count, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) String mediaServerId, @RequestParam(required = false) String callId, @RequestParam(required = false) String remoteHost
+    public TableDataInfo getListWithUrl(
+            HttpServletRequest request,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String app,
+            @RequestParam(required = false) String stream,
+            @RequestParam int pageNum,
+            @RequestParam int pageSize,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
+            @RequestParam(required = false) String mediaServerId,
+            @RequestParam(required = false) String callId,
+            @RequestParam(required = false) String remoteHost
 
     ) {
-        log.info("[云端录像] 查询URL app->{}, stream->{}, mediaServerId->{}, page->{}, count->{}, startTime->{}, endTime->{}, callId->{}", app, stream, mediaServerId, page, count, startTime, endTime, callId);
+        log.info("[云端录像] 查询URL app->{}, stream->{}, mediaServerId->{}, pageNum->{}, pageSize->{}, startTime->{}, endTime->{}, callId->{}",
+                app, stream, mediaServerId, pageNum, pageSize, startTime, endTime, callId);
 
         List<MediaServer> mediaServers;
         if (!ObjectUtils.isEmpty(mediaServerId)) {
@@ -368,37 +396,18 @@ public class CloudRecordController {
         if (remoteHost == null) {
             remoteHost = request.getScheme() + "://" + request.getLocalAddr() + ":" + (request.getScheme().equals("https") ? mediaServer.getHttpSSlPort() : mediaServer.getHttpPort());
         }
-        PageInfo<CloudRecordItem> cloudRecordItemPageInfo = cloudRecordService.getList(page, count, query, app, stream, startTime, endTime, mediaServers, callId);
-        PageInfo<CloudRecordUrl> cloudRecordUrlPageInfo = new PageInfo<>();
-        if (!ObjectUtils.isEmpty(cloudRecordItemPageInfo)) {
-            cloudRecordUrlPageInfo.setPageNum(cloudRecordItemPageInfo.getPageNum());
-            cloudRecordUrlPageInfo.setPageSize(cloudRecordItemPageInfo.getPageSize());
-            cloudRecordUrlPageInfo.setSize(cloudRecordItemPageInfo.getSize());
-            cloudRecordUrlPageInfo.setEndRow(cloudRecordItemPageInfo.getEndRow());
-            cloudRecordUrlPageInfo.setStartRow(cloudRecordItemPageInfo.getStartRow());
-            cloudRecordUrlPageInfo.setPages(cloudRecordItemPageInfo.getPages());
-            cloudRecordUrlPageInfo.setPrePage(cloudRecordItemPageInfo.getPrePage());
-            cloudRecordUrlPageInfo.setNextPage(cloudRecordItemPageInfo.getNextPage());
-            cloudRecordUrlPageInfo.setIsFirstPage(cloudRecordItemPageInfo.isIsFirstPage());
-            cloudRecordUrlPageInfo.setIsLastPage(cloudRecordItemPageInfo.isIsLastPage());
-            cloudRecordUrlPageInfo.setHasPreviousPage(cloudRecordItemPageInfo.isHasPreviousPage());
-            cloudRecordUrlPageInfo.setHasNextPage(cloudRecordItemPageInfo.isHasNextPage());
-            cloudRecordUrlPageInfo.setNavigatePages(cloudRecordItemPageInfo.getNavigatePages());
-            cloudRecordUrlPageInfo.setNavigateFirstPage(cloudRecordItemPageInfo.getNavigateFirstPage());
-            cloudRecordUrlPageInfo.setNavigateLastPage(cloudRecordItemPageInfo.getNavigateLastPage());
-            cloudRecordUrlPageInfo.setNavigatepageNums(cloudRecordItemPageInfo.getNavigatepageNums());
-            cloudRecordUrlPageInfo.setTotal(cloudRecordItemPageInfo.getTotal());
-            List<CloudRecordUrl> cloudRecordUrlList = new ArrayList<>(cloudRecordItemPageInfo.getList().size());
-            List<CloudRecordItem> cloudRecordItemList = cloudRecordItemPageInfo.getList();
-            for (CloudRecordItem cloudRecordItem : cloudRecordItemList) {
+        startPage();
+        List<CloudRecordItem> list = cloudRecordService.getList(pageNum, pageSize, query, app, stream, startTime, endTime, mediaServers, callId);
+        List<CloudRecordUrl> cloudRecordUrlList = new ArrayList<>(list.size());
+        if (!ObjectUtils.isEmpty(list)) {
+            for (CloudRecordItem cloudRecordItem : list) {
                 CloudRecordUrl cloudRecordUrl = new CloudRecordUrl();
                 cloudRecordUrl.setId(cloudRecordItem.getId());
                 cloudRecordUrl.setDownloadUrl(remoteHost + "/index/api/downloadFile?file_path=" + cloudRecordItem.getFilePath() + "&save_name=" + cloudRecordItem.getStream() + "_" + cloudRecordItem.getCallId() + "_" + DateUtil.timestampMsToUrlToyyyy_MM_dd_HH_mm_ss(cloudRecordItem.getStartTime()));
                 cloudRecordUrl.setPlayUrl(remoteHost + "/index/api/downloadFile?file_path=" + cloudRecordItem.getFilePath());
                 cloudRecordUrlList.add(cloudRecordUrl);
             }
-            cloudRecordUrlPageInfo.setList(cloudRecordUrlList);
         }
-        return cloudRecordUrlPageInfo;
+        return getDataTable(cloudRecordUrlList);
     }
 }
