@@ -55,5 +55,6 @@ export function sendDevicePush(params) {
     return request({
         url: `/api/play/start/${params.deviceId}/${params.channelId}`,
         method: 'get',
+        timeout: 10000 * 6
     })
 }

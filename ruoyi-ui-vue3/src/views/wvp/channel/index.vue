@@ -772,7 +772,7 @@ function channelSubStreamChange(row) {
  * @param itemData
  */
 function stopDevicePush(itemData) {
-  playStop(deviceId, itemData.deviceId).then(() => {
+  playStop(deviceId.value, itemData.deviceId).then(() => {
     initData();
   }).catch(function (error) {
     initData();
