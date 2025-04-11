@@ -165,10 +165,9 @@ media:
   ip: 192.168.158.199
   # [必须修改] zlm服务器的http.port
   http-port: 8092
-  # [可选] zlm服务器的hook所使用的IP, 默认使用sip.ip
-  hook-ip: 192.168.158.199
   # [必选选] zlm服务器的hook.admin_params=secret
   secret: haoxin
+  hook-ip: 192.168.158.199
   # 启用多端口模式, 多端口模式使用端口区分每路流，兼容性更好。 单端口使用流的ssrc区分， 点播超时建议使用多端口测试
   rtp:
     # [可选] 是否启用多端口模式, 开启后会在portRange范围内选择端口用于媒体流传输
