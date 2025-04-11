@@ -19,7 +19,7 @@ public interface IStreamPushService {
     /**
      * 获取
      */
-    PageInfo<StreamPush> getPushList(Integer page, Integer count, String query, Boolean pushing, String mediaServerId);
+    List<StreamPush> getPushList(Integer pageNum , Integer pageSize, String query, Boolean pushing, String mediaServerId);
 
     List<StreamPush> getPushList(String mediaSererId);
 
