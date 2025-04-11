@@ -2,13 +2,12 @@ package com.ruoyi.wvp.streamPush.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.CommonGBChannel;
 import com.ruoyi.wvp.gb28181.service.IGbChannelService;
+import com.ruoyi.wvp.mapper.StreamPushMapper;
 import com.ruoyi.wvp.media.bean.MediaInfo;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.event.media.MediaArrivalEvent;
@@ -23,7 +22,6 @@ import com.ruoyi.wvp.service.bean.GPSMsgInfo;
 import com.ruoyi.wvp.service.bean.StreamPushItemFromRedis;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.streamPush.bean.StreamPush;
-import com.ruoyi.wvp.mapper.StreamPushMapper;
 import com.ruoyi.wvp.streamPush.service.IStreamPushService;
 import com.ruoyi.wvp.utils.DateUtil;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
@@ -94,7 +92,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
             streamPush.setUpdateTime(DateUtil.getNow());
             streamPush.setPushTime(DateUtil.getNow());
             add(streamPush);
-        }else {
+        } else {
             updatePushStatus(streamPushInDb, true);
         }
         // 冗余数据，自己系统中自用
@@ -147,7 +145,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         }
         if (streamPush.getGbDeviceId() != null) {
             updatePushStatus(streamPush, false);
-        }else {
+        } else {
             deleteByAppAndStream(event.getApp(), event.getStream());
         }
     }
@@ -173,15 +171,13 @@ public class StreamPushServiceImpl implements IStreamPushService {
     }
 
     @Override
-    public PageInfo<StreamPush> getPushList(Integer page, Integer count, String query, Boolean pushing, String mediaServerId) {
-        PageHelper.startPage(page, count);
+    public List<StreamPush> getPushList(Integer pageNum, Integer pageSize, String query, Boolean pushing, String mediaServerId) {
         if (query != null) {
             query = query.replaceAll("/", "//")
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
-        List<StreamPush> all = streamPushMapper.selectAll(query, pushing, mediaServerId);
-        return new PageInfo<>(all);
+        return streamPushMapper.selectAll(query, pushing, mediaServerId);
     }
 
     @Override
@@ -237,6 +233,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         }
         streamPushMapper.del(streamPush.getId());
     }
+
     @Override
     @Transactional
     public boolean update(StreamPush streamPush) {
@@ -270,17 +267,17 @@ public class StreamPushServiceImpl implements IStreamPushService {
             mediaServer = mediaServerService.getMediaServerByAppAndStream(streamPush.getApp(), streamPush.getStream());
             if (mediaServer != null) {
                 log.info("[主动停止推流] 检索到MediaServer为{}， id: {}, app: {}, stream: {}, ", mediaServer.getId(), streamPush.getId(), streamPush.getApp(), streamPush.getStream());
-            }else {
+            } else {
                 log.info("[主动停止推流]未找到使用MediaServer id: {}, app: {}, stream: {}, ", streamPush.getId(), streamPush.getApp(), streamPush.getStream());
             }
-        }else {
+        } else {
             mediaServer = mediaServerService.getOne(streamPush.getMediaServerId());
             if (mediaServer == null) {
-                log.info("[主动停止推流]未找到使用的MediaServer： {}，开始自动检索 id: {}, app: {}, stream: {}, ",streamPush.getMediaServerId(),  streamPush.getId(), streamPush.getApp(), streamPush.getStream());
+                log.info("[主动停止推流]未找到使用的MediaServer： {}，开始自动检索 id: {}, app: {}, stream: {}, ", streamPush.getMediaServerId(), streamPush.getId(), streamPush.getApp(), streamPush.getStream());
                 mediaServer = mediaServerService.getMediaServerByAppAndStream(streamPush.getApp(), streamPush.getStream());
                 if (mediaServer != null) {
                     log.info("[主动停止推流] 检索到MediaServer为{}， id: {}, app: {}, stream: {}, ", mediaServer.getId(), streamPush.getId(), streamPush.getApp(), streamPush.getStream());
-                }else {
+                } else {
                     log.info("[主动停止推流]未找到使用MediaServer id: {}, app: {}, stream: {}, ", streamPush.getId(), streamPush.getApp(), streamPush.getStream());
                 }
             }
@@ -500,13 +497,12 @@ public class StreamPushServiceImpl implements IStreamPushService {
     }
 
 
-
     @Override
     @Transactional
     public void updatePushStatus(StreamPush streamPush, boolean pushIng) {
         streamPush.setPushing(pushIng);
         if (userSetting.getUsePushingAsStatus()) {
-            streamPush.setGbStatus(pushIng?"ON":"OFF");
+            streamPush.setGbStatus(pushIng ? "ON" : "OFF");
         }
         streamPush.setPushTime(DateUtil.getNow());
         streamPushMapper.updatePushStatus(streamPush.getId(), pushIng);
@@ -514,9 +510,9 @@ public class StreamPushServiceImpl implements IStreamPushService {
             return;
         }
         if (userSetting.getUsePushingAsStatus()) {
-            if ("ON".equalsIgnoreCase(streamPush.getGbStatus()) ) {
+            if ("ON".equalsIgnoreCase(streamPush.getGbStatus())) {
                 gbChannelService.online(streamPush.buildCommonGBChannel());
-            }else {
+            } else {
                 gbChannelService.offline(streamPush.buildCommonGBChannel());
             }
         }
@@ -531,7 +527,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
             // 不保存国标推理以及拉流代理的流
             if (streamInfo.getOriginType() == OriginType.RTSP_PUSH.ordinal()
                     || streamInfo.getOriginType() == OriginType.RTMP_PUSH.ordinal()
-                    || streamInfo.getOriginType() == OriginType.RTC_PUSH.ordinal() ) {
+                    || streamInfo.getOriginType() == OriginType.RTC_PUSH.ordinal()) {
                 String key = streamInfo.getApp() + "_" + streamInfo.getStream();
                 StreamPush streamPushItem = result.get(key);
                 if (streamPushItem == null) {
@@ -562,7 +558,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         if (streamPush == null) {
             return 0;
         }
-        if(streamPush.isPushing()) {
+        if (streamPush.isPushing()) {
             MediaServer mediaServer = mediaServerService.getOne(streamPush.getMediaServerId());
             mediaServerService.closeStreams(mediaServer, streamPush.getApp(), streamPush.getStream());
         }

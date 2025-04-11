@@ -36,6 +36,10 @@
       </el-form-item>
     </el-form>
 
+    <el-row :gutter="10" class="mb8">
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
     <el-table v-loading="loading" :data="recordList" border>
       <el-table-column prop="app" label="应用名" align="center"/>
       <el-table-column prop="stream" label="流ID" width="380" align="center"/>
