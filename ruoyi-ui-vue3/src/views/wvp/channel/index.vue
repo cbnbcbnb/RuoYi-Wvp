@@ -542,8 +542,8 @@ async function start(itemData){
     channelId: itemData.deviceId
   }
   const res = await sendDevicePush(params);
-  console.log(res);
-
+  vUrl.value = res.data.fmp4;
+  openPlay.value = true;
 }
 
 /** 搜索按钮操作 */
