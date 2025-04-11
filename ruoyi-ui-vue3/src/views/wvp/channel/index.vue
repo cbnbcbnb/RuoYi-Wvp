@@ -469,7 +469,7 @@
 
     <ChooseGroup ref="chooseGroupRef" @onSubmit="gbParentOnSubmit"></ChooseGroup>
 
-    <el-dialog title="播放视频" v-model="openPlay" width="1000px" append-to-body @opened="openedPlay">
+    <el-dialog title="播放视频" v-model="openPlay" width="1000px" append-to-body @opened="openedPlay" @close="initData">
       <div style="width: 100%; height: 600px">
         <el-row>
           <el-col :span="24">
