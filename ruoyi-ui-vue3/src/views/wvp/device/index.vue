@@ -56,11 +56,11 @@
 
     <el-table v-loading="loading" :data="deviceList" border>
       <el-table-column type="index" label="编号" width="80" align="center" fixed/>
-      <el-table-column prop="name" label="名称" width="160" align="center" fixed>
+      <el-table-column prop="name" label="名称" width="100" align="center" fixed>
       </el-table-column>
-      <el-table-column prop="deviceId" label="设备编号" align="center" width="200" fixed>
+      <el-table-column prop="deviceId" label="设备编号" align="center" width="150">
       </el-table-column>
-      <el-table-column label="IP地址" width="180" align="center" fixed>
+      <el-table-column label="IP地址" width="160" align="center">
         <template v-slot:default="scope">
           <div slot="reference" class="name-wrapper">
             <el-tag v-if="scope.row.hostAddress" size="medium">{{ scope.row.hostAddress }}</el-tag>
@@ -68,9 +68,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="manufacturer" label="厂家" width="100" align="center">
+      <el-table-column prop="manufacturer" label="厂家" width="80" align="center">
       </el-table-column>
-      <el-table-column prop="transport" label="信令传输模式" width="150" align="center">
+      <el-table-column prop="transport" label="信令传输模式" width="120" align="center">
       </el-table-column>
       <el-table-column label="流传输模式" width="160" align="center">
         <template v-slot:default="scope">
@@ -95,7 +95,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="订阅" min-width="260" align="center">
+      <el-table-column label="订阅" min-width="250" align="center">
         <template v-slot:default="scope">
           <el-checkbox label="目录" :checked="scope.row.subscribeCycleForCatalog > 0"
                        @change="(e)=>subscribeForCatalog(scope.row.id, e)"></el-checkbox>
@@ -104,9 +104,9 @@
           <el-checkbox label="报警" disabled :checked="scope.row.subscribeCycleForAlarm > 0"></el-checkbox>
         </template>
       </el-table-column>
-      <el-table-column prop="keepaliveTime" label="最近心跳" width="180" align="center">
+      <el-table-column prop="keepaliveTime" label="最近心跳" width="150" align="center">
       </el-table-column>
-      <el-table-column prop="registerTime" label="最近注册" width="180" align="center">
+      <el-table-column prop="registerTime" label="最近注册" width="150" align="center">
       </el-table-column>
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
