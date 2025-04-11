@@ -58,7 +58,7 @@ export function deleteDevice(deviceId) {
     })
 }
 
-// 移除设备
+// 同步进度查询
 export function syncStatus(deviceId) {
     return request({
         url: `/api/device/query/${deviceId}/sync_status`,

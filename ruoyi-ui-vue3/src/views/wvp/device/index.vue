@@ -110,10 +110,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-<!--          <el-button link type="primary" :disabled="scope.row.online===0" icon="Edit"-->
-<!--                     @click="refDevice(scope.row)"-->
-<!--                     @mouseover="getTooltipContent(scope.row.deviceId)">刷新-->
-<!--          </el-button>-->
+          <el-button link type="primary" :disabled="scope.row.online===0" icon="Refresh"
+                     @click="refDevice(scope.row)">刷新
+          </el-button>
           <el-button type="text" icon="Edit"
                      @click="showChannelList(scope.row)">通道
           </el-button>
@@ -236,6 +235,9 @@
       <div style="display:flex;align-items: center;justify-content: center">
         <el-progress type="dashboard" :percentage="percentage" :color="colors"/>
       </div>
+      <div style="display:flex;align-items: center;justify-content: center">
+        {{ msg }}
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -247,7 +249,7 @@ import {
   getDeviceById,
   listDevice,
   subscribeCatalog,
-  subscribeMobilePosition,
+  subscribeMobilePosition, syncStatus,
   updateDevice,
   updateTransport,
 } from "../../../api/wvp/device.js";
@@ -265,6 +267,7 @@ const loading = ref(true);
 const showSearch = ref(true);
 const total = ref(0);
 const title = ref("");
+const msg = ref("");
 const configInfoData = ref({});
 const percentage = ref(0)
 
@@ -409,8 +412,6 @@ function transportChange(row) {
  * @param value
  */
 function subscribeForCatalog(data, value) {
-  console.log(data)
-  console.log(value)
   subscribeCatalog({id: data, cycle: value ? 60 : 0}).then(response => {
 
   })
@@ -423,8 +424,6 @@ function subscribeForCatalog(data, value) {
  * @param value
  */
 function subscribeForMobilePosition(data, value) {
-  console.log(data)
-  console.log(value)
   subscribeMobilePosition({id: data, cycle: value ? 60 : 0, interval: value ? 5 : 0}).then(response => {
 
   })
@@ -435,23 +434,43 @@ function subscribeForMobilePosition(data, value) {
  */
 function showInfo() {
   configInfo().then(response => {
-    console.log(response.data)
     showDialog.value = true
     configInfoData.value = response.data
   })
 }
 
 /**
- * 刷新对应设备
+ * 刷新对应设备 percentage
  *
  * @param itemData
  */
-function refDevice(itemData) {
-  console.log("刷新对应设备:" + itemData.deviceId);
-  devicesSync(itemData.deviceId).then(response => {
-    console.log(response)
-    showProgress.value = true
-  })
+async function refDevice(itemData) {
+  let intervalId = null;
+  const res = await devicesSync(itemData.deviceId);
+  showProgress.value = true;
+  msg.value = res.msg;
+  percentage.value = 0;
+  intervalId = setInterval(async () => {
+    try {
+      const ans = await syncStatus(itemData.deviceId);
+      if (ans.msg === '成功') {
+        clearInterval(intervalId);
+        let progressIntervalId = null;
+        progressIntervalId = setInterval(() => {
+          if (percentage.value < 100) {
+            percentage.value += 20;
+          } else {
+            clearInterval(progressIntervalId);
+            msg.value = ans.msg;
+          }
+        }, 300);
+      }
+    } catch (e) {
+      clearInterval(intervalId);
+      msg.value = "同步通道失败";
+    }
+  }, 500);
+
 }
 
 /**
@@ -461,6 +480,7 @@ function refDevice(itemData) {
  * @returns {Promise<void>}
  */
 async function getTooltipContent(deviceId) {
+
   // syncStatus(deviceId).then(response => {
   //
   // })

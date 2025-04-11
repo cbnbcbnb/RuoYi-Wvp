@@ -29,7 +29,7 @@
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table v-loading="loading" :data="channelList" ref="channelListTable">
+    <el-table v-loading="loading" :data="channelList" ref="channelListTable" border>
       <el-table-column prop="name" label="名称" min-width="180" align="center"/>
       <el-table-column prop="deviceId" label="编号" min-width="180" align="center"/>
       <el-table-column label="快照" min-width="100" align="center">
@@ -471,8 +471,14 @@
 
     <el-dialog title="播放视频" v-model="openPlay" width="1000px" append-to-body @opened="openedPlay">
       <div style="width: 100%; height: 600px">
-<!--        <easy-player class="player" :video-url="vUrl" autoplay :live="true"></easy-player>-->
-          <CusPlayer ref="video"></CusPlayer>
+        <el-row>
+          <el-col :span="24">
+            <div class="player">
+              <CusPlayer ref="video"></CusPlayer>
+            </div>
+          </el-col>
+        </el-row>
+
       </div>
     </el-dialog>
   </div>
@@ -482,6 +488,7 @@
 import ChannelCode from "./channelCode.vue"
 import ChooseCivilCode from "./chooseCivilCode.vue"
 import ChooseGroup from "../../components/dialog/chooseGroup.vue"
+import CusPlayer from "@/components/flv/CusPlayer.vue";
 import {playStop} from "../../../api/wvp/play.js";
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {
@@ -494,6 +501,7 @@ import {
 import {getCommonChannel, resetChannel, updateChannelData, sendDevicePush} from "../../../api/wvp/channel.js";
 import {recordApi} from "../../../api/wvp/control.js";
 import router from "@/router";
+
 const route = useRoute();
 const {proxy} = getCurrentInstance();
 const channelList = ref([]);
@@ -534,30 +542,27 @@ const data = reactive({
 
 const {queryParams, form, rules} = toRefs(data);
 
-async function start(itemData){
+async function start(itemData) {
   const params = {
     deviceId: deviceId.value,
     channelId: itemData.deviceId
   }
   const res = await sendDevicePush(params);
-  console.log(res.data);
   vUrl.value = res.data.flv;
   openPlay.value = true;
 }
 
-function openedPlay(){
+function openedPlay() {
   nextTick(() => {
     if (video.value && typeof video.value.createPlayer === 'function') {
-      console.log('video 存在');
       video.value.createPlayer(vUrl.value, 0)
     } else {
-      console.error('createPlayer 方法不存在');
     }
   })
 
 }
 
-function paly(){
+function paly() {
   video.value.createPlayer(vUrl.value, 0)
 }
 

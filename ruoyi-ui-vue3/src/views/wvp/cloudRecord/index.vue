@@ -77,6 +77,12 @@
         v-model:limit="queryParams.pageSize"
         @pagination="getRecordList"
     />
+
+    <el-dialog title="播放视频" v-model="openPlay" width="1000px" append-to-body>
+      <div class="player">
+        <easy-player class="player" :video-url="videoUrl" autoplay :live="true"></easy-player>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -88,6 +94,7 @@ const {proxy} = getCurrentInstance();
 const mediaServerList = ref([])
 const recordList = ref([])
 const loading = ref(false)
+const openPlay = ref(false)
 const total = ref(0);
 const showSearch = ref(true);
 
@@ -160,8 +167,16 @@ function downloadFile(file) {
   })
 }
 
-function play() {
-
+const videoUrl = ref('');
+async function play(row) {
+  const res = await getPlayUrlPath({recordId: row.id});
+  if (location.protocol === "https:") {
+    videoUrl.value = res.data.httpsPath;
+  } else {
+    videoUrl.value = res.data.httpPath;
+  }
+  console.log(videoUrl.value);
+  openPlay.value = true;
 }
 
 onMounted(() => {
@@ -171,5 +186,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
+.player {
+  width: 100%;
+  height: 600px;
+}
 </style>
