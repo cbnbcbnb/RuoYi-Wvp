@@ -58,3 +58,12 @@ export function sendDevicePush(params) {
         timeout: 10000 * 6
     })
 }
+
+// 新增通道信息
+export function addChannelData(data) {
+    return request({
+        url: `/api/common/channel/add`,
+        method: 'post',
+        data: data,
+    })
+}

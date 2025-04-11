@@ -250,7 +250,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         }
         streamPush.setUpdateTime(DateUtil.getNow());
         streamPushMapper.update(streamPush);
-        if (streamPush.getGbId() > 0) {
+        if (streamPush.getGbId() > 0 && streamPush.buildCommonGBChannel() != null)  {
             gbChannelService.update(streamPush.buildCommonGBChannel());
         }
         return true;
