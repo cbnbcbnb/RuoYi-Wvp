@@ -3,10 +3,9 @@ package com.ruoyi.wvp.service.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.service.ICloudRecordService;
+import com.ruoyi.wvp.mapper.CloudRecordServiceMapper;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.event.media.MediaRecordMp4Event;
 import com.ruoyi.wvp.media.service.IMediaServerService;
@@ -15,7 +14,6 @@ import com.ruoyi.wvp.media.zlm.dto.StreamAuthorityInfo;
 import com.ruoyi.wvp.service.bean.CloudRecordItem;
 import com.ruoyi.wvp.service.bean.DownloadFileInfo;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
-import com.ruoyi.wvp.mapper.CloudRecordServiceMapper;
 import com.ruoyi.wvp.utils.CloudRecordUtils;
 import com.ruoyi.wvp.utils.DateUtil;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
@@ -52,33 +50,31 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
     private AssistRESTfulUtils assistRESTfulUtils;
 
     @Override
-    public PageInfo<CloudRecordItem> getList(int page, int count, String query, String app, String stream, String startTime, String endTime, List<MediaServer> mediaServerItems, String callId) {
+    public List<CloudRecordItem> getList(int pageNum, int pageSize, String query, String app, String stream, String startTime, String endTime, List<MediaServer> mediaServerItems, String callId) {
         // 开始时间和结束时间在数据库中都是以秒为单位的
         Long startTimeStamp = null;
         Long endTimeStamp = null;
-        if (startTime != null ) {
+        if (startTime != null) {
             if (!DateUtil.verification(startTime, DateUtil.formatter)) {
                 throw new ControllerException(ErrorCode.ERROR100.getCode(), "开始时间格式错误，正确格式为： " + DateUtil.formatter);
             }
             startTimeStamp = DateUtil.yyyy_MM_dd_HH_mm_ssToTimestampMs(startTime);
 
         }
-        if (endTime != null ) {
+        if (endTime != null) {
             if (!DateUtil.verification(endTime, DateUtil.formatter)) {
                 throw new ControllerException(ErrorCode.ERROR100.getCode(), "结束时间格式错误，正确格式为： " + DateUtil.formatter);
             }
             endTimeStamp = DateUtil.yyyy_MM_dd_HH_mm_ssToTimestampMs(endTime);
 
         }
-        PageHelper.startPage(page, count);
         if (query != null) {
             query = query.replaceAll("/", "//")
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
-        List<CloudRecordItem> all = cloudRecordServiceMapper.getList(query, app, stream, startTimeStamp, endTimeStamp,
+        return cloudRecordServiceMapper.getList(query, app, stream, startTimeStamp, endTimeStamp,
                 callId, mediaServerItems, null);
-        return new PageInfo<>(all);
     }
 
     @Override
@@ -87,7 +83,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         LocalDate endDate;
         if (month == 12) {
             endDate = LocalDate.of(year + 1, 1, 1);
-        }else {
+        } else {
             endDate = LocalDate.of(year, month + 1, 1);
         }
         long startTimeStamp = startDate.atStartOfDay().toInstant(ZoneOffset.ofHours(8)).toEpochMilli();
@@ -123,8 +119,8 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
     public String addTask(String app, String stream, MediaServer mediaServerItem, String startTime, String endTime,
                           String callId, String remoteHost, boolean filterMediaServer) {
         // 参数校验
-        Assert.notNull(app,"应用名为NULL");
-        Assert.notNull(stream,"流ID为NULL");
+        Assert.notNull(app, "应用名为NULL");
+        Assert.notNull(stream, "流ID为NULL");
         if (mediaServerItem.getRecordAssistPort() == 0) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "为配置Assist服务");
         }
@@ -145,7 +141,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         if (filePathList == null || filePathList.isEmpty()) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "未检索到视频文件");
         }
-        JSONObject result =  assistRESTfulUtils.addTask(mediaServerItem, app, stream, startTime, endTime, callId, filePathList, remoteHost);
+        JSONObject result = assistRESTfulUtils.addTask(mediaServerItem, app, stream, startTime, endTime, callId, filePathList, remoteHost);
         if (result.getInteger("code") != 0) {
             throw new ControllerException(result.getInteger("code"), result.getString("msg"));
         }
@@ -158,14 +154,14 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         MediaServer mediaServerItem = null;
         if (mediaServerId == null) {
             mediaServerItem = mediaServerService.getDefaultMediaServer();
-        }else {
+        } else {
             mediaServerItem = mediaServerService.getOne(mediaServerId);
         }
         if (mediaServerItem == null) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到可用的流媒体");
         }
 
-        JSONObject result =  assistRESTfulUtils.queryTaskList(mediaServerItem, app, stream, callId, taskId, isEnd, scheme);
+        JSONObject result = assistRESTfulUtils.queryTaskList(mediaServerItem, app, stream, callId, taskId, isEnd, scheme);
         if (result == null || result.getInteger("code") != 0) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), result == null ? "查询任务列表失败" : result.getString("msg"));
         }
@@ -177,14 +173,14 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         // 开始时间和结束时间在数据库中都是以秒为单位的
         Long startTimeStamp = null;
         Long endTimeStamp = null;
-        if (startTime != null ) {
+        if (startTime != null) {
             if (!DateUtil.verification(startTime, DateUtil.formatter)) {
                 throw new ControllerException(ErrorCode.ERROR100.getCode(), "开始时间格式错误，正确格式为： " + DateUtil.formatter);
             }
             startTimeStamp = DateUtil.yyyy_MM_dd_HH_mm_ssToTimestamp(startTime);
 
         }
-        if (endTime != null ) {
+        if (endTime != null) {
             if (!DateUtil.verification(endTime, DateUtil.formatter)) {
                 throw new ControllerException(ErrorCode.ERROR100.getCode(), "结束时间格式错误，正确格式为： " + DateUtil.formatter);
             }
@@ -220,7 +216,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
                 resultCount += cloudRecordServiceMapper.updateCollectList(result, all.subList(i, toIndex));
 
             }
-        }else {
+        } else {
             resultCount = cloudRecordServiceMapper.updateCollectList(result, all);
         }
         return resultCount;
@@ -228,7 +224,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
 
     @Override
     public int changeCollectById(Integer recordId, boolean result) {
-       return cloudRecordServiceMapper.changeCollectById(result, recordId);
+        return cloudRecordServiceMapper.changeCollectById(result, recordId);
     }
 
     @Override
@@ -247,14 +243,14 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         // 开始时间和结束时间在数据库中都是以秒为单位的
         Long startTimeStamp = null;
         Long endTimeStamp = null;
-        if (startTime != null ) {
+        if (startTime != null) {
             if (!DateUtil.verification(startTime, DateUtil.formatter)) {
                 throw new ControllerException(ErrorCode.ERROR100.getCode(), "开始时间格式错误，正确格式为： " + DateUtil.formatter);
             }
             startTimeStamp = DateUtil.yyyy_MM_dd_HH_mm_ssToTimestampMs(startTime);
 
         }
-        if (endTime != null ) {
+        if (endTime != null) {
             if (!DateUtil.verification(endTime, DateUtil.formatter)) {
                 throw new ControllerException(ErrorCode.ERROR100.getCode(), "结束时间格式错误，正确格式为： " + DateUtil.formatter);
             }
