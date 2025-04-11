@@ -542,7 +542,8 @@ async function start(itemData){
     channelId: itemData.deviceId
   }
   const res = await sendDevicePush(params);
-  vUrl.value = res.data.fmp4;
+  console.log(res.data)
+  vUrl.value = res.data.hls;
   openPlay.value = true;
 }
 
