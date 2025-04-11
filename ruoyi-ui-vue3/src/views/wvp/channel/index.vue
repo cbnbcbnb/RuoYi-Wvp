@@ -34,16 +34,7 @@
       <el-table-column prop="deviceId" label="编号" min-width="180" align="center"/>
       <el-table-column label="快照" min-width="100" align="center">
         <template #default="scope">
-          <el-image
-              :src="getSnap(scope.row)"
-              :preview-src-list="getBigSnap(scope.row)"
-              @error="getSnapErrorEvent(scope.row.deviceId, scope.row.channelId)"
-              :fit="'contain'"
-              style="width: 60px">
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture-outline"></i>
-            </div>
-          </el-image>
+          <ImagePreview :src="getSnap(scope.row)"></ImagePreview>
         </template>
       </el-table-column>
       <el-table-column prop="subCount" label="子节点数" min-width="100" align="center"/>
@@ -715,27 +706,7 @@ function getDeviceChannelList() {
 }
 
 function getSnap(row) {
-  return import.meta.env.VITE_APP_BASE_API + '/api/device/query/snap/' + deviceId.value + '/' + row.deviceId;
-}
-
-function getBigSnap(row) {
-  return [getSnap(row)]
-}
-
-function getSnapErrorEvent(deviceId, channelId) {
-  if (typeof (loadSnap.value[deviceId + channelId]) != "undefined") {
-    console.log("下载截图" + loadSnap.value[deviceId + channelId])
-    if (loadSnap.value[deviceId + channelId] > 5) {
-      delete loadSnap.value[deviceId + channelId];
-      return;
-    }
-    setTimeout(() => {
-      let url = import.meta.env.VITE_APP_BASE_API + '/api/device/query/snap/' + deviceId + '/' + channelId
-      loadSnap.value[deviceId + channelId]++
-      document.getElementById(deviceId + channelId).setAttribute("src", url + '?' + new Date().getTime())
-    }, 1000)
-
-  }
+  return '/api/device/query/snap/' + deviceId.value + '/' + row.deviceId;
 }
 
 /**
@@ -773,7 +744,7 @@ function channelSubStreamChange(row) {
  * @param itemData
  */
 function stopDevicePush(itemData) {
-  playStop(deviceId, itemData.deviceId).then(() => {
+  playStop(deviceId.value, itemData.deviceId).then(() => {
     initData();
   }).catch(function (error) {
     initData();
