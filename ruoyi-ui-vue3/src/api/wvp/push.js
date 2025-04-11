@@ -8,3 +8,21 @@ export function listPush(query) {
         params: query
     })
 }
+
+// 添加推流信息
+export function addPush(data) {
+    return request({
+        url: `/api/push/add`,
+        method: 'post',
+        data: data
+    })
+}
+
+// 更新推流信息
+export function updatePush(data) {
+    return request({
+        url: `/api/push/update`,
+        method: 'post',
+        data: data
+    })
+}

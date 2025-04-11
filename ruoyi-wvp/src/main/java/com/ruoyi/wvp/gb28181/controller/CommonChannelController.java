@@ -121,10 +121,16 @@ public class CommonChannelController extends BaseController {
         return success();
     }
 
+    /**
+     * 新增通道
+     *
+     * @param channel 通道
+     * @return
+     */
     @PostMapping("/add")
-    public CommonGBChannel add(@RequestBody CommonGBChannel channel) {
+    public AjaxResult add(@RequestBody CommonGBChannel channel) {
         channelService.add(channel);
-        return channel;
+        return success(channel);
     }
 
     @Parameter(name = "page", description = "当前页", required = true)

@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.wvp.common.enums.ChannelDataType;
 import com.ruoyi.wvp.conf.UserSetting;
@@ -205,7 +206,7 @@ public class StreamPushController extends BaseController {
      */
     @PostMapping(value = "/add")
     @ResponseBody
-    public StreamPush add(@RequestBody StreamPush stream) {
+    public AjaxResult add(@RequestBody StreamPush stream) {
         if (ObjectUtils.isEmpty(stream.getGbId())) {
             throw new ControllerException(ErrorCode.ERROR400.getCode(), "国标ID不可为空");
         }
@@ -219,18 +220,24 @@ public class StreamPushController extends BaseController {
         }
         stream.setDataType(ChannelDataType.STREAM_PUSH.value);
         stream.setDataDeviceId(stream.getId());
-        return stream;
+        return success(stream);
     }
 
+    /**
+     * 更新推流信息
+     *
+     * @param stream
+     */
     @PostMapping(value = "/update")
     @ResponseBody
-    public void update(@RequestBody StreamPush stream) {
+    public AjaxResult update(@RequestBody StreamPush stream) {
         if (ObjectUtils.isEmpty(stream.getId())) {
             throw new ControllerException(ErrorCode.ERROR400.getCode(), "ID不可为空");
         }
         if (!streamPushService.update(stream)) {
             throw new ControllerException(ErrorCode.ERROR100);
         }
+        return success();
     }
 
     @DeleteMapping(value = "/batchRemove")

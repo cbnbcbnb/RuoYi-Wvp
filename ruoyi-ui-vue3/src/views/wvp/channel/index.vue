@@ -485,8 +485,8 @@
 </template>
 
 <script setup name="Channel">
-import ChannelCode from "./channelCode.vue"
-import ChooseCivilCode from "./chooseCivilCode.vue"
+import ChannelCode from "../../components/common/channelCode.vue"
+import ChooseCivilCode from "../../components/common/chooseCivilCode.vue"
 import ChooseGroup from "../../components/dialog/chooseGroup.vue"
 import CusPlayer from "@/components/flv/CusPlayer.vue";
 import {playStop} from "../../../api/wvp/play.js";

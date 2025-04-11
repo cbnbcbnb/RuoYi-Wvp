@@ -117,8 +117,7 @@
                      @click="showChannelList(scope.row)">通道
           </el-button>
 
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-          >修改
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改
           </el-button>
 
           <el-dropdown @command="(command)=>{moreClick(command, scope.row)}">
