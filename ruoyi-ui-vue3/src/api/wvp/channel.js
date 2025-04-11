@@ -49,3 +49,11 @@ export function updateChannelData(data) {
         data: data,
     })
 }
+
+// 通知设备上传媒体流
+export function sendDevicePush(params) {
+    return request({
+        url: `/api/play/start/${params.deviceId}/${params.channelId}`,
+        method: 'get',
+    })
+}

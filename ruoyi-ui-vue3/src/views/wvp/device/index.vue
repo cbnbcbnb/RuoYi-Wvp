@@ -110,16 +110,16 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-          <!--          <el-button link type="primary" :disabled="scope.row.online===0" icon="Edit"-->
-          <!--                     @click="refDevice(scope.row)"-->
-          <!--                     @mouseover="getTooltipContent(scope.row.deviceId)">刷新-->
-          <!--          </el-button>-->
+<!--          <el-button link type="primary" :disabled="scope.row.online===0" icon="Edit"-->
+<!--                     @click="refDevice(scope.row)"-->
+<!--                     @mouseover="getTooltipContent(scope.row.deviceId)">刷新-->
+<!--          </el-button>-->
           <el-button type="text" icon="Edit"
                      @click="showChannelList(scope.row)">通道
           </el-button>
 
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-                     >修改
+          >修改
           </el-button>
 
           <el-dropdown @command="(command)=>{moreClick(command, scope.row)}">

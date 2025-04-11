@@ -92,9 +92,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-          <!--          <el-button v-bind:disabled="device == null || device.online === 0" icon="el-icon-video-play"-->
-          <!--                     type="text" @click="sendDevicePush(scope.row)">播放-->
-          <!--          </el-button>-->
+          <el-button v-bind:disabled="device == null || device.online === 0" icon="el-icon-video-play"
+                     type="text" @click="start(scope.row)">播放
+          </el-button>
           <el-button v-bind:disabled="device == null || device.online === 0"
                      icon="el-icon-switch-button"
                      type="text" style="color: #f56c6c" v-if="!!scope.row.streamId"
@@ -477,6 +477,12 @@
     <ChooseCivilCode ref="chooseCivilCodeRef" @onSubmit="gbCivilCodeOnSubmit"></ChooseCivilCode>
 
     <ChooseGroup ref="chooseGroupRef" @onSubmit="gbParentOnSubmit"></ChooseGroup>
+
+    <el-dialog title="播放视频" v-model="openPlay" width="1000px" append-to-body>
+      <div style="width: 100%; height: 600px">
+        <easy-player class="player" :video-url="vUrl" autoplay :live="true"></easy-player>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -493,7 +499,7 @@ import {
   subChannels,
   updateChannelStreamIdentification
 } from "../../../api/wvp/device.js";
-import {getCommonChannel, resetChannel, updateChannelData} from "../../../api/wvp/channel.js";
+import {getCommonChannel, resetChannel, updateChannelData, sendDevicePush} from "../../../api/wvp/channel.js";
 import {recordApi} from "../../../api/wvp/control.js";
 import router from "@/router";
 const route = useRoute();
@@ -506,6 +512,7 @@ const parentChannelId = ref('');
 const device = ref({});
 const showTree = ref(false);
 const open = ref(false);
+const openPlay = ref(false);
 const deviceChannelList = ref([])
 const showSearch = ref(true);
 const loadSnap = ref({});
@@ -513,6 +520,7 @@ const channelListTable = ref(null);
 const channelCode = ref(null);
 const chooseCivilCodeRef = ref(null);
 const chooseGroupRef = ref(null);
+const vUrl = ref('');
 
 const data = reactive({
   form: {},
@@ -527,6 +535,16 @@ const data = reactive({
 });
 
 const {queryParams, form, rules} = toRefs(data);
+
+async function start(itemData){
+  const params = {
+    deviceId: deviceId.value,
+    channelId: itemData.deviceId
+  }
+  const res = await sendDevicePush(params);
+  console.log(res);
+
+}
 
 /** 搜索按钮操作 */
 function handleQuery() {
@@ -689,7 +707,6 @@ function getDeviceChannelList() {
         channelType: queryParams.value.channelType,
       }
   ).then(response => {
-    console.log(response)
     channelList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -865,5 +882,10 @@ onMounted(() => {
   color: var(--el-color-primary);
   display: flex;
   align-items: center;
+}
+
+.player {
+  width: 1000px;
+  height: 600px;
 }
 </style>
