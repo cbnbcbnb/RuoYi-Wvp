@@ -32,3 +32,20 @@ export function getNetworkIdentificationTypeList() {
         method: 'get',
     })
 }
+
+// 重置通道
+export function resetChannel(id) {
+    return request({
+        url: `/api/common/channel/reset/${id}`,
+        method: 'post',
+    })
+}
+
+// 修改通道信息
+export function updateChannelData(data) {
+    return request({
+        url: `/api/common/channel/update`,
+        method: 'post',
+        data: data,
+    })
+}

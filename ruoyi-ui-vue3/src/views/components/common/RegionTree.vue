@@ -11,7 +11,8 @@
 
 <script setup name="RegionTree">
 import {queryForTree} from "../../../api/wvp/region.js";
-
+import {defineEmits} from "vue";
+const emit = defineEmits(['handleNodeClick']);
 const {proxy} = getCurrentInstance();
 
 const searchSrt = ref('');
@@ -39,6 +40,6 @@ onMounted(() => {
 })
 
 function handleNodeClick(data){
-  console.log(data.deviceId)
+  emit('handleNodeClick', data);
 }
 </script>

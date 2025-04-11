@@ -9,9 +9,7 @@
         :destroy-on-close="true"
         @close="close()"
     >
-      <RegionTree ref="regionTree"
-                  :clickEvent="treeNodeClickEvent"
-      ></RegionTree>
+      <RegionTree ref="regionTree" @handleNodeClick="handleNodeClick"></RegionTree>
       <el-form style="margin-top: 20px">
         <el-form-item>
           <div style="text-align: right">
@@ -28,28 +26,25 @@
 import RegionTree from "../../components/common/RegionTree.vue";
 
 const showDialog = ref(false);
-const endCallback = ref(false);
 const regionDeviceId = ref('');
-
+import {defineEmits} from "vue";
+const emit = defineEmits(['onSubmit']);
 defineExpose({openDialog})
 
 function openDialog(callback) {
   showDialog.value = true;
-  endCallback.value = callback;
 }
 
 function onSubmit() {
-  if (endCallback.value) {
-    endCallback.value = regionDeviceId.value
-  }
   close();
+  emit('onSubmit', regionDeviceId.value);
 }
 
 function close() {
   showDialog.value = false;
 }
 
-function treeNodeClickEvent(region) {
-  regionDeviceId.value = region.deviceId;
+function handleNodeClick(data) {
+  regionDeviceId.value = data.deviceId;
 }
 </script>

@@ -64,19 +64,6 @@ public interface GroupMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int batchAdd(List<Group> groupList);
 
-    @Select(" <script>" +
-            " SELECT " +
-            " * , " +
-            " concat('group', id) as tree_id," +
-            " 0 as type," +
-            " false as is_leaf," +
-            " 'ON' as status" +
-            " from wvp_common_group " +
-            " where 1=1 " +
-            " <if test='parentId != null'> and parent_id = #{parentId} </if> " +
-            " <if test='parentId == null'> and parent_id is null </if> " +
-            " <if test='query != null'> AND (device_id LIKE concat('%',#{query},'%') OR name LIKE concat('%',#{query},'%'))</if> " +
-            " </script>")
     List<GroupTree> queryForTree(@Param("query") String query, @Param("parentId") Integer parentId);
 
     @Select(" <script>" +

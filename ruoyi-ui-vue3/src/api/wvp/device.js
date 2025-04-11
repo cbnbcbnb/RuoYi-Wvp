@@ -109,5 +109,3 @@ export function subChannels(query) {
         params: query
     })
 }
-
-

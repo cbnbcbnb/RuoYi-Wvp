@@ -84,8 +84,6 @@ public class ConfigDownloadResponseMessageHandler extends SIPRequestProcessorPar
         msg.setKey(key);
         msg.setData(json);
         deferredResultHolder.invokeAllResult(msg);
-
-
     }
 
     @Override

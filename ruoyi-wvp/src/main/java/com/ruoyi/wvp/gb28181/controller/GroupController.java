@@ -1,8 +1,9 @@
 package com.ruoyi.wvp.gb28181.controller;
 
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Group;
-import com.ruoyi.wvp.gb28181.bean.GroupTree;
 import com.ruoyi.wvp.gb28181.service.IGroupService;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,7 @@ import java.util.List;
 @Tag(name = "分组管理")
 @RestController
 @RequestMapping("/api/group")
-public class GroupController {
+public class GroupController extends BaseController {
 
     @Autowired
     private IGroupService groupService;
@@ -29,31 +30,36 @@ public class GroupController {
     @Parameter(name = "group", description = "group", required = true)
     @ResponseBody
     @PostMapping("/add")
-    public void add(@RequestBody Group group){
+    public void add(@RequestBody Group group) {
         groupService.add(group);
     }
 
-    @Operation(summary = "查询分组")
-    @Parameter(name = "query", description = "要搜索的内容", required = true)
-    @Parameter(name = "parent", description = "所属分组编号", required = true)
+    /**
+     * 查询分组树
+     *
+     * @param query      要搜索的内容
+     * @param parent     所属分组编号
+     * @param hasChannel 是否包含通道
+     * @return
+     */
     @ResponseBody
     @GetMapping("/tree/list")
-    public List<GroupTree> queryForTree(
+    public AjaxResult queryForTree(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Integer parent,
             @RequestParam(required = false) Boolean hasChannel
-    ){
+    ) {
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
-        return groupService.queryForTree(query, parent, hasChannel);
+        return success(groupService.queryForTree(query, parent, hasChannel));
     }
 
     @Operation(summary = "更新分组")
     @Parameter(name = "group", description = "Group", required = true)
     @ResponseBody
     @PostMapping("/update")
-    public void update(@RequestBody Group group){
+    public void update(@RequestBody Group group) {
         groupService.update(group);
     }
 
@@ -61,7 +67,7 @@ public class GroupController {
     @Parameter(name = "id", description = "分组id", required = true)
     @ResponseBody
     @DeleteMapping("/delete")
-    public void delete(Integer id){
+    public void delete(Integer id) {
         Assert.notNull(id, "分组id（deviceId）不需要存在");
         boolean result = groupService.delete(id);
         if (!result) {
@@ -73,7 +79,7 @@ public class GroupController {
     @Parameter(name = "deviceId", description = "当前的行政区划", required = false)
     @ResponseBody
     @GetMapping("/path")
-    public List<Group> getPath(String deviceId, String businessGroup){
+    public List<Group> getPath(String deviceId, String businessGroup) {
         return groupService.getPath(deviceId, businessGroup);
     }
 

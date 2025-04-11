@@ -48,7 +48,6 @@
             plain
             icon="InfoFilled"
             @click="showInfo"
-            v-hasPermi="['system:config:add']"
         >平台信息
         </el-button>
       </el-col>
@@ -120,11 +119,35 @@
           </el-button>
 
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-                     v-hasPermi="['system:config:edit']">修改
+                     >修改
           </el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
-                     v-hasPermi="['system:config:remove']">删除
-          </el-button>
+
+          <el-dropdown @command="(command)=>{moreClick(command, scope.row)}">
+             <span class="el-dropdown-link">
+              <el-button size="medium" type="text">
+                更多
+                <el-icon class="el-icon--right">
+                <arrow-down/>
+              </el-icon>
+              </el-button>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="delete" style="color: #f56c6c">
+                  删除
+                </el-dropdown-item>
+                <el-dropdown-item command="setGuard" v-bind:disabled="!scope.row.onLine">
+                  布防
+                </el-dropdown-item>
+                <el-dropdown-item command="resetGuard" v-bind:disabled="!scope.row.onLine">
+                  撤防
+                </el-dropdown-item>
+                <el-dropdown-item command="syncBasicParam" v-bind:disabled="!scope.row.onLine">
+                  基础配置同步
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -230,6 +253,9 @@ import {
 } from "../../../api/wvp/device.js";
 import {configInfo, getOnlineMediaServerList} from "../../../api/wvp/wvpMediaServer.js";
 import router from "@/router";
+import {guardApi} from "../../../api/wvp/control.js";
+import {ElMessage} from 'element-plus'
+import {configDownloadApi} from "../../../api/wvp/config.js";
 
 const {proxy} = getCurrentInstance();
 
@@ -440,6 +466,18 @@ async function getTooltipContent(deviceId) {
   // })
 }
 
+function moreClick(command, itemData) {
+  if (command === "setGuard") {
+    setGuard(itemData)
+  } else if (command === "resetGuard") {
+    resetGuard(itemData)
+  } else if (command === "delete") {
+    handleDelete(itemData)
+  } else if (command === "syncBasicParam") {
+    syncBasicParam(itemData)
+  }
+}
+
 /**
  * 显示通道列表
  *
@@ -449,5 +487,50 @@ function showChannelList(row) {
   router.push(`/channel/list/index/${row.deviceId}/0`);
 }
 
+function setGuard(row) {
+  guardApi({
+    deviceId: row.deviceId,
+    guardCmdStr: 'SetGuard',
+  }).then(() => {
+    ElMessage({
+      message: '布防成功',
+      type: 'success',
+    })
+  })
+}
+
+function resetGuard(row) {
+  guardApi({
+    deviceId: row.deviceId,
+    guardCmdStr: 'ResetGuard',
+  }).then(() => {
+    ElMessage({
+      message: '撤防成功',
+      type: 'success',
+    })
+  })
+}
+
+function syncBasicParam(row) {
+  configDownloadApi({
+    deviceId: row.deviceId,
+    configType: "BasicParam",
+  }).then((res) => {
+    ElMessage({
+      message: `配置已同步，当前心跳间隔： ${res.BasicParam.HeartBeatInterval} 心跳间隔:${res.BasicParam.HeartBeatCount}`,
+      type: 'success',
+    })
+  })
+}
+
 getList();
 </script>
+
+<style scoped>
+.example-showcase .el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
+}
+</style>

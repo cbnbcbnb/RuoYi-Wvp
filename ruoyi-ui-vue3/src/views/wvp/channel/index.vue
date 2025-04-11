@@ -209,7 +209,7 @@
             <el-form-item label="父节点编码">
               <el-input v-model="form.gbParentId" placeholder="请输入父节点编码或选择所属虚拟组织">
                 <template v-slot:append>
-                  <el-button @click="chooseGroup()">选择</el-button>
+                  <el-button @click="chooseGroupFun()">选择</el-button>
                 </template>
               </el-input>
             </el-form-item>
@@ -467,15 +467,16 @@
         <div class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
+          <el-button v-if="form.dataType === 1" @click="resetData">重置</el-button>
         </div>
       </template>
     </el-dialog>
 
     <ChannelCode ref="channelCode" @handleOk="handleOk"></ChannelCode>
 
-    <ChooseCivilCode ref="chooseCivilCodeRef"></ChooseCivilCode>
+    <ChooseCivilCode ref="chooseCivilCodeRef" @onSubmit="gbCivilCodeOnSubmit"></ChooseCivilCode>
 
-    <ChooseGroup ref="chooseGroup"></ChooseGroup>
+    <ChooseGroup ref="chooseGroupRef" @onSubmit="gbParentOnSubmit"></ChooseGroup>
   </div>
 </template>
 
@@ -484,6 +485,7 @@ import ChannelCode from "./channelCode.vue"
 import ChooseCivilCode from "./chooseCivilCode.vue"
 import ChooseGroup from "../../components/dialog/chooseGroup.vue"
 import {playStop} from "../../../api/wvp/play.js";
+import {ElMessage, ElMessageBox} from 'element-plus'
 import {
   changeAudio,
   getDeviceById,
@@ -491,8 +493,9 @@ import {
   subChannels,
   updateChannelStreamIdentification
 } from "../../../api/wvp/device.js";
-import {getCommonChannel} from "../../../api/wvp/channel.js";
-
+import {getCommonChannel, resetChannel, updateChannelData} from "../../../api/wvp/channel.js";
+import {recordApi} from "../../../api/wvp/control.js";
+import router from "@/router";
 const route = useRoute();
 const {proxy} = getCurrentInstance();
 const channelList = ref([]);
@@ -509,6 +512,7 @@ const loadSnap = ref({});
 const channelListTable = ref(null);
 const channelCode = ref(null);
 const chooseCivilCodeRef = ref(null);
+const chooseGroupRef = ref(null);
 
 const data = reactive({
   form: {},
@@ -580,7 +584,18 @@ function reset() {
 function submitForm() {
   proxy.$refs["formRef"].validate(valid => {
     if (valid) {
-
+      if (form.value.gbDownloadSpeedArray) {
+        form.value.gbDownloadSpeed = form.value.gbDownloadSpeedArray.join("/")
+      }
+      if (form.value.gbId) {
+        updateChannelData(form.value).then(() => {
+          ElMessage({
+            type: 'success',
+            message: '保存成功',
+          })
+          open.value = false
+        })
+      }
     }
   });
 }
@@ -603,15 +618,23 @@ function handleOk(code) {
 
 function chooseCivilCodeFun() {
   chooseCivilCodeRef.value.openDialog(code => {
-    // this.form.gbCivilCode = code;
+
   });
 }
 
-function chooseGroup() {
-  // this.$refs.chooseGroup.openDialog((deviceId, businessGroupId) => {
-  //   this.form.gbBusinessGroupId = businessGroupId;
-  //   this.form.gbParentId = deviceId;
-  // });
+function gbCivilCodeOnSubmit(data) {
+  form.value.gbCivilCode = data;
+}
+
+function chooseGroupFun() {
+  chooseGroupRef.value.openDialog((deviceId, businessGroupId) => {
+
+  });
+}
+
+function gbParentOnSubmit(deviceId, businessGroupId) {
+  form.value.gbBusinessGroupId = businessGroupId;
+  form.value.gbParentId = deviceId;
 }
 
 /**
@@ -739,28 +762,89 @@ function stopDevicePush(itemData) {
   });
 }
 
+function resetData() {
+  ElMessageBox.confirm(
+      '确定重置为默认内容?',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        resetChannel(form.value.gbId).then((res) => {
+          ElMessage({
+            type: 'success',
+            message: '重置成功 已保存',
+          })
+        })
+        getCommonChannelFun(form.value.gbId)
+      })
+      .catch(() => {
+
+      })
+}
+
 // 编辑
 function handleEdit(row) {
-  getCommonChannel(row.id).then((res) => {
-    console.log(res)
+  getCommonChannelFun(row.id)
+}
+
+function getCommonChannelFun(id) {
+  getCommonChannel(id).then((res) => {
     if (res.data.gbDownloadSpeed) {
       res.data.gbDownloadSpeedArray = res.data.gbDownloadSpeed.split("/")
     }
-    this.form = res.data;
+    form.value = res.data;
     open.value = true
   })
 }
 
 function moreClick(command, itemData) {
   if (command === "records") {
-    this.queryRecords(itemData)
+    queryRecords(itemData)
   } else if (command === "cloudRecords") {
-    this.queryCloudRecords(itemData)
+    queryCloudRecords(itemData)
   } else if (command === "record") {
-    this.startRecord(itemData)
+    startRecord(itemData)
   } else if (command === "stopRecord") {
-    this.stopRecord(itemData)
+    stopRecord(itemData)
   }
+}
+
+function queryRecords(itemData) {
+  router.push(`/channel/gbRecordDetail/index/${deviceId.value}/${itemData.deviceId}`);
+}
+
+function queryCloudRecords(itemData) {
+  router.push(`/channel/cloudRecordDetail/index/${deviceId.value}_${itemData.deviceId}`);
+}
+
+function startRecord(itemData) {
+  recordApi({
+    deviceId: deviceId.value,
+    recordCmdStr: "Record",
+    channelId: itemData.deviceId,
+  }).then(() => {
+    ElMessage({
+      type: 'success',
+      message: '开始录像成功',
+    })
+  })
+}
+
+function stopRecord(itemData) {
+  recordApi({
+    deviceId: deviceId.value,
+    recordCmdStr: "StopRecord",
+    channelId: itemData.deviceId,
+  }).then(() => {
+    ElMessage({
+      type: 'success',
+      message: '停止录像成功',
+    })
+  })
 }
 
 onMounted(() => {

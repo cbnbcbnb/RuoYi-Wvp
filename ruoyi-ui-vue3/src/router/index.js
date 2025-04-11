@@ -172,6 +172,34 @@ export const dynamicRoutes = [
         meta: { title: '通道列表', activeMenu: '/device' }
       }
     ]
+  },
+  {
+    path: '/channel/gbRecordDetail',
+    component: Layout,
+    hidden: true,
+    permissions: ['tool:gen:edit'],
+    children: [
+      {
+        path: 'index/:deviceId(\\d+)/:channelId(\\d+)',
+        component: () => import('@/views/wvp/gbRecordDetail/index'),
+        name: 'GbRecordDetail',
+        meta: { title: '设备录像', activeMenu: '/device' }
+      }
+    ]
+  },
+  {
+    path: '/channel/cloudRecordDetail',
+    component: Layout,
+    hidden: true,
+    permissions: ['tool:gen:edit'],
+    children: [
+      {
+        path: 'index/:deviceId(\\d+)_:channelId(\\d+)',
+        component: () => import('@/views/wvp/cloudRecordDetail/index'),
+        name: 'CloudRecordDetail',
+        meta: { title: '云端录像', activeMenu: '/device' }
+      }
+    ]
   }
 ]
 

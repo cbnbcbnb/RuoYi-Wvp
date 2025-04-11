@@ -99,14 +99,26 @@ public class CommonChannelController extends BaseController {
         return success(channelService.getNetworkIdentificationTypeList());
     }
 
+    /**
+     * 修改通道信息
+     *
+     * @param channel
+     */
     @PostMapping("/update")
-    public void update(@RequestBody CommonGBChannel channel) {
+    public AjaxResult update(@RequestBody CommonGBChannel channel) {
         channelService.update(channel);
+        return success();
     }
 
-    @PostMapping("/reset")
-    public void reset(Integer id) {
+    /**
+     * 重置通道
+     *
+     * @param id
+     */
+    @PostMapping("/reset/{id}")
+    public AjaxResult reset(@PathVariable Integer id) {
         channelService.reset(id);
+        return success();
     }
 
     @PostMapping("/add")

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wvp.mapper.GroupMapper">
+
+    <select id="queryForTree" resultType="com.ruoyi.wvp.gb28181.bean.GroupTree">
+        SELECT
+        *,
+        concat('group', id) as tree_id,
+        0 as type,
+        false as is_leaf,
+        'ON' as status
+        FROM wvp_common_group
+        <where>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="query != null">
+                AND (device_id LIKE concat('%', #{query}, '%') OR name LIKE concat('%', #{query}, '%'))
+            </if>
+        </where>
+    </select>
+</mapper>
