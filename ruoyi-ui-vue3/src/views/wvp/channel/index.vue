@@ -469,9 +469,10 @@
 
     <ChooseGroup ref="chooseGroupRef" @onSubmit="gbParentOnSubmit"></ChooseGroup>
 
-    <el-dialog title="播放视频" v-model="openPlay" width="1000px" append-to-body>
+    <el-dialog title="播放视频" v-model="openPlay" width="1000px" append-to-body @opened="openedPlay">
       <div style="width: 100%; height: 600px">
-        <easy-player class="player" :video-url="vUrl" autoplay :live="true"></easy-player>
+<!--        <easy-player class="player" :video-url="vUrl" autoplay :live="true"></easy-player>-->
+          <CusPlayer ref="video"></CusPlayer>
       </div>
     </el-dialog>
   </div>
@@ -511,7 +512,13 @@ const channelListTable = ref(null);
 const channelCode = ref(null);
 const chooseCivilCodeRef = ref(null);
 const chooseGroupRef = ref(null);
-const vUrl = ref('');
+const video = ref(null);
+const vUrl = ref(null);
+const showVideoDialog = ref(false);
+const hasAudio = ref(false);
+const videoError = (e) => {
+  console.log("播放器错误：" + JSON.stringify(e));
+}
 
 const data = reactive({
   form: {},
@@ -533,9 +540,25 @@ async function start(itemData){
     channelId: itemData.deviceId
   }
   const res = await sendDevicePush(params);
-  console.log(res.data)
-  vUrl.value = res.data.hls;
+  console.log(res.data);
+  vUrl.value = res.data.flv;
   openPlay.value = true;
+}
+
+function openedPlay(){
+  nextTick(() => {
+    if (video.value && typeof video.value.createPlayer === 'function') {
+      console.log('video 存在');
+      video.value.createPlayer(vUrl.value, 0)
+    } else {
+      console.error('createPlayer 方法不存在');
+    }
+  })
+
+}
+
+function paly(){
+  video.value.createPlayer(vUrl.value, 0)
 }
 
 /** 搜索按钮操作 */
