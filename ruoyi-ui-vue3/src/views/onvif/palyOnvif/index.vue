@@ -46,8 +46,11 @@ const video = ref(null);
 console.log(proxy.$route.query);
 
 const handlePlay = () => {
+  const prefix = "http://192.168.158.199:8866/live?url=";
   if (playUrl.value) {
-    playUrl.value = "http://localhost:8866/live?url=" + playUrl.value
+    if (!playUrl.value.startsWith(prefix)) {
+      playUrl.value = prefix + playUrl.value;
+    }
     video.value.createPlayer(playUrl.value, 0)
   } else {
     alert('请填写播放地址');

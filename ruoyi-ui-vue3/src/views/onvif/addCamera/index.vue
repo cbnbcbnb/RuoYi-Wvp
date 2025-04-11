@@ -70,7 +70,7 @@ const url = ref('');
 const disabledAdd = ref(true);
 const probeForm = ref({
   name: '球机',
-  ip: '192.168.158.63',
+  ip: '192.168.158.62',
   username: 'admin',
   password: 'admin123',
 });
