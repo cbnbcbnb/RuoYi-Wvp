@@ -285,7 +285,7 @@ public interface CommonGBChannelMapper {
             " WHERE gb_civil_code in "+
             " <foreach collection='allChildren'  item='item'  open='(' separator=',' close=')' > #{item.deviceId}</foreach>" +
             " </script>"})
-    int removeCivilCode(List<Region> allChildren);
+    int removeCivilCode(@Param("allChildren") List<Region> allChildren);
 
 
     @Update(value = {" <script>" +

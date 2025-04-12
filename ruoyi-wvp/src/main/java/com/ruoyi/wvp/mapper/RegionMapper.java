@@ -74,7 +74,7 @@ public interface RegionMapper {
             " DELETE FROM wvp_common_region WHERE id in " +
             " <foreach collection='allChildren'  item='item'  open='(' separator=',' close=')' > #{item.id}</foreach>" +
             " </script>")
-    void batchDelete(List<Region> allChildren);
+    void batchDelete(@Param("allChildren") List<Region> allChildren);
 
     @Select(" <script>" +
             " SELECT * from wvp_common_region " +

@@ -136,64 +136,7 @@ const emit = defineEmits(['handleOk']);
 
 const showVideoDialog = ref(false);
 const activeKey = ref('0');
-const allVal = ref([
-  {
-    id: [1, 2],
-    meaning: '省级编码',
-    val: '11',
-    type: '中心编码',
-    lock: false,
-  },
-  {
-    id: [3, 4],
-    meaning: '市级编码',
-    val: '01',
-    type: '中心编码',
-    lock: false,
-  },
-  {
-    id: [5, 6],
-    meaning: '区级编码',
-    val: '01',
-    type: '中心编码',
-    lock: false,
-  },
-  {
-    id: [7, 8],
-    meaning: '基层接入单位编码',
-    val: '01',
-    type: '中心编码',
-    lock: false,
-  },
-  {
-    id: [9, 10],
-    meaning: '行业编码',
-    val: '00',
-    type: '行业编码',
-    lock: false,
-  },
-  {
-    id: [11, 13],
-    meaning: '类型编码',
-    val: '132',
-    type: '类型编码',
-    lock: false,
-  },
-  {
-    id: [14],
-    meaning: '网络标识编码',
-    val: '7',
-    type: '网络标识',
-    lock: false,
-  },
-  {
-    id: [15, 20],
-    meaning: '设备/用户序号',
-    val: '000001',
-    type: '序号',
-    lock: false,
-  }
-]);
+const allVal = ref([]);
 const regionList = ref([]);
 const deviceTypeList = ref([]);
 const industryCodeTypeList = ref([]);
@@ -204,7 +147,62 @@ const endCallBck = ref(null);
 defineExpose({openDialog})
 
 function openDialog(callBck, code, lockIndex, lockContent) {
-  console.log(code)
+  allVal.value = [{
+    id: [1, 2],
+    meaning: '省级编码',
+    val: '11',
+    type: '中心编码',
+    lock: false,
+  },
+    {
+      id: [3, 4],
+      meaning: '市级编码',
+      val: '01',
+      type: '中心编码',
+      lock: false,
+    },
+    {
+      id: [5, 6],
+      meaning: '区级编码',
+      val: '01',
+      type: '中心编码',
+      lock: false,
+    },
+    {
+      id: [7, 8],
+      meaning: '基层接入单位编码',
+      val: '01',
+      type: '中心编码',
+      lock: false,
+    },
+    {
+      id: [9, 10],
+      meaning: '行业编码',
+      val: '00',
+      type: '行业编码',
+      lock: false,
+    },
+    {
+      id: [11, 13],
+      meaning: '类型编码',
+      val: '132',
+      type: '类型编码',
+      lock: false,
+    },
+    {
+      id: [14],
+      meaning: '网络标识编码',
+      val: '7',
+      type: '网络标识',
+      lock: false,
+    },
+    {
+      id: [15, 20],
+      meaning: '设备/用户序号',
+      val: '000001',
+      type: '序号',
+      lock: false,
+    }]
   showVideoDialog.value = true
   activeKey.value = '0';
   regionList.value = []
@@ -221,8 +219,8 @@ function openDialog(callBck, code, lockIndex, lockContent) {
     allVal.value[7].val = code.substring(14)
   }
   if (typeof lockIndex != 'undefined') {
-    allVal.value[0][lockIndex].lock = true
-    allVal.value[0][lockIndex].val = lockContent
+    allVal.value[lockIndex].lock = true
+    allVal.value[lockIndex].val = lockContent
   }
   endCallBck.value = callBck;
 }

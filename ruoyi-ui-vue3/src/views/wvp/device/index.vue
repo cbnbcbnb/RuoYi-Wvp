@@ -110,23 +110,23 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-          <el-button link type="primary" :disabled="scope.row.online===0" icon="Refresh"
+          <el-button link type="primary" :disabled="scope.row.online===0"
                      @click="refDevice(scope.row)">刷新
           </el-button>
-          <el-button type="text" icon="Edit"
+          <el-button type="text"
                      @click="showChannelList(scope.row)">通道
           </el-button>
 
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改
+          <el-button link type="primary" @click="handleUpdate(scope.row)">修改
           </el-button>
 
           <el-dropdown @command="(command)=>{moreClick(command, scope.row)}">
              <span class="el-dropdown-link">
               <el-button size="medium" type="text">
                 更多
-                <el-icon class="el-icon--right">
-                <arrow-down/>
-              </el-icon>
+                <el-icon>
+                  <arrow-down/>
+                </el-icon>
               </el-button>
             </span>
             <template #dropdown>

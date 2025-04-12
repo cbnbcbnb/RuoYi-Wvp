@@ -96,7 +96,7 @@ public interface GroupMapper {
             " DELETE FROM wvp_common_group WHERE id in " +
             " <foreach collection='allChildren'  item='item'  open='(' separator=',' close=')' > #{item.id}</foreach>" +
             " </script>")
-    int batchDelete(List<Group> allChildren);
+    int batchDelete(@Param("allChildren") List<Group> allChildren);
 
     @Select("SELECT * from wvp_common_group WHERE device_id = #{businessGroup} and business_group = #{businessGroup} ")
     Group queryBusinessGroup(@Param("businessGroup") String businessGroup);
@@ -117,7 +117,7 @@ public interface GroupMapper {
             " where device_id in " +
             " <foreach collection='groupList'  item='item'  open='(' separator=',' close=')' > #{item.deviceId}</foreach>" +
             " </script>")
-    List<Group> queryInGroupListByDeviceId(List<Group> groupList);
+    List<Group> queryInGroupListByDeviceId(@Param("groupList") List<Group> groupList);
 
     @Select(" <script>" +
             " SELECT " +

@@ -22,7 +22,6 @@ import com.ruoyi.wvp.streamPush.service.IStreamPushService;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,14 +93,16 @@ public class StreamPushController extends BaseController {
         return getDataTable(list);
     }
 
-
-    @PostMapping(value = "/remove")
+    /**
+     * 删除推流
+     *
+     * @param id 应用名
+     */
+    @PostMapping(value = "/remove/{id}")
     @ResponseBody
-    @Parameter(name = "id", description = "应用名", required = true)
-    public void delete(int id) {
-        if (streamPushService.delete(id) > 0) {
-            throw new ControllerException(ErrorCode.ERROR100);
-        }
+    public AjaxResult delete(@PathVariable int id) {
+        streamPushService.delete(id);
+        return success();
     }
 
     @PostMapping(value = "upload")

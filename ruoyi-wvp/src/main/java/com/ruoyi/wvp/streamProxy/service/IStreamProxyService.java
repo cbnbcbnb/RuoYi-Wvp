@@ -7,6 +7,7 @@ import com.ruoyi.wvp.streamProxy.bean.StreamProxy;
 import com.ruoyi.wvp.streamProxy.bean.StreamProxyParam;
 import com.ruoyi.wvp.vmanager.bean.ResourceBaseInfo;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IStreamProxyService {
@@ -23,7 +24,7 @@ public interface IStreamProxyService {
      * @param count
      * @return
      */
-    PageInfo<StreamProxy> getAll(Integer page, Integer count, String query, Boolean pulling, String mediaServerId);
+    List<StreamProxy> getAll(Integer page, Integer count, String query, Boolean pulling, String mediaServerId);
 
     /**
      * 删除视频代理

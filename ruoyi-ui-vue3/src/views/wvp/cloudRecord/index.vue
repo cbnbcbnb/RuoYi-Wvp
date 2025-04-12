@@ -37,7 +37,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="getRecordList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="recordList" border>
@@ -62,9 +62,9 @@
       <el-table-column prop="mediaServerId" label="流媒体" align="center"/>
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-          <el-button icon="el-icon-video-play" type="text" @click="play(scope.row)">播放
+          <el-button type="text" @click="play(scope.row)">播放
           </el-button>
-          <el-button icon="el-icon-download" type="text" @click="downloadFile(scope.row)">下载
+          <el-button type="text" @click="downloadFile(scope.row)">下载
           </el-button>
         </template>
       </el-table-column>

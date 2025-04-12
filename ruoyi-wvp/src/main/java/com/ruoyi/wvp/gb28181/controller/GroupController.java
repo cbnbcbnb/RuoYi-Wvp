@@ -26,12 +26,16 @@ public class GroupController extends BaseController {
     @Autowired
     private IGroupService groupService;
 
-    @Operation(summary = "添加分组")
-    @Parameter(name = "group", description = "group", required = true)
+    /**
+     * 添加分组
+     *
+     * @param group
+     */
     @ResponseBody
     @PostMapping("/add")
-    public void add(@RequestBody Group group) {
+    public AjaxResult add(@RequestBody Group group) {
         groupService.add(group);
+        return success();
     }
 
     /**
@@ -55,24 +59,32 @@ public class GroupController extends BaseController {
         return success(groupService.queryForTree(query, parent, hasChannel));
     }
 
-    @Operation(summary = "更新分组")
-    @Parameter(name = "group", description = "Group", required = true)
+    /**
+     * 更新分组
+     *
+     * @param group
+     */
     @ResponseBody
     @PostMapping("/update")
-    public void update(@RequestBody Group group) {
+    public AjaxResult update(@RequestBody Group group) {
         groupService.update(group);
+        return success();
     }
 
-    @Operation(summary = "删除分组")
-    @Parameter(name = "id", description = "分组id", required = true)
+    /**
+     * 删除分组
+     *
+     * @param id 分组id
+     */
     @ResponseBody
-    @DeleteMapping("/delete")
-    public void delete(Integer id) {
+    @DeleteMapping("/delete/{id}")
+    public AjaxResult delete(@PathVariable Integer id) {
         Assert.notNull(id, "分组id（deviceId）不需要存在");
         boolean result = groupService.delete(id);
         if (!result) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "移除失败");
         }
+        return success();
     }
 
     @Operation(summary = "获取所属的行政区划下的行政区划")
