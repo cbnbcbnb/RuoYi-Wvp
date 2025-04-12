@@ -2,14 +2,13 @@ package com.ruoyi.wvp.streamProxy.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.common.enums.ChannelDataType;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.CommonGBChannel;
 import com.ruoyi.wvp.gb28181.service.IGbChannelService;
+import com.ruoyi.wvp.mapper.StreamProxyMapper;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.event.media.MediaArrivalEvent;
 import com.ruoyi.wvp.media.event.media.MediaDepartureEvent;
@@ -21,7 +20,6 @@ import com.ruoyi.wvp.media.zlm.dto.hook.OriginType;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.streamProxy.bean.StreamProxy;
 import com.ruoyi.wvp.streamProxy.bean.StreamProxyParam;
-import com.ruoyi.wvp.mapper.StreamProxyMapper;
 import com.ruoyi.wvp.streamProxy.service.IStreamProxyPlayService;
 import com.ruoyi.wvp.streamProxy.service.IStreamProxyService;
 import com.ruoyi.wvp.utils.DateUtil;
@@ -236,15 +234,13 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
     }
 
     @Override
-    public PageInfo<StreamProxy> getAll(Integer page, Integer count, String query, Boolean pulling, String mediaServerId) {
-        PageHelper.startPage(page, count);
+    public List<StreamProxy> getAll(Integer page, Integer count, String query, Boolean pulling, String mediaServerId) {
         if (query != null) {
             query = query.replaceAll("/", "//")
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
-        List<StreamProxy> all = streamProxyMapper.selectAll(query, pulling, mediaServerId);
-        return new PageInfo<>(all);
+        return streamProxyMapper.selectAll(query, pulling, mediaServerId);
     }
 
 

@@ -26,3 +26,11 @@ export function updatePush(data) {
         data: data
     })
 }
+
+// 删除推流
+export function removePush(id) {
+    return request({
+        url: `/api/push/remove/${id}`,
+        method: 'post',
+    })
+}

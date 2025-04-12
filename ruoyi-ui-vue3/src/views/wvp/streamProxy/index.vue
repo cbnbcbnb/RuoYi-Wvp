@@ -7,11 +7,12 @@
             placeholder="请输入关键字"
             clearable
             style="width: 240px"
-            @keyup.enter="handleQuery"
+
         />
       </el-form-item>
-      <el-form-item label="流媒体" prop="query">
-        <el-select @change="getPushList" style="width: 250px" v-model="queryParams.mediaServerId"
+
+      <el-form-item label="流媒体" prop="mediaServerId">
+        <el-select style="width: 250px;" v-model="queryParams.mediaServerId"
                    placeholder="请选择流媒体" default-first-option>
           <el-option
               v-for="item in mediaServerList"
@@ -21,13 +22,15 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="推流状态" prop="query">
-        <el-select @change="getPushList" style="width: 250px" v-model="queryParams.pushing"
-                   placeholder="请选择推流状态" default-first-option>
-          <el-option label="推流中" value="true"></el-option>
-          <el-option label="已停止" value="false"></el-option>
+
+      <el-form-item label="拉流状态" prop="pulling">
+        <el-select style="width: 250px;" v-model="queryParams.pulling" placeholder="请选择拉流状态"
+                   default-first-option>
+          <el-option label="正在拉流" value="true"></el-option>
+          <el-option label="尚未拉流" value="false"></el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -44,41 +47,51 @@
         >新增
         </el-button>
       </el-col>
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getPushList"></right-toolbar>
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="getStreamProxyList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="pushList" border :row-key="(row)=> row.app + row.stream">
-      <el-table-column prop="gbName" label="名称" min-width="150" align="center"/>
-      <el-table-column prop="app" label="应用名" min-width="100" align="center"/>
-      <el-table-column prop="stream" label="流ID" min-width="100" align="center"/>
-      <el-table-column label="推流状态" min-width="100" align="center">
+    <el-table v-loading="loading" :data="streamProxyList" border>
+      <el-table-column prop="app" label="流应用名" min-width="120" show-overflow-tooltip align="center"/>
+      <el-table-column prop="stream" label="流ID" min-width="120" show-overflow-tooltip align="center"/>
+      <el-table-column label="流地址" min-width="200" align="center">
         <template #default="scope">
-          <el-tag v-if="scope.row.pushing">推流中</el-tag>
-          <el-tag type="info" v-if="!scope.row.pushing">已停止</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="gbDeviceId" label="国标编码" min-width="150" align="center"/>
-      <el-table-column label="位置信息" min-width="150" align="center">
-        <template #default="scope">
-          <span
-                v-if="scope.row.gbLongitude && scope.row.gbLatitude">{{
-              scope.row.gbLongitude
-            }}<br/>{{ scope.row.gbLatitude }}</span>
-          <span v-if="!scope.row.gbLongitude || !scope.row.gbLatitude">无</span>
+          {{ scope.row.srcUrl }}
         </template>
       </el-table-column>
       <el-table-column prop="mediaServerId" label="流媒体" min-width="150" align="center"/>
-      <el-table-column label="开始时间" min-width="200" align="center">
+      <el-table-column label="代理方式" width="100" align="center">
         <template #default="scope">
-          <el-button-group v-if="scope.row.pushTime && scope.row.pushTime">
-            {{ scope.row.pushTime == null ? "-" : scope.row.pushTime }}
-          </el-button-group>
+          <div slot="reference" class="name-wrapper">
+            {{ scope.row.type === "default" ? "默认" : "FFMPEG代理" }}
+          </div>
         </template>
       </el-table-column>
+
+      <el-table-column prop="gbDeviceId" label="国标编码" min-width="120" show-overflow-tooltip align="center"/>
+      <el-table-column label="拉流状态" min-width="120" align="center">
+        <template #default="scope">
+          <div slot="reference" class="name-wrapper">
+            <el-tag v-if="scope.row.pulling">正在拉流</el-tag>
+            <el-tag type="info" v-if="!scope.row.pulling">尚未拉流</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="启用" min-width="120" align="center">
+        <template #default="scope">
+          <div slot="reference" class="name-wrapper">
+            <el-tag v-if="scope.row.enable">已启用</el-tag>
+            <el-tag type="info" v-if="!scope.row.enable">未启用</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" label="创建时间" min-width="150" show-overflow-tooltip align="center"/>
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
           <!--          <el-button @click="playPush(scope.row)" type="text">播放-->
           <!--          </el-button>-->
+          <el-button style="color: #f56c6c" type="text" v-if="scope.row.pulling" @click="stopPlay(scope.row)">
+            停止
+          </el-button>
           <el-button type="text" @click="handleChannelConfiguration(scope.row)">
             通道配置
           </el-button>
@@ -99,19 +112,89 @@
         :total="total"
         v-model:page="queryParams.pageNum"
         v-model:limit="queryParams.pageSize"
-        @pagination="getPushList"
+        @pagination="getStreamProxyList"
     />
 
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="类型" prop="type">
+          <el-select
+              v-model="form.type"
+              placeholder="请选择代理类型"
+          >
+            <el-option key="默认" label="默认" value="default"></el-option>
+            <el-option key="FFmpeg" label="FFmpeg" value="ffmpeg"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="应用名" prop="app">
-          <el-input v-model="form.app" placeholder="请输入应用名"></el-input>
+          <el-input v-model="form.app" clearable placeholder="请选择应用名"></el-input>
         </el-form-item>
         <el-form-item label="流ID" prop="stream">
-          <el-input v-model="form.stream" placeholder="请输入流ID"></el-input>
+          <el-input v-model="form.stream" clearable placeholder="请选择流ID"></el-input>
         </el-form-item>
-        <el-form-item label="拉起离线推流">
-          <el-checkbox v-model="form.startOfflinePush"></el-checkbox>
+        <el-form-item label="拉流地址" prop="url">
+          <el-input v-model="form.srcUrl" clearable placeholder="请选择拉流地址"></el-input>
+        </el-form-item>
+        <el-form-item label="超时时间(秒)" prop="timeoutMs">
+          <el-input v-model="form.timeout" clearable placeholder="请选择超时时间(秒)"></el-input>
+        </el-form-item>
+        <el-form-item label="节点选择" prop="rtpType">
+          <el-select
+              v-model="form.relatesMediaServerId"
+              @change="mediaServerIdChange"
+              style="width: 100%"
+              placeholder="请选择拉流节点"
+          >
+            <el-option key="auto" label="自动选择" value="auto"></el-option>
+            <el-option
+                v-for="item in mediaServerList"
+                :key="item.id"
+                :label="item.id"
+                :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="FFmpeg命令模板" prop="ffmpegCmdKey" v-if="form.type=='ffmpeg'">
+          <el-select
+              v-model="form.ffmpegCmdKey"
+              style="width: 100%"
+              placeholder="请选择FFmpeg命令模板"
+          >
+            <el-option
+                v-for="item in Object.keys(ffmpegCmdList)"
+                :key="item"
+                :label="ffmpegCmdList[item]"
+                :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="拉流方式(RTSP)" prop="rtspType">
+          <el-select
+              v-model="form.rtspType"
+              style="width: 100%"
+              placeholder="请选择拉流方式"
+          >
+            <el-option label="TCP" value="0"></el-option>
+            <el-option label="UDP" value="1"></el-option>
+            <el-option label="组播" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="无人观看" prop="noneReader">
+          <el-radio-group v-model="form.noneReader">
+            <el-radio :label="0">不做处理</el-radio>
+            <el-radio :label="1">停用</el-radio>
+            <el-radio :label="2">移除</el-radio>
+          </el-radio-group>
+
+        </el-form-item>
+        <el-form-item label="其他选项">
+          <div style="float: left;">
+            <el-checkbox label="启用" v-model="form.enable"></el-checkbox>
+            <el-checkbox label="开启音频" v-model="form.enableAudio"></el-checkbox>
+            <el-checkbox label="录制" v-model="form.enableMp4"></el-checkbox>
+          </div>
+
         </el-form-item>
       </el-form>
       <template #footer>
@@ -454,18 +537,18 @@
   </div>
 </template>
 
-<script setup name="StreamPush">
+<script setup name="StreamProxy">
 import ChannelCode from "../../components/common/channelCode.vue"
 import ChooseCivilCode from "../../components/common/chooseCivilCode.vue"
 import ChooseGroup from "../../components/dialog/chooseGroup.vue"
 import {getOnlineMediaServerList} from "../../../api/wvp/wvpMediaServer.js";
-import {addPush, listPush, removePush, updatePush} from "../../../api/wvp/push.js";
-import {addChannelData, updateChannelData} from "../../../api/wvp/channel.js";
+import {addProxy, deleteProxy, getFFmpegCMDs, listProxy, stopProxy, updateProxy} from "../../../api/wvp/proxy.js";
 import {ElMessage} from "element-plus";
+import {addChannelData, updateChannelData} from "../../../api/wvp/channel.js";
 
 const {proxy} = getCurrentInstance();
 
-const pushList = ref([]);
+const streamProxyList = ref([]);
 const mediaServerList = ref([]);
 const loading = ref(false);
 const showSearch = ref(true);
@@ -476,7 +559,7 @@ const openChannel = ref(false);
 const channelCode = ref(null);
 const chooseCivilCodeRef = ref(null);
 const chooseGroupRef = ref(null);
-
+const ffmpegCmdList = ref({});
 const data = reactive({
   form: {},
   queryParams: {
@@ -494,10 +577,29 @@ const data = reactive({
 
 const {queryParams, form, rules} = toRefs(data);
 
+function getStreamProxyList() {
+  loading.value = true
+  listProxy(queryParams.value).then((res) => {
+    total.value = res.total;
+    for (let i = 0; i < res.rows.length; i++) {
+      res.rows[i]["startBtnLoading"] = false;
+    }
+    streamProxyList.value = res.rows;
+    loading.value = false
+  })
+}
+
+function initData() {
+  getStreamProxyList();
+  getOnlineMediaServerList().then((res) => {
+    mediaServerList.value = res.data;
+  })
+}
+
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
-  getPushList();
+  getStreamProxyList();
 }
 
 /** 重置按钮操作 */
@@ -509,44 +611,66 @@ function resetQuery() {
 /** 表单重置 */
 function reset() {
   form.value = {
+    type: undefined,
     app: undefined,
     stream: undefined,
-    startOfflinePush: undefined,
-    gbName: undefined,
-    gbDeviceId: undefined,
-    gbManufacturer: undefined,
-    gbModel: undefined,
-    gbCivilCode: undefined,
-    gbAddress: undefined,
-    gbParental: undefined,
-    gbParentId: undefined,
-    gbStatus: undefined,
-    gbLongitude: undefined,
-    gbLatitude: undefined,
-    gbPtzType: undefined,
-    gbBlock: undefined,
-    gbOwner: undefined,
-    gbSafetyWay: undefined,
-    gbRegisterWay: undefined,
-    gbCertNum: undefined,
-    gbCertifiable: undefined,
-    gbEndTime: undefined,
-    gbSecrecy: undefined,
-    gbIpAddress: undefined,
-    gbPort: undefined,
-    gbPassword: undefined,
-    gbBusinessGroupId: undefined,
-    gbPositionType: undefined,
-    gbRoomType: undefined,
-    gbUseType: undefined,
-    gbSupplyLightType: undefined,
-    gbDirectionType: undefined,
-    gbResolution: undefined,
-    gbDownloadSpeedArray: undefined,
-    gbSvcSpaceSupportMod: undefined,
-    gbSvcTimeSupportMode: undefined,
+    srcUrl: undefined,
+    timeout: undefined,
+    relatesMediaServerId: undefined,
+    ffmpegCmdKey: undefined,
+    rtspType: undefined,
+    noneReader: undefined,
+    enable: undefined,
+    enableAudio: undefined,
+    enableMp4: undefined,
   };
   proxy.resetForm("formRef");
+}
+
+
+function handleAdd() {
+  reset()
+  open.value = true;
+  title.value = "新增拉流";
+
+  form.value = {
+    type: "default",
+    dataType: 3,
+    noneReader: 1,
+    enable: true,
+    enableAudio: true,
+    mediaServerId: "",
+    timeout: 10,
+  }
+}
+
+function handleEdit(row) {
+  reset()
+  open.value = true;
+  title.value = "修改拉流";
+  form.value = JSON.parse(JSON.stringify(row))
+}
+
+function handleDelete(row) {
+  proxy.$modal.confirm('是否确认删除该拉流？').then(function () {
+    deleteProxy(row.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+      })
+      getStreamProxyList();
+    })
+  })
+}
+
+function mediaServerIdChange() {
+  console.log(form.value.relatesMediaServerId)
+  if (form.value.relatesMediaServerId !== "auto") {
+    getFFmpegCMDs({mediaServerId: form.value.relatesMediaServerId}).then((res) => {
+      ffmpegCmdList.value = res.data;
+      form.value.ffmpegCmdKey = Object.keys(res.data)[0];
+    })
+  }
 }
 
 /** 取消按钮 */
@@ -556,103 +680,46 @@ function cancel() {
   reset();
 }
 
-function initData() {
-  getOnlineMediaServerList().then((res) => {
-    mediaServerList.value = res.data;
-  })
-  getPushList();
-}
-
-function getPushList() {
-  loading.value = true;
-
-  listPush(queryParams.value).then((res) => {
-    total.value = res.total;
-    res.rows.forEach(e => {
-      e.location = ''
-      if (e.gbLongitude && e.gbLatitude) {
-        e.location = e.gbLongitude + "," + e.gbLatitude;
-      }
-    });
-    pushList.value = res.rows;
-    loading.value = false;
-  })
-}
-
-function handleAdd() {
-  reset()
-  open.value = true;
-  title.value = "新增推流";
-}
-
-function handleEdit(row){
-  reset()
-  open.value = true;
-  title.value = "修改推流";
-  form.value = JSON.parse(JSON.stringify(row))
-}
-
-function handleDelete(row){
-  proxy.$modal.confirm('是否确认删除该推流？').then(function () {
-    removePush(row.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-      })
-      getPushList();
-    })
-  })
-}
-
-/** 编辑通道按钮 */
-function submitFormChannel() {
-  proxy.$refs["formRef"].validate(valid => {
-    if (valid) {
-      if (form.value.gbDownloadSpeedArray) {
-        form.value.gbDownloadSpeed = form.value.gbDownloadSpeedArray.join("/")
-      }
-      if (form.value.gbId) {
-        updateChannelData(form.value).then(() => {
-          ElMessage({
-            type: 'success',
-            message: '保存成功',
-          })
-          openChannel.value = false
-          getPushList()
-        })
-      } else {
-        addChannelData(form.value).then(() => {
-          ElMessage({
-            type: 'success',
-            message: '保存成功',
-          })
-          openChannel.value = false
-          getPushList()
-        })
-      }
-    }
-  })
-}
-
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs["formRef"].validate(valid => {
     if (valid) {
+      noneReaderHandler()
       if (form.value.id != undefined) {
-        updatePush(form.value).then(() => {
+        updateProxy(form.value).then(() => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
-          getPushList()
+          getStreamProxyList()
         })
       } else {
-        addPush(form.value).then(() => {
+        addProxy(form.value).then(() => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
-          getPushList()
+          getStreamProxyList()
         })
       }
     }
   });
+}
+
+function noneReaderHandler() {
+  if (!form.value.noneReader || form.value.noneReader === 0) {
+    form.value.enableDisableNoneReader = false;
+    form.value.enableRemoveNoneReader = false;
+  } else if (form.value.noneReader === 1) {
+    form.value.enableDisableNoneReader = true;
+    form.value.enableRemoveNoneReader = false;
+  } else if (form.value.noneReader === 2) {
+    form.value.enableDisableNoneReader = false;
+    form.value.enableRemoveNoneReader = true;
+  }
+}
+
+function stopPlay(row) {
+  stopProxy(row.id).then(() => {
+    proxy.$modal.msgSuccess("停止成功");
+    getStreamProxyList()
+  })
 }
 
 function handleChannelConfiguration(row) {
@@ -690,6 +757,36 @@ function chooseGroupFun() {
 function gbParentOnSubmit(deviceId, businessGroupId) {
   form.value.gbBusinessGroupId = businessGroupId;
   form.value.gbParentId = deviceId;
+}
+
+/** 编辑通道按钮 */
+function submitFormChannel() {
+  proxy.$refs["formRef"].validate(valid => {
+    if (valid) {
+      if (form.value.gbDownloadSpeedArray) {
+        form.value.gbDownloadSpeed = form.value.gbDownloadSpeedArray.join("/")
+      }
+      if (form.value.gbId) {
+        updateChannelData(form.value).then(() => {
+          ElMessage({
+            type: 'success',
+            message: '保存成功',
+          })
+          openChannel.value = false
+          getStreamProxyList()
+        })
+      } else {
+        addChannelData(form.value).then(() => {
+          ElMessage({
+            type: 'success',
+            message: '保存成功',
+          })
+          openChannel.value = false
+          getStreamProxyList()
+        })
+      }
+    }
+  })
 }
 
 onMounted(() => {

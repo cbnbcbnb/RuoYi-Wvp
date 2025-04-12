@@ -29,6 +29,11 @@
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
+
+    <el-row :gutter="10" class="mb8">
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="initData"></right-toolbar>
+    </el-row>
+
     <el-table v-loading="loading" :data="channelList" ref="channelListTable" border>
       <el-table-column prop="name" label="名称" min-width="180" align="center"/>
       <el-table-column prop="deviceId" label="编号" min-width="180" align="center"/>

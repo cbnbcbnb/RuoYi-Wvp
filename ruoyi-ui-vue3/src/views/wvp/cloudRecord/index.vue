@@ -37,7 +37,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="getRecordList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="recordList" border>
