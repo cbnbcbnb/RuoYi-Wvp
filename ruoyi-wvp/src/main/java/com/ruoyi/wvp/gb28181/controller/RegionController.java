@@ -30,12 +30,16 @@ public class RegionController extends BaseController {
     @Autowired
     private IRegionService regionService;
 
-    @Operation(summary = "添加区域")
-    @Parameter(name = "region", description = "Region", required = true)
+    /**
+     * 添加区域
+     *
+     * @param region
+     */
     @ResponseBody
     @PostMapping("/add")
-    public void add(@RequestBody Region region) {
+    public AjaxResult add(@RequestBody Region region) {
         regionService.add(region);
+        return success();
     }
 
     @Operation(summary = "查询区域")
@@ -73,24 +77,32 @@ public class RegionController extends BaseController {
         return success(regionService.queryForTree(query, parent, hasChannel));
     }
 
-    @Operation(summary = "更新区域")
-    @Parameter(name = "region", description = "Region", required = true)
+    /**
+     * 更新区域
+     *
+     * @param region
+     */
     @ResponseBody
     @PostMapping("/update")
-    public void update(@RequestBody Region region) {
+    public AjaxResult update(@RequestBody Region region) {
         regionService.update(region);
+        return success();
     }
 
-    @Operation(summary = "删除区域")
-    @Parameter(name = "id", description = "区域ID", required = true)
+    /**
+     * 删除区域
+     *
+     * @param id 区域ID
+     */
     @ResponseBody
-    @DeleteMapping("/delete")
-    public void delete(Integer id) {
+    @DeleteMapping("/delete/{id}")
+    public AjaxResult delete(@PathVariable Integer id) {
         Assert.notNull(id, "区域ID需要存在");
         boolean result = regionService.deleteByDeviceId(id);
         if (!result) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "移除失败");
         }
+        return success();
     }
 
     @Operation(summary = "根据区域Id查询区域")

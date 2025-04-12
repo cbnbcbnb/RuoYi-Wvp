@@ -88,17 +88,15 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-          <el-button v-bind:disabled="device == null || device.online === 0" icon="el-icon-video-play"
+          <el-button v-bind:disabled="device == null || device.online === 0"
                      type="text" @click="start(scope.row)">播放
           </el-button>
           <el-button v-bind:disabled="device == null || device.online === 0"
-                     icon="el-icon-switch-button"
                      type="text" style="color: #f56c6c" v-if="!!scope.row.streamId"
                      @click="stopDevicePush(scope.row)">停止
           </el-button>
           <el-button
               type="text"
-              icon="el-icon-edit"
               @click="handleEdit(scope.row)"
           >
             编辑
@@ -108,9 +106,9 @@
              <span class="el-dropdown-link">
               <el-button size="medium" type="text">
                 更多
-                <el-icon class="el-icon--right">
-                <arrow-down/>
-              </el-icon>
+                <el-icon>
+                  <arrow-down/>
+                </el-icon>
               </el-button>
             </span>
             <template #dropdown>
@@ -503,7 +501,7 @@ import {
   subChannels,
   updateChannelStreamIdentification
 } from "../../../api/wvp/device.js";
-import {getCommonChannel, resetChannel, updateChannelData, sendDevicePush} from "../../../api/wvp/channel.js";
+import {getCommonChannel, resetChannel, sendDevicePush, updateChannelData} from "../../../api/wvp/channel.js";
 import {recordApi} from "../../../api/wvp/control.js";
 import router from "@/router";
 

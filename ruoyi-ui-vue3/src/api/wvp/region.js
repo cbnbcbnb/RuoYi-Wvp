@@ -17,3 +17,29 @@ export function queryForTree(query) {
         params: query
     })
 }
+
+// 更新区域
+export function updateRegion(data) {
+    return request({
+        url: `/api/region/update`,
+        method: 'post',
+        data: data
+    })
+}
+
+// 添加区域
+export function addRegion(data) {
+    return request({
+        url: `/api/region/add`,
+        method: 'post',
+        data: data
+    })
+}
+
+// 删除区域
+export function deleteRegion(id) {
+    return request({
+        url: `/api/region/delete/${id}`,
+        method: 'delete',
+    })
+}
