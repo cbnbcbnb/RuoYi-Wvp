@@ -200,7 +200,7 @@
         <DaHua :player-options="playerOptions" ref="dahuaPlayer"/>
       </div>
       <div v-if="brand === 'HIKVISION'">
-        <Hikvision />
+        <Hikvision :rtsp="playerOptions.rtspURL" />
       </div>
     </el-dialog>
 
@@ -259,7 +259,6 @@ function handleView(row) {
   playerOptions.value.password = row.password;
   title.value = "视频播放";
   showPaly.value = true;
-
 }
 
 function openedPaly() {
