@@ -1,3 +1,4 @@
+<!-- 这里是西瓜视频播放器,你只需要把rtsp转成flv形式就可以播放了 -->
 <template>
   <div style="position: absolute;height: 100%;width: 100%;display: flex;align-items: center;justify-content: center;">
     <div class="video" v-show="isPlay" :id="elId"></div>

@@ -71,18 +71,21 @@
         <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
 
-      <el-table v-loading="loading" :data="deviceList" @selection-change="handleSelectionChange" border >
+      <el-table v-loading="loading" :data="deviceList" @selection-change="handleSelectionChange" border>
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="名称" align="center" prop="name" width="140" fixed />
-        <el-table-column label="ip" align="center" prop="ip" width="140" fixed />
-        <el-table-column label="设备厂商" align="center" prop="firm" width="140" />
+        <el-table-column label="名称" align="center" prop="name" width="140" fixed/>
+        <el-table-column label="ip" align="center" prop="ip" width="140" fixed/>
+        <el-table-column label="设备厂商" align="center" prop="firm" width="140"/>
         <el-table-column label="设备型号" align="center" prop="model" width="300"/>
         <el-table-column label="固件版本" align="center" prop="firmwareVersion" width="300"/>
         <el-table-column label="用户名" align="center" prop="userName" width="120"/>
         <el-table-column label="密码" align="center" prop="password" width="120"/>
         <el-table-column label="默认播放地址" align="center" prop="url" width="800">
           <template #default="scope">
-            <el-text style="cursor: pointer;" @click="copyToClipboard(scope.row.url)" type="primary">{{ scope.row.url }}</el-text>
+            <el-text style="cursor: pointer;" @click="copyToClipboard(scope.row.url)" type="primary">{{
+                scope.row.url
+              }}
+            </el-text>
           </template>
         </el-table-column>
         <el-table-column label="全部播放地址" align="center" prop="streamUris" width="140">
@@ -156,17 +159,17 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="设备厂商" prop="firm">
-              <el-input v-model="form.firm" placeholder="请输入设备厂商" disabled />
+              <el-input v-model="form.firm" placeholder="请输入设备厂商" disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="设备型号" prop="model">
-              <el-input v-model="form.model" placeholder="请输入设备型号" disabled />
+              <el-input v-model="form.model" placeholder="请输入设备型号" disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="固件版本" prop="firmwareVersion">
-              <el-input v-model="form.firmwareVersion" placeholder="请输入固件版本" disabled />
+              <el-input v-model="form.firmwareVersion" placeholder="请输入固件版本" disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -187,16 +190,28 @@
     <!-- 查看直播流地址 对话框 -->
     <el-dialog :title="title" v-model="showUrl" width="800px" append-to-body>
       <div v-for="item in urls" :key="item" style="margin-bottom: 10px;">
-        <el-text type="primary" style="cursor: pointer;" @click="copyToClipboard(item)">{{item}}</el-text>
+        <el-text type="primary" style="cursor: pointer;" @click="copyToClipboard(item)">{{ item }}</el-text>
       </div>
     </el-dialog>
+
+    <!-- 播放弹窗 对话框 -->
+    <el-dialog :title="title" v-model="showPaly" width="835px" @opened="openedPaly">
+      <div v-if="brand === 'Dahua'">
+        <DaHua :player-options="playerOptions" ref="dahuaPlayer"/>
+      </div>
+      <div v-if="brand === 'HIKVISION'">
+        <Hikvision />
+      </div>
+    </el-dialog>
+
 
   </div>
 </template>
 
 <script setup name="Device">
 import {listDevice, getDevice, delDevice, addDevice, updateDevice} from "@/api/onvif/device";
-import CusPlayer from "@/components/flv/flv.vue"
+import DaHua from "@/components/daHua/index.vue";
+import Hikvision from "@/components/Hikvision/index.vue";
 
 const {proxy} = getCurrentInstance();
 
@@ -209,10 +224,13 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const brand = ref("");
 const urls = ref({});
 const showUrl = ref(false);
+const showPaly = ref(false);
 const video = ref(null);
-const videoIndex = ref(0);
+const playerOptions = ref({});
+const dahuaPlayer = ref(null);
 
 const data = reactive({
   form: {},
@@ -234,7 +252,22 @@ const data = reactive({
 const {queryParams, form, rules} = toRefs(data);
 
 function handleView(row) {
-  proxy.$router.push({ path: "/onvif/palyOnvif", query: { name: row.name, url: row.url } });
+  brand.value = row.firm;
+  playerOptions.value.ip = row.ip;
+  playerOptions.value.rtspURL = row.url;
+  playerOptions.value.username = row.userName;
+  playerOptions.value.password = row.password;
+  title.value = "视频播放";
+  showPaly.value = true;
+
+}
+
+function openedPaly() {
+  if(brand.value === 'Dahua'){
+    if(dahuaPlayer.value){
+      dahuaPlayer.value.playerPlay();
+    }
+  }
 }
 
 

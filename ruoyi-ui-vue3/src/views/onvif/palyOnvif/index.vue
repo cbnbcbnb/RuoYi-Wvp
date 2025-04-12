@@ -43,13 +43,12 @@ const video = ref(null);
 
 const handlePlay = () => {
   // 后续修改
-  const prefix = "http://192.168.158.199:8866/live?url=";
+  const prefix = "http://localhost:8866/live?url=";
   if (playUrl.value) {
     if (!playUrl.value.startsWith(prefix)) {
       playUrl.value = prefix + playUrl.value;
     }
-    console.log(video.value)
-    // video.value.createPlayer(playUrl.value, 0)
+    video.value.createPlayer(playUrl.value, 0)
   } else {
     alert('请填写播放地址');
   }
