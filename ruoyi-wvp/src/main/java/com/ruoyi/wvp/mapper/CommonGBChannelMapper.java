@@ -241,14 +241,14 @@ public interface CommonGBChannelMapper {
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByIds")
-    List<CommonGBChannel> queryByIds(Collection<Integer> ids);
+    List<CommonGBChannel> queryByIds(@Param("ids") Collection<Integer> ids);
 
     @Delete(value = {" <script>" +
             " delete from wvp_device_channel" +
             " where 1 = 1 and id in " +
             " <foreach collection='channelListInDb'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
             "</script>"})
-    void batchDelete(List<CommonGBChannel> channelListInDb);
+    void batchDelete(@Param("channelListInDb") List<CommonGBChannel> channelListInDb);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryListByCivilCode")
     List<CommonGBChannel> queryListByCivilCode(@Param("query") String query, @Param("online") Boolean online,
@@ -305,7 +305,7 @@ public interface CommonGBChannelMapper {
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
             " </script>"})
-    int removeCivilCodeByChannels(List<CommonGBChannel> channelList);
+    int removeCivilCodeByChannels(@Param("channelList") List<CommonGBChannel> channelList);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByCivilCode")
     List<CommonGBChannel> queryByCivilCode(@Param("civilCode") String civilCode);
@@ -329,7 +329,7 @@ public interface CommonGBChannelMapper {
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
             " </script>"})
-    int removeParentIdByChannels(List<CommonGBChannel> channelList);
+    int removeParentIdByChannels(@Param("channelList") List<CommonGBChannel> channelList);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByBusinessGroup")
     List<CommonGBChannel> queryByBusinessGroup(@Param("businessGroup") String businessGroup);
@@ -378,7 +378,7 @@ public interface CommonGBChannelMapper {
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
             " </script>"})
     int updateGroup(@Param("parentId") String parentId, @Param("businessGroup") String businessGroup,
-                    List<CommonGBChannel> channelList);
+                    @Param("channelList") List<CommonGBChannel> channelList);
 
     @Update({"<script>" +
             "<foreach collection='commonGBChannels' item='item' separator=';'>" +
