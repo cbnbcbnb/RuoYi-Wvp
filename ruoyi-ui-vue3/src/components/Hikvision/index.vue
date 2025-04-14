@@ -32,6 +32,7 @@ const videoError = (e) => {
   console.log("播放器错误：" + JSON.stringify(e));
 }
 
+console.log(props.rtsp)
 const rtcUrl= ref("rtsp://admin:hx147258@192.168.158.189:554/Streaming/Channels/102");
 const hasAudio = ref(false);
 

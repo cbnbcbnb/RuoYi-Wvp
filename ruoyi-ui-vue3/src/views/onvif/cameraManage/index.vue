@@ -257,8 +257,10 @@ function handleView(row) {
   playerOptions.value.rtspURL = row.url;
   playerOptions.value.username = row.userName;
   playerOptions.value.password = row.password;
+
   title.value = "视频播放";
   showPaly.value = true;
+  console.log(playerOptions.value.rtspURL)
 }
 
 function openedPaly() {
