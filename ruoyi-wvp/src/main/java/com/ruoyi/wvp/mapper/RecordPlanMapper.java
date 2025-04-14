@@ -35,7 +35,7 @@ public interface RecordPlanMapper {
             "(#{item.start}, #{item.stop}, #{item.weekDay},#{planId})" +
             "</foreach> " +
             " </script>")
-    void batchAddItem(@Param("planId") int planId, List<RecordPlanItem> planItemList);
+    void batchAddItem(@Param("planId") int planId,@Param("planItemList") List<RecordPlanItem> planItemList);
 
     @Select("select * from wvp_record_plan where  id = #{planId}")
     RecordPlan get(@Param("planId") Integer planId);
