@@ -43,7 +43,7 @@
             </el-row>
           </div>
 
-          <div style="display: flex; flex-wrap: wrap;">
+          <div style="display: flex; flex-wrap: wrap; margin-top: 10px;">
             <div style="width: 50%; height: 400px;">
               <el-row>
                 <el-col :span="24">
