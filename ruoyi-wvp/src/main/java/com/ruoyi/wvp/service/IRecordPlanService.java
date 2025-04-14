@@ -15,7 +15,7 @@ public interface IRecordPlanService {
 
     void delete(Integer planId);
 
-    PageInfo<RecordPlan> query(Integer page, Integer count, String query);
+    List<RecordPlan> query(Integer pageNum, Integer pageSize, String query);
 
     void add(RecordPlan plan);
 

@@ -1,6 +1,9 @@
 package com.ruoyi.wvp.vmanager.recordPlan;
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.CommonGBChannel;
 import com.ruoyi.wvp.gb28181.service.IDeviceChannelService;
@@ -8,9 +11,7 @@ import com.ruoyi.wvp.service.IRecordPlanService;
 import com.ruoyi.wvp.service.bean.RecordPlan;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import com.ruoyi.wvp.vmanager.recordPlan.bean.RecordPlanParam;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -25,7 +26,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/record/plan")
-public class RecordPlanController {
+public class RecordPlanController extends BaseController {
 
     @Autowired
     private IRecordPlanService recordPlanService;
@@ -34,14 +35,19 @@ public class RecordPlanController {
     private IDeviceChannelService deviceChannelService;
 
 
+    /**
+     * 新增录制计划
+     *
+     * @param plan 计划
+     */
     @ResponseBody
     @PostMapping("/add")
-    @Parameter(name = "plan", description = "计划", required = true)
-    public void add(@RequestBody RecordPlan plan) {
+    public AjaxResult add(@RequestBody RecordPlan plan) {
         if (plan.getPlanItemList() == null || plan.getPlanItemList().isEmpty()) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "添加录制计划时，录制计划不可为空");
         }
         recordPlanService.add(plan);
+        return success();
     }
 
     @ResponseBody
@@ -51,7 +57,7 @@ public class RecordPlanController {
         if (param.getAllLink() != null) {
             if (param.getAllLink()) {
                 recordPlanService.linkAll(param.getPlanId());
-            }else {
+            } else {
                 recordPlanService.cleanAll(param.getPlanId());
             }
             return;
@@ -64,7 +70,7 @@ public class RecordPlanController {
         List<Integer> channelIds = new ArrayList<>();
         if (param.getChannelIds() != null) {
             channelIds.addAll(param.getChannelIds());
-        }else {
+        } else {
             List<Integer> chanelIdList = deviceChannelService.queryChaneIdListByDeviceDbIds(param.getDeviceDbIds());
             if (chanelIdList != null && !chanelIdList.isEmpty()) {
                 channelIds = chanelIdList;
@@ -73,26 +79,39 @@ public class RecordPlanController {
         recordPlanService.link(channelIds, param.getPlanId());
     }
 
+    /**
+     * 获取录制计划
+     *
+     * @param planId 计划ID
+     * @return
+     */
     @ResponseBody
-    @GetMapping("/get")
-    @Parameter(name = "planId", description = "计划ID", required = true)
-    public RecordPlan get(Integer planId) {
+    @GetMapping("/get/{planId}")
+    public AjaxResult get(@PathVariable Integer planId) {
         if (planId == null) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "计划ID不可为NULL");
         }
-        return recordPlanService.get(planId);
+        return success(recordPlanService.get(planId));
     }
 
+    /**
+     * 查询录制计划列表
+     *
+     * @param query    检索内容
+     * @param pageNum  当前页
+     * @param pageSize 每页查询数量
+     * @return
+     */
     @ResponseBody
     @GetMapping("/query")
-    @Parameter(name = "query", description = "检索内容", required = false)
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    public PageInfo<RecordPlan> query(@RequestParam(required = false) String query, @RequestParam Integer page, @RequestParam Integer count) {
+    public TableDataInfo query(@RequestParam(required = false) String query, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         if (query != null && ObjectUtils.isEmpty(query.trim())) {
             query = null;
         }
-        return recordPlanService.query(page, count, query);
+
+        startPage();
+        List<RecordPlan> list = recordPlanService.query(pageNum, pageSize, query);
+        return getDataTable(list);
     }
 
     @Parameter(name = "page", description = "当前页", required = true)
@@ -116,27 +135,37 @@ public class RecordPlanController {
             query = null;
         }
 
-        return recordPlanService.queryChannelList(page, count, query, channelType,  online, planId, hasLink);
+        return recordPlanService.queryChannelList(page, count, query, channelType, online, planId, hasLink);
     }
 
+    /**
+     * 更新录制计划
+     *
+     * @param plan 计划
+     */
     @ResponseBody
     @PostMapping("/update")
-    @Parameter(name = "plan", description = "计划", required = true)
-    public void update(@RequestBody RecordPlan plan) {
+    public AjaxResult update(@RequestBody RecordPlan plan) {
         if (plan == null || plan.getId() == 0) {
             throw new ControllerException(ErrorCode.ERROR400);
         }
         recordPlanService.update(plan);
+        return success();
     }
 
+    /**
+     * 删除录制计划
+     *
+     * @param planId 计划ID
+     */
     @ResponseBody
-    @DeleteMapping("/delete")
-    @Parameter(name = "planId", description = "计划ID", required = true)
-    public void delete(Integer planId) {
+    @DeleteMapping("/delete/{planId}")
+    public AjaxResult delete(@PathVariable Integer planId) {
         if (planId == null) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "计划IDID不可为NULL");
         }
         recordPlanService.delete(planId);
+        return success();
     }
 
 }
