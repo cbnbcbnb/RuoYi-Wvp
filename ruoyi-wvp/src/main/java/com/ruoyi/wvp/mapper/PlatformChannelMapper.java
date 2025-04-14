@@ -404,7 +404,7 @@ public interface PlatformChannelMapper {
             "  pgc.device_channel_id IN" +
             "<foreach collection='ids' item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             "</script> ")
-    List<Platform> queryPlatFormListByChannelList(Collection<Integer> ids);
+    List<Platform> queryPlatFormListByChannelList(@Param("ids") Collection<Integer> ids);
 
     @Select("<script> " +
             " SELECT " +

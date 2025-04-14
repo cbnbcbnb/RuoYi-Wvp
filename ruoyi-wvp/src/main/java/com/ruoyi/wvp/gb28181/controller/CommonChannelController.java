@@ -4,12 +4,10 @@ package com.ruoyi.wvp.gb28181.controller;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.gb28181.bean.CommonGBChannel;
-import com.ruoyi.wvp.gb28181.bean.DeviceType;
-import com.ruoyi.wvp.gb28181.bean.IndustryCodeType;
-import com.ruoyi.wvp.gb28181.bean.NetworkIdentificationType;
 import com.ruoyi.wvp.gb28181.controller.bean.ChannelToGroupByGbDeviceParam;
 import com.ruoyi.wvp.gb28181.controller.bean.ChannelToGroupParam;
 import com.ruoyi.wvp.gb28181.controller.bean.ChannelToRegionByGbDeviceParam;
@@ -151,53 +149,79 @@ public class CommonChannelController extends BaseController {
         return channelService.queryList(page, count, query, online, hasRecordPlan, channelType);
     }
 
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
-    @Parameter(name = "civilCode", description = "行政区划")
+    /**
+     * 获取通道列表
+     *
+     * @param pageNum     当前页
+     * @param pageSize    每页查询数量
+     * @param query       查询内容
+     * @param online      是否在线
+     * @param channelType 通道类型， 0：国标设备，1：推流设备，2：拉流代理
+     * @param civilCode   行政区划
+     * @return
+     */
     @GetMapping("/civilcode/list")
-    public PageInfo<CommonGBChannel> queryListByCivilCode(int page, int count,
-                                                          @RequestParam(required = false) String query,
-                                                          @RequestParam(required = false) Boolean online,
-                                                          @RequestParam(required = false) Integer channelType,
-                                                          @RequestParam(required = false) String civilCode) {
+    public TableDataInfo queryListByCivilCode(int pageNum, int pageSize,
+                                              @RequestParam(required = false) String query,
+                                              @RequestParam(required = false) Boolean online,
+                                              @RequestParam(required = false) Integer channelType,
+                                              @RequestParam(required = false) String civilCode) {
+        startPage();
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
-        return channelService.queryListByCivilCode(page, count, query, online, channelType, civilCode);
+        List<CommonGBChannel> list = channelService.queryListByCivilCode(pageNum, pageSize, query, online, channelType, civilCode);
+        return getDataTable(list);
     }
 
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
-    @Parameter(name = "groupDeviceId", description = "业务分组下的父节点ID")
+    /**
+     * 根据ParentId获取通道列表
+     *
+     * @param pageNum       当前页
+     * @param pageSize      每页查询数量
+     * @param query         查询内容
+     * @param online        是否在线
+     * @param channelType   通道类型， 0：国标设备，1：推流设备，2：拉流代理
+     * @param groupDeviceId 业务分组下的父节点ID
+     * @return
+     */
     @GetMapping("/parent/list")
-    public PageInfo<CommonGBChannel> queryListByParentId(int page, int count,
-                                                         @RequestParam(required = false) String query,
-                                                         @RequestParam(required = false) Boolean online,
-                                                         @RequestParam(required = false) Integer channelType,
-                                                         @RequestParam(required = false) String groupDeviceId) {
+    public TableDataInfo queryListByParentId(int pageNum, int pageSize,
+                                             @RequestParam(required = false) String query,
+                                             @RequestParam(required = false) Boolean online,
+                                             @RequestParam(required = false) Integer channelType,
+                                             @RequestParam(required = false) String groupDeviceId) {
+        startPage();
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
-        return channelService.queryListByParentId(page, count, query, online, channelType, groupDeviceId);
+        List<CommonGBChannel> list = channelService.queryListByParentId(pageNum, pageSize, query, online, channelType, groupDeviceId);
+        return getDataTable(list);
     }
 
+    /**
+     * 添加通道
+     *
+     * @param param
+     */
     @PostMapping("/region/add")
-    public void addChannelToRegion(@RequestBody ChannelToRegionParam param) {
+    public AjaxResult addChannelToRegion(@RequestBody ChannelToRegionParam param) {
         Assert.notEmpty(param.getChannelIds(), "通道ID不可为空");
         Assert.hasLength(param.getCivilCode(), "未添加行政区划");
         channelService.addChannelToRegion(param.getCivilCode(), param.getChannelIds());
+        return success();
     }
 
+    /**
+     * 删除通道
+     *
+     * @param param
+     */
     @PostMapping("/region/delete")
-    public void deleteChannelToRegion(@RequestBody ChannelToRegionParam param) {
+    public AjaxResult deleteChannelToRegion(@RequestBody ChannelToRegionParam param) {
         Assert.isTrue(!param.getChannelIds().isEmpty() || !ObjectUtils.isEmpty(param.getCivilCode()), "参数异常");
         channelService.deleteChannelToRegion(param.getCivilCode(), param.getChannelIds());
+        return success();
     }
 
     @PostMapping("/region/device/add")
@@ -213,20 +237,32 @@ public class CommonChannelController extends BaseController {
         channelService.deleteChannelToRegionByGbDevice(param.getDeviceIds());
     }
 
+    /**
+     * 添加通道信息
+     *
+     * @param param
+     */
     @PostMapping("/group/add")
-    public void addChannelToGroup(@RequestBody ChannelToGroupParam param) {
+    public AjaxResult addChannelToGroup(@RequestBody ChannelToGroupParam param) {
         Assert.notEmpty(param.getChannelIds(), "通道ID不可为空");
         Assert.hasLength(param.getParentId(), "未添加上级分组编号");
         Assert.hasLength(param.getBusinessGroup(), "未添加业务分组");
         channelService.addChannelToGroup(param.getParentId(), param.getBusinessGroup(), param.getChannelIds());
+        return success();
     }
 
+    /**
+     * 删除通道
+     *
+     * @param param
+     */
     @PostMapping("/group/delete")
-    public void deleteChannelToGroup(@RequestBody ChannelToGroupParam param) {
+    public AjaxResult deleteChannelToGroup(@RequestBody ChannelToGroupParam param) {
         Assert.isTrue(!param.getChannelIds().isEmpty()
                         || (!ObjectUtils.isEmpty(param.getParentId()) && !ObjectUtils.isEmpty(param.getBusinessGroup())),
                 "参数异常");
         channelService.deleteChannelToGroup(param.getParentId(), param.getBusinessGroup(), param.getChannelIds());
+        return success();
     }
 
     @PostMapping("/group/device/add")

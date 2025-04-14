@@ -67,3 +67,59 @@ export function addChannelData(data) {
         data: data,
     })
 }
+
+// 获取通道列表
+export function queryListByCivilCode(query) {
+    return request({
+        url: `/api/common/channel/civilcode/list`,
+        method: 'get',
+        params: query
+    })
+}
+
+
+// 根据ParentId获取通道列表
+export function queryListByParentId(query) {
+    return request({
+        url: `/api/common/channel/parent/list`,
+        method: 'get',
+        params: query
+    })
+}
+
+// 添加通道
+export function addChannelToRegion(data) {
+    return request({
+        url: `/api/common/channel/region/add`,
+        method: 'post',
+        data: data
+    })
+}
+
+// 删除通道
+export function deleteChannelToRegion(data) {
+    return request({
+        url: `/api/common/channel/region/delete`,
+        method: 'post',
+        data: data
+    })
+}
+
+// 删除通道
+export function deleteChannelToGroup(data) {
+    return request({
+        url: `/api/common/channel/group/delete`,
+        method: 'post',
+        data: data
+    })
+}
+
+// 添加通道信息
+export function addChannelToGroup(data) {
+    return request({
+        url: `/api/common/channel/group/add`,
+        method: 'post',
+        data: data
+    })
+}
+
