@@ -144,8 +144,8 @@ public interface PlatformChannelMapper {
             " <if test='query != null'> " +
             " AND (coalesce(wdc.gb_device_id, wdc.device_id) LIKE concat('%',#{query},'%') OR wpgc.custom_device_id LIKE concat('%',#{query},'%') " +
             "      OR coalesce(wdc.gb_name, wdc.name)  LIKE concat('%',#{query},'%') OR wpgc.custom_name LIKE concat('%',#{query},'%'))</if> " +
-            " <if test='online == true'> AND coalesce(wpgc.status, wdc.gb_status, wdc.status) = 'ON'</if> " +
-            " <if test='online == false'> AND coalesce(wpgc.status, wdc.gb_status, wdc.status) = 'OFF'</if> " +
+            " <if test='online == true'> AND coalesce(wdc.status, wdc.gb_status, wdc.status) = 'ON'</if> " +
+            " <if test='online == false'> AND coalesce(wdc.status, wdc.gb_status, wdc.status) = 'OFF'</if> " +
             " <if test='hasShare == true'> AND wpgc.platform_id = #{platformId}</if> " +
             " <if test='hasShare == false'> AND wpgc.platform_id is null</if> " +
             " <if test='dataType != null'> AND wdc.data_type = #{dataType}</if> " +
@@ -250,7 +250,7 @@ public interface PlatformChannelMapper {
             "<foreach item='item' index='index' collection='channelIds' open='(' separator=',' close=')'> #{item} </foreach> " +
             "</if>" +
             "</script>")
-    List<CommonGBChannel> queryNotShare(@Param("platformId") Integer platformId, List<Integer> channelIds);
+    List<CommonGBChannel> queryNotShare(@Param("platformId") Integer platformId,@Param("channelIds") List<Integer> channelIds);
 
     @Select("<script>" +
             " select " +
@@ -303,7 +303,7 @@ public interface PlatformChannelMapper {
             "</if>" +
             " order by wdc.id" +
             "</script>")
-    List<CommonGBChannel> queryShare(@Param("platformId") Integer platformId, List<Integer> channelIds);
+    List<CommonGBChannel> queryShare(@Param("platformId") Integer platformId,@Param("channelIds") List<Integer> channelIds);
 
     @Delete("<script> " +
             "DELETE from wvp_platform_channel WHERE platform_id=#{platformId} " +
@@ -313,7 +313,7 @@ public interface PlatformChannelMapper {
             "   </foreach> " +
             "</if>" +
             "</script>")
-    int removeChannelsWithPlatform(@Param("platformId") Integer platformId, List<CommonGBChannel> channelList);
+    int removeChannelsWithPlatform(@Param("platformId") Integer platformId,@Param("channelList") List<CommonGBChannel> channelList);
 
     @Delete("<script> " +
             "DELETE from wvp_platform_channel WHERE " +
@@ -323,7 +323,7 @@ public interface PlatformChannelMapper {
             "   </foreach> " +
             "</if>" +
             "</script>")
-    int removeChannels(List<CommonGBChannel> channelList);
+    int removeChannels(@Param("channelList") List<CommonGBChannel> channelList);
 
     @Insert("<script> "+
             "INSERT INTO wvp_platform_group (platform_id, group_id) VALUES " +
@@ -331,7 +331,7 @@ public interface PlatformChannelMapper {
             " (#{platformId}, #{item.id} )" +
             "</foreach>" +
             "</script>")
-    int addPlatformGroup(Collection<Group> groupListNotShare, @Param("platformId") Integer platformId);
+    int addPlatformGroup(@Param("groupListNotShare") Collection<Group> groupListNotShare, @Param("platformId") Integer platformId);
 
     @Insert("<script> "+
             "INSERT INTO wvp_platform_region (platform_id, region_id) VALUES " +
@@ -339,7 +339,7 @@ public interface PlatformChannelMapper {
             " (#{platformId}, #{item.id} )" +
             "</foreach>" +
             "</script>")
-    int addPlatformRegion(List<Region> regionListNotShare, @Param("platformId") Integer platformId);
+    int addPlatformRegion(@Param("regionListNotShare") List<Region> regionListNotShare, @Param("platformId") Integer platformId);
 
     @Delete("<script> "+
             "DELETE from wvp_platform_group WHERE platform_id=#{platformId} AND group_id in" +
@@ -380,7 +380,7 @@ public interface PlatformChannelMapper {
             " where wpg.platform_id is not null and wcg.id in " +
             "<foreach collection='groupSet'  item='item'  open='(' separator=',' close=')' > #{item.parentId}</foreach>" +
             " </script>")
-    Set<Group> queryShareParentGroupByGroupSet(Set<Group> groupSet, @Param("platformId") Integer platformId);
+    Set<Group> queryShareParentGroupByGroupSet(@Param("groupSet") Set<Group> groupSet, @Param("platformId") Integer platformId);
 
     @Select(" <script>" +
             " SELECT wcr.* " +
@@ -389,7 +389,7 @@ public interface PlatformChannelMapper {
             " where wpr.platform_id is not null and wcr.id in " +
             "<foreach collection='regionSet'  item='item'  open='(' separator=',' close=')' > #{item.parentId}</foreach>" +
             " </script>")
-    Set<Region> queryShareParentRegionByRegionSet(Set<Region> regionSet, @Param("platformId") Integer platformId);
+    Set<Region> queryShareParentRegionByRegionSet(@Param("regionSet") Set<Region> regionSet, @Param("platformId") Integer platformId);
 
     @Select("<script> " +
             " SELECT " +

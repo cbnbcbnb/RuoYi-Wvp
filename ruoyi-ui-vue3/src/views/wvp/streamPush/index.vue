@@ -613,14 +613,12 @@ function handleEdit(row) {
 
 function handleDelete(row) {
   proxy.$modal.confirm('是否确认删除该推流？').then(function () {
-    removePush(row.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-      })
-      getPushList();
-    })
-  })
+    return removePush(row.id)
+  }).then(() => {
+    getPushList();
+    proxy.$modal.msgSuccess("删除成功");
+  }).catch(() => {
+  });
 }
 
 /** 编辑通道按钮 */

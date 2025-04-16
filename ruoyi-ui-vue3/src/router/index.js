@@ -215,6 +215,21 @@ export const dynamicRoutes = [
         meta: { title: '关联通道', activeMenu: '/recordPlan' }
       }
     ]
+  },
+
+  {
+    path: '/platform/chooseChannel',
+    component: Layout,
+    hidden: true,
+    permissions: ['tool:gen:edit'],
+    children: [
+      {
+        path: 'index/:platformId(\\d+)',
+        component: () => import('@/views/wvp/platform/chooseChannel'),
+        name: 'ChooseChannel',
+        meta: { title: '通道共享', activeMenu: '/platform' }
+      }
+    ]
   }
 ]
 

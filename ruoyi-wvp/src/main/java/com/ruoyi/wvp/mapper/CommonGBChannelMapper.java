@@ -311,14 +311,14 @@ public interface CommonGBChannelMapper {
     List<CommonGBChannel> queryByCivilCode(@Param("civilCode") String civilCode);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByGbDeviceIds")
-    List<CommonGBChannel> queryByGbDeviceIds(@Param("dataType") Integer dataType, List<Integer> deviceIds);
+    List<CommonGBChannel> queryByGbDeviceIds(@Param("dataType") Integer dataType,@Param("deviceIds") List<Integer> deviceIds);
 
     @Select(value = {" <script>" +
             " select id from wvp_device_channel " +
             " where channel_type = 0 and data_type = #{dataType} and data_device_id in  "+
             " <foreach collection='deviceIds'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             " </script>"})
-    List<Integer> queryByGbDeviceIdsForIds(@Param("dataType") Integer dataType, List<Integer> deviceIds);
+    List<Integer> queryByGbDeviceIdsForIds(@Param("dataType") Integer dataType,@Param("deviceIds") List<Integer> deviceIds);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByGroupList")
     List<CommonGBChannel> queryByGroupList(List<Group> groupList);

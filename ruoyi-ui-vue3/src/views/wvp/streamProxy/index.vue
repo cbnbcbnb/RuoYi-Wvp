@@ -677,14 +677,14 @@ function handleEdit(row) {
 
 function handleDelete(row) {
   proxy.$modal.confirm('是否确认删除该拉流？').then(function () {
-    deleteProxy(row.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-      })
-      getStreamProxyList();
-    })
-  })
+    return deleteProxy(row.id)
+  }).then(() => {
+    getStreamProxyList();
+    proxy.$modal.msgSuccess("删除成功");
+  }).catch(() => {
+  });
+
+
 }
 
 function mediaServerIdChange() {
