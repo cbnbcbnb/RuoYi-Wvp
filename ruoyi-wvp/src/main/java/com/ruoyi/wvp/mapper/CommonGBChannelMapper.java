@@ -159,10 +159,10 @@ public interface CommonGBChannelMapper {
             "UPDATE wvp_device_channel SET gb_status = #{status} WHERE id = #{item.gbId}" +
             "</foreach> " +
             "</script>")
-    int updateStatusForListById(List<CommonGBChannel> commonGBChannels, @Param("status") String status);
+    int updateStatusForListById(@Param("commonGBChannels") List<CommonGBChannel> commonGBChannels, @Param("status") String status);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryInListByStatus")
-    List<CommonGBChannel> queryInListByStatus(List<CommonGBChannel> commonGBChannelList, @Param("status") String status);
+    List<CommonGBChannel> queryInListByStatus(@Param("commonGBChannelList") List<CommonGBChannel> commonGBChannelList, @Param("status") String status);
 
 
     @Insert(" <script>" +
