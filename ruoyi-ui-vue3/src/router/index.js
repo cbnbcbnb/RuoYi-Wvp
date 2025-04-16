@@ -200,6 +200,21 @@ export const dynamicRoutes = [
         meta: { title: '云端录像', activeMenu: '/device' }
       }
     ]
+  },
+
+  {
+    path: '/recordPlan/associatedChannel',
+    component: Layout,
+    hidden: true,
+    permissions: ['tool:gen:edit'],
+    children: [
+      {
+        path: 'index/:planId(\\d+)',
+        component: () => import('@/views/wvp/recordPlan/associatedChannel'),
+        name: 'CloudRecordDetail',
+        meta: { title: '关联通道', activeMenu: '/recordPlan' }
+      }
+    ]
   }
 ]
 

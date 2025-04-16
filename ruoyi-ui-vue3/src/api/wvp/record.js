@@ -60,3 +60,21 @@ export function deleteRecord(id) {
         method: 'delete',
     })
 }
+
+// 查询通道列表
+export function listPlanRecord(query) {
+    return request({
+        url: `/api/record/plan/channel/list`,
+        method: 'get',
+        params: query
+    })
+}
+
+// 通道关联录制计划
+export function link(data) {
+    return request({
+        url: `/api/record/plan/link`,
+        method: 'post',
+        data: data
+    })
+}

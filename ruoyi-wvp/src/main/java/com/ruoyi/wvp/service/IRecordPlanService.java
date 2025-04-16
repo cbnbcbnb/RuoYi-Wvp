@@ -21,7 +21,7 @@ public interface IRecordPlanService {
 
     void link(List<Integer> channelIds, Integer planId);
 
-    PageInfo<CommonGBChannel> queryChannelList(int page, int count, String query, Integer channelType, Boolean online, Integer planId, Boolean hasLink);
+    List<CommonGBChannel> queryChannelList(int pageNum, int pageSize, String query, Integer channelType, Boolean online, Integer planId, Boolean hasLink);
 
     void linkAll(Integer planId);
 

@@ -74,7 +74,7 @@
 import {addRecord, deleteRecord, getRecord, listRecord, updateRecord} from "../../../api/wvp/record.js";
 import ByteWeekTimePicker from "./byteWeekTimePicker.vue";
 import {ElMessage} from "element-plus";
-
+import router from "@/router";
 const {proxy} = getCurrentInstance();
 
 const loading = ref(false);
@@ -168,7 +168,7 @@ function handleDelete(row) {
 }
 
 function handleLink(row){
-  console.log(row.id)
+  router.push(`/recordPlan/associatedChannel/index/${row.id}`);
 }
 
 /** 提交按钮 */
