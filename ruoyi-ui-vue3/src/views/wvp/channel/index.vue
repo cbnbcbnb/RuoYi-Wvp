@@ -504,6 +504,7 @@ import {
 import {getCommonChannel, resetChannel, sendDevicePush, updateChannelData} from "../../../api/wvp/channel.js";
 import {recordApi} from "../../../api/wvp/control.js";
 import router from "@/router";
+import {useRoute} from "vue-router";
 
 const route = useRoute();
 const {proxy} = getCurrentInstance();

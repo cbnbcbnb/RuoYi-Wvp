@@ -98,7 +98,7 @@ public interface DeviceChannelMapper {
             "select id from wvp_device_channel where data_type =1 and data_device_id in  " +
             " <foreach item='item' index='index' collection='deviceDbIds' open='(' separator=',' close=')'> #{item} </foreach>" +
             " </script>")
-    List<Integer> queryChaneIdListByDeviceDbIds(List<Integer> deviceDbIds);
+    List<Integer> queryChaneIdListByDeviceDbIds(@Param("deviceDbIds") List<Integer> deviceDbIds);
 
     @Delete("DELETE FROM wvp_device_channel WHERE data_type =1 and data_device_id=#{dataDeviceId}")
     int cleanChannelsByDeviceId(@Param("dataDeviceId") int dataDeviceId);

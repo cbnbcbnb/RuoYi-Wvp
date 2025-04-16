@@ -1,6 +1,5 @@
 package com.ruoyi.wvp.vmanager.recordPlan;
 
-import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -50,17 +49,21 @@ public class RecordPlanController extends BaseController {
         return success();
     }
 
+    /**
+     * 通道关联录制计划
+     *
+     * @param param
+     */
     @ResponseBody
     @PostMapping("/link")
-    @Parameter(name = "param", description = "通道关联录制计划", required = true)
-    public void link(@RequestBody RecordPlanParam param) {
+    public AjaxResult link(@RequestBody RecordPlanParam param) {
         if (param.getAllLink() != null) {
             if (param.getAllLink()) {
                 recordPlanService.linkAll(param.getPlanId());
             } else {
                 recordPlanService.cleanAll(param.getPlanId());
             }
-            return;
+            return success();
         }
 
         if (param.getChannelIds() == null && param.getDeviceDbIds() == null) {
@@ -77,6 +80,7 @@ public class RecordPlanController extends BaseController {
             }
         }
         recordPlanService.link(channelIds, param.getPlanId());
+        return success();
     }
 
     /**
@@ -114,28 +118,34 @@ public class RecordPlanController extends BaseController {
         return getDataTable(list);
     }
 
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页条数", required = true)
-    @Parameter(name = "planId", description = "录制计划ID")
-    @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "hasLink", description = "是否已经关联")
+    /**
+     * 查询通道列表
+     *
+     * @param pageNum     当前页
+     * @param pageSize    每页条数
+     * @param planId      录制计划ID
+     * @param query       通道类型， 0：国标设备，1：推流设备，2：拉流代理
+     * @param channelType 查询内容
+     * @param online      是否在线
+     * @param hasLink     是否已经关联
+     * @return
+     */
     @GetMapping("/channel/list")
     @ResponseBody
-    public PageInfo<CommonGBChannel> queryChannelList(int page, int count,
-                                                      @RequestParam(required = false) Integer planId,
-                                                      @RequestParam(required = false) String query,
-                                                      @RequestParam(required = false) Integer channelType,
-                                                      @RequestParam(required = false) Boolean online,
-                                                      @RequestParam(required = false) Boolean hasLink) {
+    public TableDataInfo queryChannelList(int pageNum, int pageSize,
+                                          @RequestParam(required = false) Integer planId,
+                                          @RequestParam(required = false) String query,
+                                          @RequestParam(required = false) Integer channelType,
+                                          @RequestParam(required = false) Boolean online,
+                                          @RequestParam(required = false) Boolean hasLink) {
 
         Assert.notNull(planId, "录制计划ID不可为NULL");
         if (org.springframework.util.ObjectUtils.isEmpty(query)) {
             query = null;
         }
-
-        return recordPlanService.queryChannelList(page, count, query, channelType, online, planId, hasLink);
+        startPage();
+        List<CommonGBChannel> list = recordPlanService.queryChannelList(pageNum, pageSize, query, channelType, online, planId, hasLink);
+        return getDataTable(list);
     }
 
     /**

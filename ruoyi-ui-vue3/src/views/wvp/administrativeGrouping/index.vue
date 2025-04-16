@@ -27,8 +27,6 @@
           <el-table-column prop="name" label="名称" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="deviceId" label="设备编号" :show-overflow-tooltip="true"
           ></el-table-column>
-          <el-table-column prop="status" label="设备编号" :show-overflow-tooltip="true"
-          ></el-table-column>
           <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column label="操作" align="center" width="210" class-name="small-padding fixed-width">
@@ -147,8 +145,6 @@
         >
           <el-table-column prop="name" label="名称" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="deviceId" label="设备编号" :show-overflow-tooltip="true"
-          ></el-table-column>
-          <el-table-column prop="status" label="设备编号" :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="true"
           ></el-table-column>

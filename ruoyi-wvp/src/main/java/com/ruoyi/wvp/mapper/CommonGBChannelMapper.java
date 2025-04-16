@@ -461,7 +461,7 @@ public interface CommonGBChannelMapper {
             " WHERE id in "+
             " <foreach collection='channelIds'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             " </script>"})
-    void removeRecordPlan(List<Integer> channelIds);
+    void removeRecordPlan(@Param("channelIds") List<Integer> channelIds);
 
     @Update(value = {" <script>" +
             " UPDATE wvp_device_channel " +
@@ -469,7 +469,7 @@ public interface CommonGBChannelMapper {
             " WHERE id in "+
             " <foreach collection='channelIds'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             " </script>"})
-    void addRecordPlan(List<Integer> channelIds, @Param("planId") Integer planId);
+    void addRecordPlan(@Param("channelIds") List<Integer> channelIds, @Param("planId") Integer planId);
 
     @Update(value = {" <script>" +
             " UPDATE wvp_device_channel " +
