@@ -2,6 +2,8 @@ package com.ruoyi.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.conf.SipConfig;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Platform;
@@ -13,9 +15,7 @@ import com.ruoyi.wvp.gb28181.service.IPlatformService;
 import com.ruoyi.wvp.utils.DateUtil;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,11 @@ import org.springframework.web.context.request.async.DeferredResult;
 /**
  * 级联平台管理
  */
-@Tag(name  = "级联平台管理")
+@Tag(name = "级联平台管理")
 @Slf4j
 @RestController
 @RequestMapping("/api/platform")
-public class PlatformController {
+public class PlatformController extends BaseController {
 
     @Autowired
     private IPlatformChannelService platformChannelService;
@@ -42,18 +42,23 @@ public class PlatformController {
     @Autowired
     private SipConfig sipConfig;
 
-	@Autowired
-	private IPlatformService platformService;
+    @Autowired
+    private IPlatformService platformService;
 
 
+    /**
+     * 获取上级平台信息
+     *
+     * @return
+     */
     @GetMapping("/server_config")
-    public JSONObject serverConfig() {
+    public AjaxResult serverConfig() {
         JSONObject result = new JSONObject();
         result.put("deviceIp", sipConfig.getShowIp());
         result.put("devicePort", sipConfig.getPort());
         result.put("username", sipConfig.getId());
         result.put("password", sipConfig.getPassword());
-        return result;
+        return success(result);
     }
 
     @Parameter(name = "id", description = "平台国标编号", required = true)
@@ -61,18 +66,23 @@ public class PlatformController {
     public Platform getPlatform(@PathVariable String id) {
         Platform parentPlatform = platformService.queryPlatformByServerGBId(id);
         if (parentPlatform != null) {
-            return  parentPlatform;
+            return parentPlatform;
         } else {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "未查询到此平台");
         }
     }
 
+    /**
+     * 获取上级平台列表
+     *
+     * @param page  当前页
+     * @param count 每页数量
+     * @param query 查询内容
+     * @return
+     */
     @GetMapping("/query")
-    @Parameter(name = "page", description = "当前页")
-    @Parameter(name = "count", description = "每页查询数量")
-    @Parameter(name = "query", description = "查询内容")
-    public PageInfo<Platform> platforms(int page, int count,
-                                        @RequestParam(required = false) String query) {
+    public AjaxResult platforms(int page, int count,
+                                @RequestParam(required = false) String query) {
 
         PageInfo<Platform> parentPlatformPageInfo = platformService.queryPlatformList(page, count, query);
         if (parentPlatformPageInfo != null && !parentPlatformPageInfo.getList().isEmpty()) {
@@ -81,12 +91,17 @@ public class PlatformController {
                 platform.setCatalogSubscribe(subscribeHolder.getCatalogSubscribe(platform.getServerGBId()) != null);
             }
         }
-        return parentPlatformPageInfo;
+        return success(parentPlatformPageInfo);
     }
 
+    /**
+     * 添加上级平台信息
+     *
+     * @param platform
+     */
     @PostMapping("/add")
     @ResponseBody
-    public void add(@RequestBody Platform platform) {
+    public AjaxResult add(@RequestBody Platform platform) {
 
         if (log.isDebugEnabled()) {
             log.debug("保存上级平台信息API调用");
@@ -128,12 +143,17 @@ public class PlatformController {
         if (!updateResult) {
             throw new ControllerException(ErrorCode.ERROR100);
         }
+        return success();
     }
 
+    /**
+     * 更新上级平台信息
+     *
+     * @param parentPlatform
+     */
     @PostMapping("/update")
     @ResponseBody
-    public void updatePlatform(@RequestBody Platform parentPlatform) {
-
+    public AjaxResult updatePlatform(@RequestBody Platform parentPlatform) {
         if (log.isDebugEnabled()) {
             log.debug("保存上级平台信息API调用");
         }
@@ -151,60 +171,74 @@ public class PlatformController {
             throw new ControllerException(ErrorCode.ERROR400);
         }
         platformService.update(parentPlatform);
+        return success();
     }
 
-    @Parameter(name = "id", description = "上级平台ID")
-    @DeleteMapping("/delete")
+    /**
+     * 删除上级平台信息
+     *
+     * @param id 上级平台ID
+     * @return
+     */
+    @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public DeferredResult<Object> deletePlatform(Integer id) {
+    public AjaxResult deletePlatform(@PathVariable Integer id) {
 
         if (log.isDebugEnabled()) {
             log.debug("删除上级平台API调用");
         }
         DeferredResult<Object> deferredResult = new DeferredResult<>();
 
-        platformService.delete(id, (object)->{
+        platformService.delete(id, (object) -> {
             deferredResult.setResult(WVPResult.success());
         });
-        return deferredResult;
+        return success(deferredResult);
     }
 
-    @Parameter(name = "serverGBId", description = "上级平台的国标编号")
+    /**
+     * 判断上级平台是否存在
+     *
+     * @param serverGBId 上级平台的国标编号
+     * @return
+     */
     @GetMapping("/exit/{serverGBId}")
     @ResponseBody
-    public Boolean exitPlatform(@PathVariable String serverGBId) {
+    public AjaxResult exitPlatform(@PathVariable String serverGBId) {
         Platform platform = platformService.queryPlatformByServerGBId(serverGBId);
-        return platform != null;
+        return success(platform != null);
     }
 
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页条数", required = true)
-    @Parameter(name = "platformId", description = "上级平台的数据ID")
-    @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "hasShare", description = "是否已经共享")
+    /**
+     * 查询上级平台列表
+     *
+     * @param page        当前页
+     * @param count       每页条数
+     * @param platformId  上级平台的数据ID
+     * @param query       通道类型， 0：国标设备，1：推流设备，2：拉流代理
+     * @param channelType 查询内容
+     * @param online      是否在线
+     * @param hasShare    是否已经共享
+     * @return
+     */
     @GetMapping("/channel/list")
     @ResponseBody
-    public PageInfo<PlatformChannel> queryChannelList(int page, int count,
-                                                      @RequestParam(required = false) Integer platformId,
-                                                      @RequestParam(required = false) String query,
-                                                      @RequestParam(required = false) Integer channelType,
-                                                      @RequestParam(required = false) Boolean online,
-                                                      @RequestParam(required = false) Boolean hasShare) {
+    public AjaxResult queryChannelList(int page, int count,
+                                       @RequestParam(required = false) Integer platformId,
+                                       @RequestParam(required = false) String query,
+                                       @RequestParam(required = false) Integer channelType,
+                                       @RequestParam(required = false) Boolean online,
+                                       @RequestParam(required = false) Boolean hasShare) {
 
         Assert.notNull(platformId, "上级平台的数据ID不可为NULL");
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
-
-        return platformChannelService.queryChannelList(page, count, query, channelType,  online, platformId, hasShare);
+        return success(platformChannelService.queryChannelList(page, count, query, channelType, online, platformId, hasShare));
     }
 
     @PostMapping("/channel/add")
     @ResponseBody
-    public void addChannel(@RequestBody UpdateChannelParam param) {
-
+    public AjaxResult addChannel(@RequestBody UpdateChannelParam param) {
         if (log.isDebugEnabled()) {
             log.debug("给上级平台添加国标通道API调用");
         }
@@ -214,17 +248,18 @@ public class PlatformController {
                 log.info("[国标级联]添加所有通道到上级平台， {}", param.getPlatformId());
                 result = platformChannelService.addAllChannel(param.getPlatformId());
             }
-        }else {
+        } else {
             result = platformChannelService.addChannels(param.getPlatformId(), param.getChannelIds());
         }
         if (result <= 0) {
             throw new ControllerException(ErrorCode.ERROR100);
         }
+        return success();
     }
 
     @DeleteMapping("/channel/remove")
     @ResponseBody
-    public void delChannelForGB(@RequestBody UpdateChannelParam param) {
+    public AjaxResult delChannelForGB(@RequestBody UpdateChannelParam param) {
 
         if (log.isDebugEnabled()) {
             log.debug("给上级平台删除国标通道API调用");
@@ -235,38 +270,46 @@ public class PlatformController {
                 log.info("[国标级联]移除所有通道，上级平台， {}", param.getPlatformId());
                 result = platformChannelService.removeAllChannel(param.getPlatformId());
             }
-        }else {
+        } else {
             result = platformChannelService.removeChannels(param.getPlatformId(), param.getChannelIds());
         }
         if (result <= 0) {
             throw new ControllerException(ErrorCode.ERROR100);
         }
+        return success();
     }
 
-    @Parameter(name = "id", description = "平台ID", required = true)
-    @GetMapping("/channel/push")
+    /**
+     * 上级平台推送通道
+     *
+     * @param id 平台ID
+     */
+    @GetMapping("/channel/push//{id}")
     @ResponseBody
-    public void pushChannel(Integer id) {
+    public AjaxResult pushChannel(@PathVariable Integer id) {
         Assert.notNull(id, "平台ID不可为空");
         platformChannelService.pushChannel(id);
+        return success();
     }
 
     @PostMapping("/channel/device/add")
     @ResponseBody
-    public void addChannelByDevice(@RequestBody UpdateChannelParam param) {
+    public AjaxResult addChannelByDevice(@RequestBody UpdateChannelParam param) {
         Assert.notNull(param.getPlatformId(), "平台ID不可为空");
         Assert.notNull(param.getDeviceIds(), "设备ID不可为空");
         Assert.notEmpty(param.getDeviceIds(), "设备ID不可为空");
         platformChannelService.addChannelByDevice(param.getPlatformId(), param.getDeviceIds());
+        return success();
     }
 
     @PostMapping("/channel/device/remove")
     @ResponseBody
-    public void removeChannelByDevice(@RequestBody UpdateChannelParam param) {
+    public AjaxResult removeChannelByDevice(@RequestBody UpdateChannelParam param) {
         Assert.notNull(param.getPlatformId(), "平台ID不可为空");
         Assert.notNull(param.getDeviceIds(), "设备ID不可为空");
         Assert.notEmpty(param.getDeviceIds(), "设备ID不可为空");
         platformChannelService.removeChannelByDevice(param.getPlatformId(), param.getDeviceIds());
+        return success();
     }
 
     @PostMapping("/channel/custom/update")

@@ -137,7 +137,7 @@ public interface RegionMapper {
             " where id in " +
             " <foreach collection='regionSet'  item='item'  open='(' separator=',' close=')' > #{item.parentId}</foreach>" +
             " </script>")
-    Set<Region> queryParentInChannelList(Set<Region> regionSet);
+    Set<Region> queryParentInChannelList(@Param("regionSet") Set<Region> regionSet);
 
     @Select(" <script>" +
             " SELECT " +
@@ -147,7 +147,7 @@ public interface RegionMapper {
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbCivilCode}</foreach>" +
             " order by id " +
             "</script>")
-    Set<Region> queryByChannelList(List<CommonGBChannel> channelList);
+    Set<Region> queryByChannelList(@Param("channelList") List<CommonGBChannel> channelList);
 
     @Select(" <script>" +
             " SELECT * " +
@@ -156,7 +156,7 @@ public interface RegionMapper {
             " where wpr.platform_id is null and wcr.device_id in " +
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbCivilCode}</foreach>" +
             " </script>")
-    Set<Region> queryNotShareRegionForPlatformByChannelList(List<CommonGBChannel> channelList, @Param("platformId") Integer platformId);
+    Set<Region> queryNotShareRegionForPlatformByChannelList(@Param("channelList") List<CommonGBChannel> channelList, @Param("platformId") Integer platformId);
 
     @Select(" <script>" +
             " SELECT * " +
@@ -165,6 +165,6 @@ public interface RegionMapper {
             " where wpr.platform_id IS NULL and wcr.id in " +
             " <foreach collection='allRegion'  item='item'  open='(' separator=',' close=')' > #{item.id}</foreach>" +
             " </script>")
-    Set<Region> queryNotShareRegionForPlatformByRegionList(Set<Region> allRegion, @Param("platformId") Integer platformId);
+    Set<Region> queryNotShareRegionForPlatformByRegionList(@Param("allRegion") Set<Region> allRegion, @Param("platformId") Integer platformId);
 
 }

@@ -126,7 +126,7 @@ public interface GroupMapper {
             " where (device_id, business_group) in " +
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > (#{item.gbParentId}, #{item.gbBusinessGroupId})</foreach>" +
             " </script>")
-    Set<Group> queryInChannelList(List<CommonGBChannel> channelList);
+    Set<Group> queryInChannelList(@Param("channelList") List<CommonGBChannel> channelList);
 
     @Select(" <script>" +
             " SELECT " +
@@ -135,7 +135,7 @@ public interface GroupMapper {
             " where id in " +
             " <foreach collection='groupSet'  item='item'  open='(' separator=',' close=')' > #{item.parentId}</foreach>" +
             " </script>")
-    Set<Group> queryParentInChannelList(Set<Group> groupSet);
+    Set<Group> queryParentInChannelList(@Param("groupSet") Set<Group> groupSet);
 
     @Select(" <script>" +
             " SELECT " +
@@ -157,7 +157,7 @@ public interface GroupMapper {
             " where wpg.platform_id is null and wcg.device_id in " +
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbParentId}</foreach>" +
             " </script>")
-    Set<Group> queryNotShareGroupForPlatformByChannelList(List<CommonGBChannel> channelList, @Param("platformId") Integer platformId);
+    Set<Group> queryNotShareGroupForPlatformByChannelList(@Param("channelList") List<CommonGBChannel> channelList, @Param("platformId") Integer platformId);
 
     @Select(" <script>" +
             " SELECT * " +
@@ -166,7 +166,7 @@ public interface GroupMapper {
             " where wpg.platform_id IS NULL and wcg.id in " +
             " <foreach collection='allGroup'  item='item'  open='(' separator=',' close=')' > #{item.id}</foreach>" +
             " </script>")
-    Set<Group> queryNotShareGroupForPlatformByGroupList(Set<Group> allGroup, @Param("platformId") Integer platformId);
+    Set<Group> queryNotShareGroupForPlatformByGroupList(@Param("allGroup") Set<Group> allGroup, @Param("platformId") Integer platformId);
 
 
     @Select(" <script>" +
@@ -177,7 +177,7 @@ public interface GroupMapper {
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbParentId}</foreach>" +
             " order by id " +
             "</script>")
-    Set<Group> queryByChannelList(List<CommonGBChannel> channelList);
+    Set<Group> queryByChannelList(@Param("channelList") List<CommonGBChannel> channelList);
 
     //    @Update(value = " <script>" +
 //            " update wvp_common_group w1 " +
