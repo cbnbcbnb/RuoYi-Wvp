@@ -5,12 +5,20 @@ import {searchPlugin} from '@vuepress/plugin-search'
 
 export default defineUserConfig({
     lang: 'en-US',
-
+    port: '12999',
+    plugins: [
+        searchPlugin({
+            locales: {
+                '/': {
+                    placeholder: '搜索文档',
+                },
+            }
+        }),
+    ],
     title: 'ruoyi-wvp',
     description: '为简化对接监控而生',
-
     theme: defaultTheme({
-        logo: 'https://vuejs.press/images/hero.png',
+        logo: '/images/logo/logo.png',
 
         navbar: ['/', {
             text: '文档',
@@ -27,21 +35,40 @@ export default defineUserConfig({
                     {
                         text: '快速开始',
                         link: '/doc/kslj'
+                    },
+                    {
+                        text: '视频教程',
+                        link: '/doc/spjc'
+                    },
+                    {
+                        text: '更新日志',
+                        link: '/doc/gxrz'
                     }
+                ]
+            },
+            {
+                text: '功能和使用',
+                children: [
+                    {
+                        text: '接入设备',
+                        link: '/doc/device'
+                    },
+                ]
+            },
+            {
+                text: '其他',
+                children: [
+                    {
+                        text: '常见问题',
+                        link: '/doc/faq'
+                    },
+                    {
+                        text: '捐赠支持',
+                        link: '/doc/donate'
+                    },
                 ]
             }
         ]
     }),
-
-    plugins: [
-        searchPlugin({
-            locales: {
-                '/': {
-                    placeholder: '搜索文档',
-                },
-            }
-        }),
-    ],
-
     bundler: viteBundler(),
 })

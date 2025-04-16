@@ -1,7 +1,7 @@
 ---
 home: true
 title: 首页
-heroImage: https://vuejs.press/images/hero.png
+heroImage: /images/logo/logo.png
 actions:
   - text: 快速开始
     link: /doc/kslj.md

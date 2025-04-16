@@ -39,3 +39,5 @@ ruoyi-wvp 是基于ruoyi-vue和wvp框架开发，开箱即用的28181协议视�
 - [个人码云](https://gitee.com/ruoyi_wvp)
 - [个人CSDN](https://blog.csdn.net/qq_43463507?type=blog)
 - [个人掘金](https://juejin.cn/user/434635074828914/posts)
+
+# 7.赞助
