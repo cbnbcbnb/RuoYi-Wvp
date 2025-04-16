@@ -60,6 +60,8 @@ import {queryForTree} from "@/api/wvp/region";
 import {queryListByCivilCode, queryListByParentId, sendDevicePush} from "@/api/wvp/channel.js";
 import {queryForTree as groupQueryForTree} from "@/api/wvp/group.js";
 import CusPlayer from "@/components/flv/CusPlayer.vue";
+import { start as playPush} from "@/api/wvp/push.js";
+import { start as playProxy } from "@/api/wvp/proxy.js";
 
 const {proxy} = getCurrentInstance();
 
@@ -122,19 +124,42 @@ const loadNode = async (node, resolve) => {
 };
 
 const handleNodeClick = async (data) => {
-  if (data.gbDeviceId && data.gbParentId) {
-    const params = {
-      deviceId: data.gbParentId,
-      channelId: data.gbDeviceId
+  if(data.dataType === 1){
+    if (data.gbDeviceId && data.gbParentId) {
+      const params = {
+        deviceId: data.gbParentId,
+        channelId: data.gbDeviceId
+      }
+      const res = await sendDevicePush(params);
+      const videoRef = proxy.$refs[`video${activePlayerIndex.value}`];
+      if (videoRef && videoRef[0]) {
+        videoRef[0].createPlayer(res.data.flv, 0);
+      } else {
+        proxy.$modal.msgError("请选择播放器");
+      }
     }
-    const res = await sendDevicePush(params);
+  }
+
+  if(data.dataType === 2) {
+    const ans = await playPush({id: data.dataDeviceId});
     const videoRef = proxy.$refs[`video${activePlayerIndex.value}`];
     if (videoRef && videoRef[0]) {
-      videoRef[0].createPlayer(res.data.flv, 0);
+      videoRef[0].createPlayer(ans.data.flv, 0);
     } else {
       proxy.$modal.msgError("请选择播放器");
     }
   }
+
+  if(data.dataType === 3) {
+    const ans = await playProxy({id: data.dataDeviceId});
+    const videoRef = proxy.$refs[`video${activePlayerIndex.value}`];
+    if (videoRef && videoRef[0]) {
+      videoRef[0].createPlayer(ans.flv, 0);
+    } else {
+      proxy.$modal.msgError("请选择播放器");
+    }
+  }
+
 };
 
 const splitShow = ref(1)

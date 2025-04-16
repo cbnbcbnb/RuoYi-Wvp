@@ -503,7 +503,6 @@ const data = reactive({
 const {queryParams, form, rules} = toRefs(data);
 
 async function playPush(row) {
-  console.log(row);
   try {
     const ans = await start({id: row.id});
     rtcUrl.value = ans.data.fmp4;

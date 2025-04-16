@@ -553,6 +553,7 @@ import {addProxy, deleteProxy, getFFmpegCMDs, listProxy, stopProxy, updateProxy,
 import {ElMessage} from "element-plus";
 import {addChannelData, updateChannelData} from "../../../api/wvp/channel.js";
 
+
 const {proxy} = getCurrentInstance();
 
 const streamProxyList = ref([]);

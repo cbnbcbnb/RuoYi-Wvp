@@ -101,6 +101,7 @@ public class ZLMHttpHookListener {
     public HookResultForOnPublish onPublish(@RequestBody OnPublishHookParam param) {
         String[] parts = param.getStream().split("/");
         param.setStream(parts[0]);
+        // 这里用
         String key = "3e80d1762a324d5b0ff636e0bd16f1e3";
         String pusuKey = "";
         try {

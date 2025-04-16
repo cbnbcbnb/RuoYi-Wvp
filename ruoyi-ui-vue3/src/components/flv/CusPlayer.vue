@@ -26,8 +26,6 @@ export default {
   mounted() {
     var that = this;
     document.addEventListener('visibilitychange', function() {
-      // console.log(document.visibilityState);
-      // console.log(document.hidden);
       if (document.hidden) {
         console.log("页面隐藏")
       }
