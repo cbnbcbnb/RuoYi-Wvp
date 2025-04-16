@@ -28,62 +28,21 @@
         <el-card>
           <div class="flex">
             分屏:
-            <svg-icon icon-class="github" @click="spiltIndex(0)" class="flex-icon" />
-            <svg-icon icon-class="github" @click="spiltIndex(4)" class="flex-icon" />
-            <svg-icon icon-class="github" @click="spiltIndex(6)" class="flex-icon" />
-            <svg-icon icon-class="github" @click="spiltIndex(9)" class="flex-icon" />
-          </div>
-          <div style="width: 100%; height: 600px; margin-top: 20px;">
-            <el-row>
-              <el-col :span="24">
-                <div class="player">
-                  <CusPlayer ref="video"></CusPlayer>
-                </div>
-              </el-col>
-            </el-row>
+            <svg-icon icon-class="splitOne" @click="spiltIndex(1)" class="flex-icon" />
+            <svg-icon icon-class="splitFour" @click="spiltIndex(4)" class="flex-icon" />
+            <svg-icon icon-class="splitSix" @click="spiltIndex(6)" class="flex-icon" />
+            <svg-icon icon-class="splitNine" @click="spiltIndex(9)" class="flex-icon" />
           </div>
 
-          <div style="display: flex; flex-wrap: wrap; margin-top: 10px;">
-            <div style="width: 50%; height: 400px;">
-              <el-row>
-                <el-col :span="24">
-                  <div style="width: 100%; height: 400px; background-color: #000000; border: 4px solid rgb(0, 198, 255) !important;">
-                    <CusPlayer ref="video"></CusPlayer>
-                  </div>
-                </el-col>
-              </el-row>
+          <div style="display: flex; flex-wrap: wrap; margin-top: 20px;">
+            <div
+                v-for="(item, index) in splitLayouts[splitShow]"
+                :key="index"
+                :style="getCellStyle(splitShow)"
+                :class="['player-cell', { active: activePlayerIndex === index }]"
+                @click="setActivePlayer(index)">
+              <CusPlayer :ref="'video' + index" />
             </div>
-
-            <div style="width: 50%; height: 400px;">
-              <el-row>
-                <el-col :span="24">
-                  <div style="width: 100%; height: 400px; background-color: #000000; border: 4px solid rgb(0, 198, 255) !important;">
-                    <CusPlayer ref="video"></CusPlayer>
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
-
-            <div style="width: 50%; height: 400px;">
-              <el-row>
-                <el-col :span="24">
-                  <div style="width: 100%; height: 400px; background-color: #000000; border: 4px solid rgb(0, 198, 255) !important;">
-                    <CusPlayer ref="video"></CusPlayer>
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
-
-            <div style="width: 50%; height: 400px;">
-              <el-row>
-                <el-col :span="24">
-                  <div style="width: 100%; height: 400px; background-color: #000000; border: 4px solid rgb(0, 198, 255) !important;">
-                    <CusPlayer ref="video"></CusPlayer>
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
-
           </div>
 
         </el-card>
@@ -103,13 +62,6 @@ const {proxy} = getCurrentInstance();
 const queryParams = ref({
   pageNum: 1,
   pageSize: 200,
-  civilCode: "",
-})
-
-const queryParamsGroup = ref({
-  pageNum: 1,
-  pageSize: 200,
-  groupDeviceId: "",
 })
 
 const video = ref(null);
@@ -119,6 +71,13 @@ const defaultProps = {
   children: 'children',
   label: 'name',
   isLeaf: 'leaf'
+};
+
+const splitLayouts = {
+  1: [1],
+  4: [1, 2, 3, 4],
+  6: [1, 2, 3, 4, 5, 6],
+  9: [1, 2, 3, 4, 5, 6, 7, 8, 9],
 };
 
 async function onSwitch(e) {
@@ -145,8 +104,8 @@ const loadNode = async (node, resolve) => {
       }));
       resolve(children);
     } else {
-      queryParamsGroup.value.groupDeviceId = node.data.deviceId;
-      const response = await queryListByParentId(queryParamsGroup.value);
+      queryParams.value.groupDeviceId = node.data.deviceId;
+      const response = await queryListByParentId(queryParams.value);
       const children = response.rows.map(item => ({
         ...item,
         leaf: true,
@@ -164,14 +123,58 @@ const handleNodeClick = async (data) => {
       channelId: data.gbDeviceId
     }
     const res = await sendDevicePush(params);
-    console.log("1111", res);
-    video.value.createPlayer(res.data.flv, 0)
-    // vUrl.value = res.data.flv;
-    // openPlay.value = true;
+    const videoRef = proxy.$refs[`video${activePlayerIndex.value}`];
+    if (videoRef && videoRef[0]) {
+      videoRef[0].createPlayer(res.data.flv, 0);
+    } else {
+      proxy.$modal.msgError("请选择播放器");
+    }
   }
 };
 
+const splitShow = ref(1)
+const borderWidth = ref(2)
+const activePlayerIndex = ref(null);
+const model = ref(null);
+
 const activeValue = ref(true);
+function getCellStyle(splitMode) {
+  model.value = splitMode;
+  const style = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000000",
+    boxSizing: "border-box",
+  };
+
+  if (splitMode === 1) {
+    style.width = "100%";
+    style.height = "600px";
+    style.border  = `${borderWidth.value}px solid #409EFF`;
+  } else if (splitMode === 4) {
+    style.width = "50%";
+    style.height = "400px";
+    style.border  = `${borderWidth.value}px solid #409EFF`;
+    style.margin = "-2px";
+  } else if (splitMode === 6) {
+    style.width = "50%";
+    style.height = "250px";
+    style.border  = `${borderWidth.value}px solid #409EFF`;
+    style.margin = "-2px";
+  } else if (splitMode === 9) {
+    style.width = "33.33%";
+    style.height = "250px";
+    style.border  = `${borderWidth.value}px solid #409EFF`;
+    style.margin = "-2px";
+  }
+
+  return style;
+}
+
+function setActivePlayer(index) {
+  activePlayerIndex.value = index;
+}
 
 async function getTreeData() {
   const res = await queryForTree();
@@ -198,7 +201,8 @@ async function getGroupQueryForTree() {
 }
 
 function spiltIndex(index){
-  console.log("index", index);
+  splitShow.value = index;
+  activePlayerIndex.value = null;
 }
 
 onMounted(async () => {
@@ -220,10 +224,19 @@ onMounted(async () => {
   align-items: center;
 }
 
-.player {
-  width: 100%;
-  height: 600px;
-  background-color: #000000;
+.player-cell {
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+
+.player-cell:hover {
+  cursor: pointer;
+}
+
+.player-cell.active {
+  border-color: #67C23A !important;
+  z-index: 999;
+  boxSizing: "border-box"
 }
 
 .flex-icon {
