@@ -28,10 +28,14 @@
         <el-card>
           <div class="flex">
             分屏:
-            <svg-icon icon-class="splitOne" @click="spiltIndex(1)" class="flex-icon" />
-            <svg-icon icon-class="splitFour" @click="spiltIndex(4)" class="flex-icon" />
-            <svg-icon icon-class="splitSix" @click="spiltIndex(6)" class="flex-icon" />
-            <svg-icon icon-class="splitNine" @click="spiltIndex(9)" class="flex-icon" />
+            <svg-icon :class="['flex-icon', { active: model === 1 }]"
+                icon-class="splitOne" @click="spiltIndex(1)" class="flex-icon" />
+            <svg-icon :class="['flex-icon', { active: model === 4 }]"
+                icon-class="splitFour" @click="spiltIndex(4)" class="flex-icon" />
+            <svg-icon :class="['flex-icon', { active: model === 6 }]"
+                icon-class="splitSix" @click="spiltIndex(6)" class="flex-icon" />
+            <svg-icon :class="['flex-icon', { active: model === 9 }]"
+                icon-class="splitNine" @click="spiltIndex(9)" class="flex-icon" />
           </div>
 
           <div style="display: flex; flex-wrap: wrap; margin-top: 20px;">
@@ -135,7 +139,7 @@ const handleNodeClick = async (data) => {
 const splitShow = ref(1)
 const borderWidth = ref(2)
 const activePlayerIndex = ref(null);
-const model = ref(null);
+const model = ref(1);
 
 const activeValue = ref(true);
 function getCellStyle(splitMode) {
@@ -159,12 +163,12 @@ function getCellStyle(splitMode) {
     style.margin = "-2px";
   } else if (splitMode === 6) {
     style.width = "50%";
-    style.height = "250px";
+    style.height = "300px";
     style.border  = `${borderWidth.value}px solid #409EFF`;
     style.margin = "-2px";
   } else if (splitMode === 9) {
     style.width = "33.33%";
-    style.height = "250px";
+    style.height = "280px";
     style.border  = `${borderWidth.value}px solid #409EFF`;
     style.margin = "-2px";
   }
@@ -241,6 +245,18 @@ onMounted(async () => {
 
 .flex-icon {
   margin-left: 10px;
+}
+
+.flex-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.flex-icon.active {
+  color: #409EFF;
+  transform: scale(1.2);
 }
 </style>
 
