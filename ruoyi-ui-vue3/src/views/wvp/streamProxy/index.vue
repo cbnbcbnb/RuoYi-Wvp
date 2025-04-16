@@ -750,7 +750,6 @@ function onStopPlay(row) {
 function handleChannelConfiguration(row) {
   openChannel.value = true
   form.value = JSON.parse(JSON.stringify(row))
-  form.value.gbDeviceId = ""
 }
 
 function buildDeviceIdCode(deviceId) {
