@@ -442,13 +442,14 @@ function handleEdit(row) {
   title.value = "修改平台";
 }
 
-function handleDelete() {
+function handleDelete(row) {
   proxy.$modal.confirm('确认删除？').then(function () {
-    delPlatform(row.id).then(() => {
-      proxy.$modal.msgSuccess("删除成功");
-      getList();
-    })
-  })
+    return delPlatform(row.id)
+  }).then(() => {
+    proxy.$modal.msgSuccess("删除成功");
+    getList();
+  }).catch(() => {
+  });
 }
 
 /** 提交按钮 */

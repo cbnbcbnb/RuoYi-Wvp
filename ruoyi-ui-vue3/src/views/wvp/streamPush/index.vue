@@ -61,7 +61,7 @@
       <el-table-column label="位置信息" min-width="150" align="center">
         <template #default="scope">
           <span
-                v-if="scope.row.gbLongitude && scope.row.gbLatitude">{{
+              v-if="scope.row.gbLongitude && scope.row.gbLatitude">{{
               scope.row.gbLongitude
             }}<br/>{{ scope.row.gbLatitude }}</span>
           <span v-if="!scope.row.gbLongitude || !scope.row.gbLatitude">无</span>
@@ -585,23 +585,21 @@ function handleAdd() {
   title.value = "新增推流";
 }
 
-function handleEdit(row){
+function handleEdit(row) {
   reset()
   open.value = true;
   title.value = "修改推流";
   form.value = JSON.parse(JSON.stringify(row))
 }
 
-function handleDelete(row){
+function handleDelete(row) {
   proxy.$modal.confirm('是否确认删除该推流？').then(function () {
-    removePush(row.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-      })
-      getPushList();
-    })
-  })
+    return removePush(row.id)
+  }).then(() => {
+    getPushList();
+    proxy.$modal.msgSuccess("删除成功");
+  }).catch(() => {
+  });
 }
 
 /** 编辑通道按钮 */
