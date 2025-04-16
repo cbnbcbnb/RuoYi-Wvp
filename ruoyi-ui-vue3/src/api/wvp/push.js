@@ -34,3 +34,12 @@ export function removePush(id) {
         method: 'post',
     })
 }
+
+// 播放
+export function start(query) {
+    return request({
+        url: `/api/push/start`,
+        method: 'get',
+        params: query
+    })
+}

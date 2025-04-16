@@ -80,7 +80,6 @@ public class PlayController extends BaseController {
     @Parameter(name = "channelId", description = "通道国标编号", required = true)
     @GetMapping("/start/{deviceId}/{channelId}")
     public DeferredResult<WVPResult<StreamContent>> play(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId) {
-
         log.info("[开始点播] deviceId：{}, channelId：{}, ", deviceId, channelId);
         Assert.notNull(deviceId, "设备国标编号不可为NULL");
         Assert.notNull(channelId, "通道国标编号不可为NULL");

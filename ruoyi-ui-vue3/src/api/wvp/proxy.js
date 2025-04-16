@@ -51,3 +51,12 @@ export function stopProxy(id) {
         method: 'post',
     })
 }
+
+// 启用代理
+export function start(query) {
+    return request({
+        url: `/api/proxy/start`,
+        method: 'get',
+        params: query
+    })
+}

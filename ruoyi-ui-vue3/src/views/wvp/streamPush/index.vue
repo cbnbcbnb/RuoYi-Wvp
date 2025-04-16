@@ -61,7 +61,7 @@
       <el-table-column label="位置信息" min-width="150" align="center">
         <template #default="scope">
           <span
-                v-if="scope.row.gbLongitude && scope.row.gbLatitude">{{
+              v-if="scope.row.gbLongitude && scope.row.gbLatitude">{{
               scope.row.gbLongitude
             }}<br/>{{ scope.row.gbLatitude }}</span>
           <span v-if="!scope.row.gbLongitude || !scope.row.gbLatitude">无</span>
@@ -77,8 +77,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-          <!--          <el-button @click="playPush(scope.row)" type="text">播放-->
-          <!--          </el-button>-->
+          <el-button @click="playPush(scope.row)" type="text">播放</el-button>
           <el-button type="text" @click="handleChannelConfiguration(scope.row)">
             通道配置
           </el-button>
@@ -451,6 +450,13 @@
     <ChooseCivilCode ref="chooseCivilCodeRef" @onSubmit="gbCivilCodeOnSubmit"></ChooseCivilCode>
 
     <ChooseGroup ref="chooseGroupRef" @onSubmit="gbParentOnSubmit"></ChooseGroup>
+
+    <el-dialog title="播放视频" v-model="openView" width="835px" append-to-body>
+      <div class="player">
+        <easy-player class="player" :video-url="rtcUrl" autoplay :live="true"></easy-player>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -459,7 +465,7 @@ import ChannelCode from "../../components/common/channelCode.vue"
 import ChooseCivilCode from "../../components/common/chooseCivilCode.vue"
 import ChooseGroup from "../../components/dialog/chooseGroup.vue"
 import {getOnlineMediaServerList} from "../../../api/wvp/wvpMediaServer.js";
-import {addPush, listPush, removePush, updatePush} from "../../../api/wvp/push.js";
+import {addPush, listPush, removePush, updatePush, start} from "../../../api/wvp/push.js";
 import {addChannelData, updateChannelData} from "../../../api/wvp/channel.js";
 import {ElMessage} from "element-plus";
 
@@ -468,9 +474,11 @@ const {proxy} = getCurrentInstance();
 const pushList = ref([]);
 const mediaServerList = ref([]);
 const loading = ref(false);
+const openView = ref(false);
 const showSearch = ref(true);
 const total = ref(0);
 const title = ref("");
+const rtcUrl = ref("");
 const open = ref(false);
 const openChannel = ref(false);
 const channelCode = ref(null);
@@ -493,6 +501,17 @@ const data = reactive({
 });
 
 const {queryParams, form, rules} = toRefs(data);
+
+async function playPush(row) {
+  console.log(row);
+  try {
+    const ans = await start({id: row.id});
+    rtcUrl.value = ans.data.fmp4;
+    openView.value = true;
+  } catch (e) {
+    console.log(e)
+  }
+}
 
 /** 搜索按钮操作 */
 function handleQuery() {
@@ -585,14 +604,14 @@ function handleAdd() {
   title.value = "新增推流";
 }
 
-function handleEdit(row){
+function handleEdit(row) {
   reset()
   open.value = true;
   title.value = "修改推流";
   form.value = JSON.parse(JSON.stringify(row))
 }
 
-function handleDelete(row){
+function handleDelete(row) {
   proxy.$modal.confirm('是否确认删除该推流？').then(function () {
     removePush(row.id).then(() => {
       ElMessage({
@@ -698,5 +717,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
+.player {
+  width: 100%;
+  height: 600px;
+}
 </style>

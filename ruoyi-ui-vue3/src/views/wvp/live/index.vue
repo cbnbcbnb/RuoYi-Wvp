@@ -71,6 +71,7 @@ const queryParams = ref({
 const video = ref(null);
 
 const treeData = ref([]);
+
 const defaultProps = {
   children: 'children',
   label: 'name',
@@ -140,8 +141,8 @@ const splitShow = ref(1)
 const borderWidth = ref(2)
 const activePlayerIndex = ref(null);
 const model = ref(1);
-
 const activeValue = ref(true);
+
 function getCellStyle(splitMode) {
   model.value = splitMode;
   const style = {
@@ -212,6 +213,7 @@ function spiltIndex(index){
 onMounted(async () => {
   await getTreeData();
 });
+
 </script>
 
 <style scoped>

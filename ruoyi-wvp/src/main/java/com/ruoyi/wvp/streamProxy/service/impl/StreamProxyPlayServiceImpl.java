@@ -150,10 +150,10 @@ public class StreamProxyPlayServiceImpl implements IStreamProxyPlayService {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), mediaServerId == null?"未找到可用的媒体节点":"未找到节点" + mediaServerId);
         }
         StreamInfo streamInfo = mediaServerService.startProxy(mediaServer, streamProxy);
-        if (mediaServerId == null || !mediaServerId.equals(mediaServer.getId())) {
+//        if (mediaServerId == null || !mediaServerId.equals(mediaServer.getId())) {
             streamProxy.setMediaServerId(mediaServer.getId());
             streamProxyMapper.addStream(streamProxy);
-        }
+//        }
         return streamInfo;
     }
 

@@ -202,7 +202,7 @@ public class StreamProxyController extends BaseController {
         log.info("播放代理： {}", id);
         StreamInfo streamInfo = streamProxyPlayService.start(id, null, null);
         if (streamInfo == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), ErrorCode.ERROR100.getMsg());
+            throw new RuntimeException(ErrorCode.ERROR400.getMsg());
         } else {
             return new StreamContent(streamInfo);
         }

@@ -51,9 +51,9 @@
     </el-row>
 
     <el-table v-loading="loading" :data="streamProxyList" border>
-      <el-table-column prop="app" label="流应用名" min-width="120" show-overflow-tooltip align="center"/>
-      <el-table-column prop="stream" label="流ID" min-width="120" show-overflow-tooltip align="center"/>
-      <el-table-column label="流地址" min-width="200" align="center">
+      <el-table-column prop="app" label="流应用名" min-width="120" show-overflow-tooltip align="center" fixed/>
+      <el-table-column prop="stream" label="流ID" min-width="120" show-overflow-tooltip align="center" fixed/>
+      <el-table-column label="流地址" min-width="200" align="center" show-overflow-tooltip>
         <template #default="scope">
           {{ scope.row.srcUrl }}
         </template>
@@ -87,9 +87,10 @@
       <el-table-column prop="createTime" label="创建时间" min-width="150" show-overflow-tooltip align="center"/>
       <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
-          <!--          <el-button @click="playPush(scope.row)" type="text">播放-->
-          <!--          </el-button>-->
-          <el-button style="color: #f56c6c" type="text" v-if="scope.row.pulling" @click="stopPlay(scope.row)">
+          <el-button @click="playPush(scope.row)" type="text" :loading="scope.row.playLoading">
+            播放
+          </el-button>
+          <el-button size="medium" icon="el-icon-switch-button" style="color: #f56c6c"  type="text" v-if="scope.row.pulling" @click="onStopPlay(scope.row)">
             停止
           </el-button>
           <el-button type="text" @click="handleChannelConfiguration(scope.row)">
@@ -534,6 +535,12 @@
     <ChooseCivilCode ref="chooseCivilCodeRef" @onSubmit="gbCivilCodeOnSubmit"></ChooseCivilCode>
 
     <ChooseGroup ref="chooseGroupRef" @onSubmit="gbParentOnSubmit"></ChooseGroup>
+
+    <el-dialog :title="title" v-model="openView" width="835px" append-to-body>
+      <div class="player">
+        <easy-player class="player" :video-url="rtcUrl" autoplay :live="true" :close="getStreamProxyList()"></easy-player>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -542,7 +549,7 @@ import ChannelCode from "../../components/common/channelCode.vue"
 import ChooseCivilCode from "../../components/common/chooseCivilCode.vue"
 import ChooseGroup from "../../components/dialog/chooseGroup.vue"
 import {getOnlineMediaServerList} from "../../../api/wvp/wvpMediaServer.js";
-import {addProxy, deleteProxy, getFFmpegCMDs, listProxy, stopProxy, updateProxy} from "../../../api/wvp/proxy.js";
+import {addProxy, deleteProxy, getFFmpegCMDs, listProxy, stopProxy, updateProxy, start} from "../../../api/wvp/proxy.js";
 import {ElMessage} from "element-plus";
 import {addChannelData, updateChannelData} from "../../../api/wvp/channel.js";
 
@@ -554,7 +561,9 @@ const loading = ref(false);
 const showSearch = ref(true);
 const total = ref(0);
 const title = ref("");
+const rtcUrl = ref("");
 const open = ref(false);
+const openView = ref(false);
 const openChannel = ref(false);
 const channelCode = ref(null);
 const chooseCivilCodeRef = ref(null);
@@ -576,6 +585,21 @@ const data = reactive({
 });
 
 const {queryParams, form, rules} = toRefs(data);
+const streamInfo = ref();
+async function playPush(row){
+  row.playLoading = true;
+  streamInfo.value = row;
+  try {
+    const ans = await start({id: row.id});
+    rtcUrl.value = ans.fmp4;
+    row.playLoading = false;
+    title.value = "播放视频";
+    openView.value = true;
+  } catch (e) {
+    row.playLoading = false;
+  }
+
+}
 
 function getStreamProxyList() {
   loading.value = true
@@ -715,7 +739,7 @@ function noneReaderHandler() {
   }
 }
 
-function stopPlay(row) {
+function onStopPlay(row) {
   stopProxy(row.id).then(() => {
     proxy.$modal.msgSuccess("停止成功");
     getStreamProxyList()
@@ -795,5 +819,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
+.player {
+  width: 100%;
+  height: 600px;
+}
 </style>

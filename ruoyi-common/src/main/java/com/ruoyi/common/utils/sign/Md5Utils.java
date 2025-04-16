@@ -7,14 +7,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Md5加密方法
- * 
+ *
  * @author ruoyi
  */
 public class Md5Utils
 {
     private static final Logger log = LoggerFactory.getLogger(Md5Utils.class);
 
-    private static byte[] md5(String s)
+    private static final byte[] md5(String s)
     {
         MessageDigest algorithm;
         try

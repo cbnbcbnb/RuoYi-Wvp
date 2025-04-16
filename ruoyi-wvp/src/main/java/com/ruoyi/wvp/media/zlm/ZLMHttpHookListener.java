@@ -3,6 +3,7 @@ package com.ruoyi.wvp.media.zlm;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.annotation.Anonymous;
+import com.ruoyi.common.utils.sign.Md5Utils;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.bean.ResultForOnPublish;
@@ -18,12 +19,14 @@ import com.ruoyi.wvp.utils.MediaServerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,6 +99,17 @@ public class ZLMHttpHookListener {
     @ResponseBody
     @PostMapping(value = "/on_publish", produces = "application/json;charset=UTF-8")
     public HookResultForOnPublish onPublish(@RequestBody OnPublishHookParam param) {
+        String[] parts = param.getStream().split("/");
+        param.setStream(parts[0]);
+        String key = "3e80d1762a324d5b0ff636e0bd16f1e3";
+        String pusuKey = "";
+        try {
+            pusuKey = DigestUtils.md5DigestAsHex(key.getBytes("utf-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String sign = "sign=" + pusuKey;
+        param.setParams(sign);
 
         JSONObject json = (JSONObject) JSON.toJSON(param);
 
