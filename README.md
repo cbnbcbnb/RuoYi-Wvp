@@ -4,7 +4,7 @@
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi-Wvp</h1>
 <h4 align="center">基于ruoyi-vue的流媒体平台，开箱即用、完全开源、使用MIT许可协议</h4>
 <p align="center">
-	<a href="https://gitee.com/"><img width="40" height="20" src="http://image.taimomo.top/ry-wvp.svg"></a>
+	<a href="https://gitee.com/xiaochemgzi/RuoYi-Wvp"><img width="40" height="20" src="http://image.taimomo.top/ry-wvp.svg"></a>
 </p>
 
 ## 平台介绍
