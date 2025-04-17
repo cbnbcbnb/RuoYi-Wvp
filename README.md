@@ -4,8 +4,7 @@
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi-Wvp</h1>
 <h4 align="center">基于ruoyi-vue的流媒体平台，开箱即用、完全开源、使用MIT许可协议</h4>
 <p align="center">
-	<a href="https://gitee.com/y_project/RuoYi-Vue"><img src="https://img.shields.io/badge/RuoYi-v3.8.9-brightgreen.svg"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
+	<a href="https://gitee.com/"><img width="40" height="20" src="http://image.taimomo.top/ry-wvp.svg"></a>
 </p>
 
 ## 平台介绍
@@ -47,7 +46,7 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 ## 在线体验
 
 演示地址：暂无演示地址  
-文档地址：http://doc.ruoyi.vip
+文档地址：http://doc.ry-wvp.xyz
 
 ## 国标演示图
 
@@ -80,6 +79,10 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
         <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/1b0dca2be11a44bab60bed1f6fefb0a7.png"/></td>
         <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/27211331ad6246699cb3019ba9c92a64.png"/></td>
     </tr>
+	<tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/a832fa6d9a50413385cbd2ed1b700797.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/ae58f01bff6c49a4bad5d622490bede6.png"/></td>
+    </tr>
 </table>
 
 ## onvif演示图
@@ -106,6 +109,10 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 </p>
 
 ## 特别致谢
+
+感谢作者[夏楚](https://github.com/xia-chu) 开源了这么棒流媒体服务框架。
+感谢作者[wvp](https://github.com/648540858/wvp-GB28181-pro) 开源了这么棒国标服务器框架。
+感谢作者[若依](https://ruoyi.vip/) 开源了这么棒快速开发框架。
 
 ## 赞赏方式
 
