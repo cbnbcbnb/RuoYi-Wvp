@@ -122,9 +122,9 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 
 ## 特别致谢
 
-感谢作者[夏楚](https://github.com/xia-chu) 开源了这么棒流媒体服务框架。
-感谢作者[wvp](https://github.com/648540858/wvp-GB28181-pro) 开源了这么棒国标服务器框架。
-感谢作者[若依](https://ruoyi.vip/) 开源了这么棒快速开发框架。
+- 感谢作者[夏楚](https://github.com/xia-chu) 开源了这么棒流媒体服务框架。
+- 感谢作者[wvp](https://github.com/648540858/wvp-GB28181-pro) 开源了这么棒国标服务器框架。
+- 感谢作者[若依](https://ruoyi.vip/) 开源了这么棒快速开发框架。
 
 ## 赞赏方式
 
