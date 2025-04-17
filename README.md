@@ -96,4 +96,18 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 * 微信1: chenbai0511
 * 微信2: NYHHDWGZL
 
+<p align="center">
+    <img width="200" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/a8663f16829b4871a94c9534a6dad894.jpg"/>
+    <img width="200" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/4601cea6e8cc4df18124bfc1af715dc7.png"/>
+</p>
+
+## 特别致谢
+
+## 赞赏方式
+
+ry-wvp 全面支持微信/支付宝赞赏,江山父老可以请作者喝杯☕️咖啡吗qwq
+
+如果你感觉项目对你有帮助,可以扫码进行捐赠qwq
+
+<img width="700" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/bcfef20f53ee49e8baf2559f97e85ffb.jpg"/>
 
