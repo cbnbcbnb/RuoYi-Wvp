@@ -1,4 +1,4 @@
-export const siteData = JSON.parse("{\"base\":\"/\",\"lang\":\"en-US\",\"title\":\"ruoyi-wvp\",\"description\":\"为简化对接监控而生\",\"head\":[],\"locales\":{}}")
+export const siteData = JSON.parse("{\"base\":\"/\",\"lang\":\"en-US\",\"title\":\"ruoyi-wvp\",\"description\":\"为简化对接监控而生\",\"head\":[[\"link\",{\"rel\":\"icon\",\"href\":\"/images/logo/logo.png\"}]],\"locales\":{}}")
 
 if (import.meta.webpackHot) {
   import.meta.webpackHot.accept()

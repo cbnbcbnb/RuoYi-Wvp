@@ -81,8 +81,10 @@
 <span class="line"># 前端访问地址 http<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>localhost<span class="token operator">:</span><span class="token number">80</span></span>
 <span class="line"></span></code></pre>
 </div><h2 id="_6-遇到问题" tabindex="-1"><a class="header-anchor" href="#_6-遇到问题"><span>6.遇到问题</span></a></h2>
+<p>加联系方式</p>
 <ul>
-<li>加微信：<code v-pre>zlmkit</code>，备注：<code v-pre>ruoyi-wvp</code></li>
+<li>微信: chenbai0511 备注：<code v-pre>ruoyi-wvp</code></li>
+<li>微信: NYHHDWGZL 备注：<code v-pre>ruoyi-wvp</code></li>
 </ul>
 </div></template>
 
