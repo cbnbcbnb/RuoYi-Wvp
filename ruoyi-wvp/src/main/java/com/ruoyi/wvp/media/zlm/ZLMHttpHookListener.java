@@ -99,18 +99,18 @@ public class ZLMHttpHookListener {
     @ResponseBody
     @PostMapping(value = "/on_publish", produces = "application/json;charset=UTF-8")
     public HookResultForOnPublish onPublish(@RequestBody OnPublishHookParam param) {
-        String[] parts = param.getStream().split("/");
-        param.setStream(parts[0]);
-        // 这里用
-        String key = "3e80d1762a324d5b0ff636e0bd16f1e3";
-        String pusuKey = "";
-        try {
-            pusuKey = DigestUtils.md5DigestAsHex(key.getBytes("utf-8"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String sign = "sign=" + pusuKey;
-        param.setParams(sign);
+//        String[] parts = param.getStream().split("/");
+//        param.setStream(parts[0]);
+//        // 这里用
+//        String key = "3e80d1762a324d5b0ff636e0bd16f1e3";
+//        String pusuKey = "";
+//        try {
+//            pusuKey = DigestUtils.md5DigestAsHex(key.getBytes("utf-8"));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        String sign = "sign=" + pusuKey;
+//        param.setParams(sign);
 
         JSONObject json = (JSONObject) JSON.toJSON(param);
 
