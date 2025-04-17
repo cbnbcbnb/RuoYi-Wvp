@@ -1,37 +1,8 @@
 export const SEARCH_INDEX = [
   {
-    "title": "Get Started",
-    "headers": [
-      {
-        "level": 2,
-        "title": "Pages",
-        "slug": "pages",
-        "link": "#pages",
-        "children": []
-      },
-      {
-        "level": 2,
-        "title": "Content",
-        "slug": "content",
-        "link": "#content",
-        "children": []
-      },
-      {
-        "level": 2,
-        "title": "Configuration",
-        "slug": "configuration",
-        "link": "#configuration",
-        "children": []
-      },
-      {
-        "level": 2,
-        "title": "Layouts and customization",
-        "slug": "layouts-and-customization",
-        "link": "#layouts-and-customization",
-        "children": []
-      }
-    ],
-    "path": "/get-started.html",
+    "title": "支持项目",
+    "headers": [],
+    "path": "/donate.html",
     "pathLocale": "/",
     "extraFields": []
   },
@@ -39,6 +10,65 @@ export const SEARCH_INDEX = [
     "title": "首页",
     "headers": [],
     "path": "/",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "行政分组",
+    "headers": [],
+    "path": "/doc/administrativeGrouping.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "反馈bug",
+    "headers": [
+      {
+        "level": 2,
+        "title": "如何反馈",
+        "slug": "如何反馈",
+        "link": "#如何反馈",
+        "children": []
+      }
+    ],
+    "path": "/doc/bug.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "通道管理",
+    "headers": [
+      {
+        "level": 2,
+        "title": "行政区划",
+        "slug": "行政区划",
+        "link": "#行政区划",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "业务分组",
+        "slug": "业务分组",
+        "link": "#业务分组",
+        "children": []
+      }
+    ],
+    "path": "/doc/channel.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "参与到开发中来",
+    "headers": [
+      {
+        "level": 2,
+        "title": "与开发有关的信息",
+        "slug": "与开发有关的信息",
+        "link": "#与开发有关的信息",
+        "children": []
+      }
+    ],
+    "path": "/doc/development.html",
     "pathLocale": "/",
     "extraFields": []
   },
@@ -103,6 +133,70 @@ export const SEARCH_INDEX = [
       }
     ],
     "path": "/doc/device.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "国标设备",
+    "headers": [
+      {
+        "level": 2,
+        "title": "更新设备通道",
+        "slug": "更新设备通道",
+        "link": "#更新设备通道",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "删除设备",
+        "slug": "删除设备",
+        "link": "#删除设备",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "点播视频",
+        "slug": "点播视频",
+        "link": "#点播视频",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "设备录像",
+        "slug": "设备录像",
+        "link": "#设备录像",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "云台控制（暂时没有）",
+        "slug": "云台控制-暂时没有",
+        "link": "#云台控制-暂时没有",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "获取视频的播放器地址（暂时没有）",
+        "slug": "获取视频的播放器地址-暂时没有",
+        "link": "#获取视频的播放器地址-暂时没有",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "语音对讲（暂时没有）",
+        "slug": "语音对讲-暂时没有",
+        "link": "#语音对讲-暂时没有",
+        "children": []
+      }
+    ],
+    "path": "/doc/device_use.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "免责声明",
+    "headers": [],
+    "path": "/doc/disclaimers.html",
     "pathLocale": "/",
     "extraFields": []
   },
@@ -193,9 +287,138 @@ export const SEARCH_INDEX = [
     "extraFields": []
   },
   {
+    "title": "节点管理",
+    "headers": [],
+    "path": "/doc/node.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "添加摄像头",
+    "headers": [],
+    "path": "/doc/onvifAddCamera.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "摄像头管理",
+    "headers": [],
+    "path": "/doc/onvifCameraManage.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "国标级联",
+    "headers": [
+      {
+        "level": 2,
+        "title": "使用",
+        "slug": "使用",
+        "link": "#使用",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "添加上级平台",
+        "slug": "添加上级平台",
+        "link": "#添加上级平台",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "通道共享",
+        "slug": "通道共享",
+        "link": "#通道共享",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "推送通道",
+        "slug": "推送通道",
+        "link": "#推送通道",
+        "children": []
+      }
+    ],
+    "path": "/doc/platform.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "拉流代理",
+    "headers": [
+      {
+        "level": 2,
+        "title": "添加代理",
+        "slug": "添加代理",
+        "link": "#添加代理",
+        "children": []
+      }
+    ],
+    "path": "/doc/proxy.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "推流列表",
+    "headers": [
+      {
+        "level": 2,
+        "title": "功能说明",
+        "slug": "功能说明",
+        "link": "#功能说明",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "推拉流鉴权规则",
+        "slug": "推拉流鉴权规则",
+        "link": "#推拉流鉴权规则",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "推流规则",
+        "slug": "推流规则",
+        "link": "#推流规则",
+        "children": []
+      },
+      {
+        "level": 2,
+        "title": "播放规则",
+        "slug": "播放规则",
+        "link": "#播放规则",
+        "children": []
+      }
+    ],
+    "path": "/doc/push.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "云端录像",
+    "headers": [],
+    "path": "/doc/record.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "录像计划",
+    "headers": [],
+    "path": "/doc/recordPlan.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
     "title": "",
     "headers": [],
     "path": "/doc/spjc.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "分配监控",
+    "headers": [],
+    "path": "/doc/wvpLive.html",
     "pathLocale": "/",
     "extraFields": []
   },

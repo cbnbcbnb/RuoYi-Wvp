@@ -78,4 +78,7 @@ npm run dev
 # 前端访问地址 http://localhost:80
 ```
 ## 6.遇到问题
-- 加微信：`zlmkit`，备注：`ruoyi-wvp`
+加联系方式
+- 微信: chenbai0511 备注：`ruoyi-wvp`
+- 微信: NYHHDWGZL 备注：`ruoyi-wvp`
+
