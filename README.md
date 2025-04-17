@@ -53,7 +53,7 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 
 <table>
     <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/cd1f90be5f2684f4560c9519c0f2a232ee8.jpg"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/c11404f40b3344719c5e17055972e35b.png"/></td>
         <td><img src="https://oscimg.oschina.net/oscnet/1cbcf0e6f257c7d3a063c0e3f2ff989e4b3.jpg"/></td>
     </tr>
     <tr>

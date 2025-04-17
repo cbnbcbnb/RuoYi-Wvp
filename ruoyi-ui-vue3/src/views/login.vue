@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <div class="login-box">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">{{ title }}</h3>
       <el-form-item prop="username">
@@ -57,10 +58,12 @@
         </div>
       </el-form-item>
     </el-form>
-    <!--  底部  -->
-    <div class="el-login-footer">
-      <span>Copyright © 2018-2025 ruoyi.vip All Rights Reserved.</span>
+      <div class="el-login-footer">
+        <span>Copyright © 2024-2025 ry-wvp.xyz All Rights Reserved.</span>
+      </div>
     </div>
+    <!--  底部  -->
+
   </div>
 </template>
 
@@ -166,23 +169,35 @@ getCookie();
 <style lang='scss' scoped>
 .login {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
+  background-image: url("../assets/images/bg-url.png");
   background-size: cover;
 }
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
+  font-size: 30px;
   color: #707070;
+}
+
+.login-box{
+  width: 900px;
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px 0px 0px 25px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .login-form {
   border-radius: 6px;
   background: #ffffff;
-  width: 400px;
-  padding: 25px 25px 5px 25px;
+  width: 500px;
+  padding: 20px 20px 5px 20px;
   .el-input {
     height: 40px;
     input {
@@ -216,7 +231,7 @@ getCookie();
   bottom: 0;
   width: 100%;
   text-align: center;
-  color: #fff;
+  color: #000000;
   font-family: Arial;
   font-size: 12px;
   letter-spacing: 1px;
