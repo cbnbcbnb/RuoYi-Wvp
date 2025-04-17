@@ -43,6 +43,14 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 2.  onvif设备嗅探：通过IP地址与账号密码自动探测设备，快速获取设备信息并启用实时直播功能。
 3.  onvif设备管理：实现参数配置及实时视频点播，简化多品牌设备管控。
 
+## 前端获取
+
+加qq群获取最新前端vue3代码
+
+<p align="center">
+ <img width="400" alt="logo" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/7e0678c3f21547f0a427ddca506eab17.jpg">
+</p>
+
 ## 在线体验
 
 演示地址：暂无演示地址  
@@ -94,14 +102,18 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
     </tr>
 </table>
 
+## 前端源码
+
+大家
+
 ## 授权协议
 
 本项目自有代码使用宽松的MIT协议，在保留版权信息的情况下可以自由应用于各自商用、非商业的项目。 但是本项目也零碎的使用了一些其他的开源代码，在商用的情况下请自行替代或剔除； 由于使用本项目而产生的商业纠纷或侵权行为一概与本项目及开发者无关，请自行承担法律风险。 在使用本项目代码时，也应该在授权协议中同时表明本项目依赖的第三方库的协议。
 
 ## 联系方式
 
-* 微信1: chenbai0511
-* 微信2: NYHHDWGZL
+* 微信1: chenbai0511 备注：ruoyi-wvp
+* 微信2: NYHHDWGZL  备注：ruoyi-wvp
 
 <p align="center">
     <img width="200" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/a8663f16829b4871a94c9534a6dad894.jpg"/>
