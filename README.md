@@ -54,41 +54,38 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 <table>
     <tr>
         <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/c11404f40b3344719c5e17055972e35b.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/1cbcf0e6f257c7d3a063c0e3f2ff989e4b3.jpg"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/9238d06790764f3b9317f7b0a9abd056.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8074972883b5ba0622e13246738ebba237a.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-9f88719cdfca9af2e58b352a20e23d43b12.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/749121d82e4844c4827afaaaa5172af2.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/1752defdedd44aea9d4b94440c0a56cd.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-39bf2584ec3a529b0d5a3b70d15c9b37646.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-936ec82d1f4872e1bc980927654b6007307.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/34c300506ce74302be2f5bd63fca270f.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/f0c4aa1e694c4282853ebcb304503e28.png"/></td>
     </tr>
 	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-b2d62ceb95d2dd9b3fbe157bb70d26001e9.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d67451d308b7a79ad6819723396f7c3d77a.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/43d4a7c839a64916a89ce6146acb4db4.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/389dff88a839449483518868154c804c.png"/></td>
     </tr>	 
     <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/5e8c387724954459291aafd5eb52b456f53.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/644e78da53c2e92a95dfda4f76e6d117c4b.jpg"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/690c87e89f80463298d48136b99998bc.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/b276ace519b541eba6b05e640b450e44.png"/></td>
     </tr>
 	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8370a0d02977eebf6dbf854c8450293c937.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-49003ed83f60f633e7153609a53a2b644f7.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d4fe726319ece268d4746602c39cffc0621.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-c195234bbcd30be6927f037a6755e6ab69c.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/b6115bc8c31de52951982e509930b20684a.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-5e4daac0bb59612c5038448acbcef235e3a.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/1b0dca2be11a44bab60bed1f6fefb0a7.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/27211331ad6246699cb3019ba9c92a64.png"/></td>
     </tr>
 </table>
 
 ## onvif演示图
 
-
+<table>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/84687cc86b934b70a5940ab44d3f1122.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/fe10bf8264e3489299e9d26950a2ad24.png"/></td>
+    </tr>
+</table>
 
 ## 授权协议
 
