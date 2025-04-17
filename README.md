@@ -1,5 +1,5 @@
 <p align="center">
-	<img style="width: 60px; !important;" alt="logo" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/16/019d3685191040109b872d0802157368.png">
+	<img width="200" alt="logo" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/16/019d3685191040109b872d0802157368.png">
 </p>
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi-Wvp</h1>
 <h4 align="center">基于ruoyi-vue的流媒体平台，开箱即用、完全开源、使用MIT许可协议</h4>
