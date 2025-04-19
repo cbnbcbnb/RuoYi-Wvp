@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +79,7 @@ public class DeviceQueryController extends BaseController {
      * @param deviceId 设备国标编号
      * @return 国标设备
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:query')")
     @GetMapping("/devices/{deviceId}")
     public AjaxResult devices(@PathVariable String deviceId) {
         return success(deviceService.getDeviceByDeviceId(deviceId));
@@ -89,6 +91,7 @@ public class DeviceQueryController extends BaseController {
      * @param device 设备
      * @return 分页国标列表
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:list')")
     @GetMapping("/devices")
     public TableDataInfo devices(Device device) {
         startPage();
@@ -106,6 +109,7 @@ public class DeviceQueryController extends BaseController {
      * @param channelType 设备/子目录-> false/true
      * @return
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:channels')")
     @GetMapping("/devices/channels")
     public TableDataInfo channels(String deviceId, int pageNum, int pageSize, @RequestParam(required = false) String query, @RequestParam(required = false) Boolean online, @RequestParam(required = false) Boolean channelType) {
         if (ObjectUtils.isEmpty(query)) {
@@ -119,6 +123,7 @@ public class DeviceQueryController extends BaseController {
     /**
      * 同步设备通道
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:sync')")
     @PostMapping("/devices/{deviceId}/sync")
     public AjaxResult devicesSync(@PathVariable String deviceId) {
         if (log.isDebugEnabled()) {
@@ -147,6 +152,7 @@ public class DeviceQueryController extends BaseController {
      * @param deviceId 设备id
      * @return
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:remove')")
     @DeleteMapping("/devices/{deviceId}/delete")
     public AjaxResult delete(@PathVariable String deviceId) {
         if (log.isDebugEnabled()) {
@@ -189,6 +195,7 @@ public class DeviceQueryController extends BaseController {
      * @param channelType 通道类型
      * @return 子通道列表
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:channels')")
     @GetMapping("/sub_channels/channels")
     public TableDataInfo subChannels(String deviceId, String channelId, int page, int count, @RequestParam(required = false) String query, @RequestParam(required = false) Boolean online, @RequestParam(required = false) Boolean channelType) {
         DeviceChannel deviceChannel = deviceChannelService.getOne(deviceId, channelId);
@@ -218,6 +225,7 @@ public class DeviceQueryController extends BaseController {
      *
      * @param channel
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:channelStreamIdentification')")
     @PostMapping("/channel/stream/identification/update/")
     public AjaxResult updateChannelStreamIdentification(@RequestBody DeviceChannel channel) {
         deviceChannelService.updateChannelStreamIdentification(channel);
@@ -231,6 +239,7 @@ public class DeviceQueryController extends BaseController {
      * @param streamMode 数据流传输模式 UDP（udp传输），TCP-ACTIVE（tcp主动模式），TCP-PASSIVE（tcp被动模式）
      * @return
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:updateTransport')")
     @PostMapping("/transport/{deviceId}/{streamMode}")
     public AjaxResult updateTransport(@PathVariable String deviceId, @PathVariable String streamMode) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
@@ -265,6 +274,7 @@ public class DeviceQueryController extends BaseController {
      * @param device 设备信息
      * @return
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:edit')")
     @PostMapping("/device/update/")
     public AjaxResult updateDevice(@RequestBody Device device) {
         if (device == null || device.getDeviceId() == null || device.getId() <= 0) {
@@ -372,11 +382,12 @@ public class DeviceQueryController extends BaseController {
     }
 
     /**
-     * 设备国标编号
+     * 同步进度查询
      *
      * @param deviceId
      * @return
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:sync')")
     @PostMapping("/{deviceId}/sync_status")
     public AjaxResult getSyncStatus(@PathVariable String deviceId) {
         SyncStatus channelSyncStatus = deviceService.getChannelSyncStatus(deviceId);
@@ -449,6 +460,7 @@ public class DeviceQueryController extends BaseController {
      * @param id    通道的Id
      * @param cycle 订阅周期
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:subscribeCatalog')")
     @PostMapping("/subscribe/catalog/{id}/{cycle}")
     public AjaxResult subscribeCatalog(@PathVariable int id, @PathVariable int cycle) {
         deviceService.subscribeCatalog(id, cycle);
@@ -462,6 +474,7 @@ public class DeviceQueryController extends BaseController {
      * @param cycle    订阅周期
      * @param interval 报送间隔
      */
+    @PreAuthorize("@ss.hasPermi('wvp:device:subscribeMobilePosition')")
     @PostMapping("/subscribe/mobile-position/{id}/{cycle}/{interval}")
     public void subscribeMobilePosition(@PathVariable int id, @PathVariable int cycle, @PathVariable int interval) {
         deviceService.subscribeMobilePosition(id, cycle, interval);

@@ -51,8 +51,8 @@ public class DefaultProperties {
          */
         Logger log = LoggerFactory.getLogger(AlarmNotifyMessageHandler.class);
         if (sipLog) {
-            properties.setProperty("gov.nist.javax.sip.STACK_LOGGER", "com.genersoft.iot.vmp.gb28181.conf.StackLoggerImpl");
-            properties.setProperty("gov.nist.javax.sip.SERVER_LOGGER", "com.genersoft.iot.vmp.gb28181.conf.ServerLoggerImpl");
+            properties.setProperty("gov.nist.javax.sip.STACK_LOGGER", "com.ruoyi.wvp.gb28181.conf.StackLoggerImpl");
+            properties.setProperty("gov.nist.javax.sip.SERVER_LOGGER", "com.ruoyi.wvp.gb28181.conf.ServerLoggerImpl");
             properties.setProperty("gov.nist.javax.sip.LOG_MESSAGE_CONTENT", "true");
             log.info("[SIP日志]已开启");
         }else {

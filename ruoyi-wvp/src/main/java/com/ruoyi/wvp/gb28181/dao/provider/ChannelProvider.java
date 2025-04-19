@@ -28,7 +28,7 @@ public class ChannelProvider {
             "    coalesce(gb_block, block) as gb_block,\n" +
             "    coalesce(gb_address, address) as gb_address,\n" +
             "    coalesce(gb_parental, parental) as gb_parental,\n" +
-            "    coalesce(gb_parent_id, parent_id) as gb_parent_id,\n" +
+            "    (SELECT device_id FROM wvp_device WHERE id = data_device_id LIMIT 1) AS gb_parent_id,\n" +
             "    coalesce(gb_safety_way, safety_way) as gb_safety_way,\n" +
             "    coalesce(gb_register_way, register_way) as gb_register_way,\n" +
             "    coalesce(gb_cert_num, cert_num) as gb_cert_num,\n" +

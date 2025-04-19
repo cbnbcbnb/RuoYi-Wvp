@@ -56,7 +56,8 @@
             as_message_channel = #{asMessageChannel},
             broadcast_push_after_ack = #{broadcastPushAfterAck},
             geo_coord_sys = #{geoCoordSys},
-            media_server_id = #{mediaServerId}
+            media_server_id = #{mediaServerId},
+            manufacturer = #{manufacturer}
         WHERE id = #{id}
     </update>
 
