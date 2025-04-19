@@ -53,9 +53,10 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 
 ## 在线体验
 
-演示地址：http://java.ry-wvp.xyz  
-账号：ry
-密码：123456
+演示地址：http://java.ry-wvp.xyz   <br />
+账号：ry <br />
+密码：123456 <br />
+
 文档地址：http://doc.ry-wvp.xyz
 
 ## 国标演示图
