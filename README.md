@@ -26,7 +26,7 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 ## 内置功能
 
 1.  原若依全部功能：原若依全部功能,包含用户管理、角色管理、部门管理及系统监控等。
-2.  国标设备：国标设备完成注册后,平台自动展示设备详情,支持查看设备通道及便捷点播视频等多样化功能。
+2.  国标设备：国标设备完成注册后,平台自动展示设备详情,支持查看设备通道、云台控制及便捷点播视频等多样化功能。
 3.  云端录像：用户可轻松查看或下载国标设备所存储的云端录像视频内容。
 4.  推流列表：清晰呈现推流及可推流设备通道信息,支持一键播放视频与便捷国标通道配置等操作。
 5.  拉流列表：清晰呈现拉流及可拉流设备通道信息,支持一键播放视频与便捷国标通道配置等操作。
@@ -36,12 +36,22 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 9.  通道管理：与行政分组和业务分组深度关联,实现通道精细化和高效化管理,形成多维度的管理逻辑。
 10. 节点管理：实时查看ZLMediaKit节点的状态、负载及资源分配详情。
 11. 分屏监控：支持4/6/9分屏自由切换，实时掌控多区域画面，提升安防巡查效率。
+12. 设备录像：支持点播设备录像和下载功能。
 
-## 非开源功能
+## 非开源功能-onvif协议
 
 1.  onvif设备发现：内网环境下可一键扫描并查看所有开启ONVIF协议的设备信息，实现高效集中管控。
 2.  onvif设备嗅探：通过IP地址与账号密码自动探测设备，快速获取设备信息并启用实时直播功能。
 3.  onvif设备管理：实现参数配置及实时视频点播，简化多品牌设备管控。
+4.  onvif云台功能：实现绝对位置移动和连续移动。
+
+## 非开源功能-ISUP协议
+
+1.  设备管理、视频点播、云台控制。
+
+## 非开源功能-rtsp协议
+
+1.  设备管理、视频点播。
 
 ## 前端源码
 
@@ -72,7 +82,15 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
     </tr>
     <tr>
         <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/350dcf28536448349a8ab4927a9e192e.png"/></td>
-        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/a383b8369edb421080168fea74e4e4f2.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/aba0df58f83144b4aa9ccf9f444a0238.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/37be5453cecb4fe78346ce9e9e468708.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/a98953be2b1b4058a81b1a8d524fda11.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/0a83d0787a824e528b21425951f4fd0b.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/9fc317f4c6b44623938e5b0a95f5a86f.png"/></td>
     </tr>
     <tr>
         <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/34c300506ce74302be2f5bd63fca270f.png"/></td>
@@ -101,7 +119,22 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 <table>
     <tr>
         <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/84687cc86b934b70a5940ab44d3f1122.png"/></td>
-        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/fe10bf8264e3489299e9d26950a2ad24.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/ae974591674c4580ba9e695108a58e9b.png"/></td>
+    </tr>
+</table>
+
+## isup播放示例图
+<table>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/8ac1339ac5584a2090f529f61da50093.png"/></td>
+    </tr>
+</table>
+
+## rtsp播放示例图
+
+<table>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/e35fc83314c54b9a91eb6ddbe2185e7b.png"/></td>
     </tr>
 </table>
 
