@@ -9,7 +9,11 @@
         <version>3.8.9</version>
     </parent>
 
-    <artifactId>ruoyi-onvif</artifactId>
+    <artifactId>ruoyi-isup</artifactId>
+
+    <description>
+        isup模块
+    </description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

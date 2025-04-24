@@ -20,6 +20,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sip.InvalidArgumentException;
@@ -31,6 +32,7 @@ import javax.sip.message.Response;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -82,6 +84,7 @@ public class MessageRequestProcessor extends SIPRequestProcessorParent implement
         // 查询设备是否存在
         Device device = redisCatchStorage.getDevice(deviceId);
         // 查询上级平台是否存在
+        String cacheKey = "platform:" + deviceId;
         Platform parentPlatform = platformService.queryPlatformByServerGBId(deviceId);
         try {
             if (device != null && parentPlatform != null) {

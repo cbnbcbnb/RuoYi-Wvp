@@ -18,10 +18,10 @@
                 AND stream = #{stream}
             </if>
             <if test="endTimeStamp != null">
-                AND end_time >= #{endTimeStamp}
+                AND end_time &lt;= #{endTimeStamp}
             </if>
             <if test="startTimeStamp != null">
-                AND start_time &lt;= #{startTimeStamp}
+                AND start_time &gt;= #{startTimeStamp}
             </if>
             <if test="callId != null">
                 AND call_id = #{callId}

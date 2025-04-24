@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 读取项目相关配置
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -29,6 +29,8 @@ public class RuoYiConfig
 
     /** 验证码类型 */
     private static String captchaType;
+
+    private String publicCode;
 
     public String getName()
     {
@@ -82,6 +84,14 @@ public class RuoYiConfig
 
     public static String getCaptchaType() {
         return captchaType;
+    }
+
+    public String getPublicCode() {
+        return publicCode;
+    }
+
+    public void setPublicCode(String publicCode) {
+        this.publicCode = publicCode;
     }
 
     public void setCaptchaType(String captchaType) {

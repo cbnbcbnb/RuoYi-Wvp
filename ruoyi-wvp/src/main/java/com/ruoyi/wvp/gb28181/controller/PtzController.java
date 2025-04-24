@@ -2,6 +2,7 @@ package com.ruoyi.wvp.gb28181.controller;
 
 
 
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.wvp.conf.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
@@ -33,7 +34,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/api/front-end")
-public class PtzController {
+public class PtzController extends BaseController {
 
 	@Autowired
 	private SIPCommander cmder;

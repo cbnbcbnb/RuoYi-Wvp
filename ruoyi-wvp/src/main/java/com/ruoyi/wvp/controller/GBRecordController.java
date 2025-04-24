@@ -1,4 +1,4 @@
-package com.ruoyi.wvp.gb28181.controller;
+package com.ruoyi.wvp.controller;
 
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
@@ -18,12 +18,11 @@ import com.ruoyi.wvp.utils.DateUtil;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,12 +59,18 @@ public class GBRecordController {
 	@Autowired
 	private UserSetting userSetting;
 
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "channelId", description = "通道国标编号", required = true)
-	@Parameter(name = "startTime", description = "开始时间", required = true)
-	@Parameter(name = "endTime", description = "结束时间", required = true)
-	@GetMapping("/query/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<RecordInfo>> recordinfo(@PathVariable String deviceId, @PathVariable String channelId, String startTime, String endTime){
+	/**
+	 * 录像信息查询
+	 *
+	 * @param deviceId 设备国标编号
+	 * @param channelId 通道国标编号
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
+	 * @return
+	 */
+	@PreAuthorize("@ss.hasPermi('gb:record:query')")
+	@GetMapping("/query")
+	public DeferredResult<WVPResult<RecordInfo>> recordinfo( String deviceId, String channelId, String startTime, String endTime, String type){
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("录像信息查询 API调用，deviceId：%s ，startTime：%s， endTime：%s",deviceId, startTime, endTime));
@@ -87,7 +92,7 @@ public class GBRecordController {
 		msg.setId(uuid);
 		msg.setKey(key);
 		try {
-			cmder.recordInfoQuery(device, channelId, startTime, endTime, sn, null, null, null, (eventResult -> {
+			cmder.recordInfoQuery(device, channelId, startTime, endTime, sn, null, type, null, (eventResult -> {
 				WVPResult<RecordInfo> wvpResult = new WVPResult<>();
 				wvpResult.setCode(ErrorCode.ERROR100.getCode());
 				wvpResult.setMsg("查询录像失败, status: " +  eventResult.statusCode + ", message: " + eventResult.msg);
@@ -113,13 +118,20 @@ public class GBRecordController {
 	}
 
 
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "channelId", description = "通道国标编号", required = true)
-	@Parameter(name = "startTime", description = "开始时间", required = true)
-	@Parameter(name = "endTime", description = "结束时间", required = true)
-	@Parameter(name = "downloadSpeed", description = "下载倍速", required = true)
-	@GetMapping("/download/start/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<StreamContent>> download(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId,
+	/**
+	 * 录像下载
+	 *
+	 * @param request
+	 * @param deviceId 设备国标编号
+	 * @param channelId 通道国标编号
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
+	 * @param downloadSpeed 下载倍速
+	 * @return
+	 */
+	@PreAuthorize("@ss.hasPermi('gb:record:download')")
+	@GetMapping("/download/start")
+	public DeferredResult<WVPResult<StreamContent>> download(HttpServletRequest request,  String deviceId, String channelId,
 															 String startTime, String endTime, String downloadSpeed) {
 
 		if (log.isDebugEnabled()) {

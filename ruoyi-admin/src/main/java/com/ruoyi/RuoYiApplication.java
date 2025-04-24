@@ -37,16 +37,16 @@ public class RuoYiApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(RuoYiApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  若依启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
-                " .-------.       ____     __        \n" +
-                " |  _ _   \\      \\   \\   /  /    \n" +
-                " | ( ' )  |       \\  _. /  '       \n" +
-                " |(_ o _) /        _( )_ .'         \n" +
-                " | (_,_).' __  ___(_ o _)'          \n" +
-                " |  |\\ \\  |  ||   |(_,_)'         \n" +
-                " |  | \\ `'   /|   `-'  /           \n" +
-                " |  |  \\    /  \\      /           \n" +
-                " ''-'   `'-'    `-..-'              ");
+        System.out.println("(♥◠‿◠)ﾉﾞ  ruoyi-wvp启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+                "\n" +
+                "                         _                              \n" +
+                "                        (_)                             \n" +
+                "  _ __ _   _  ___  _   _ _ ________      ____   ___ __  \n" +
+                " | '__| | | |/ _ \\| | | | |______\\ \\ /\\ / /\\ \\ / / '_ \\ \n" +
+                " | |  | |_| | (_) | |_| | |       \\ V  V /  \\ V /| |_) |\n" +
+                " |_|   \\__,_|\\___/ \\__, |_|        \\_/\\_/    \\_/ | .__/ \n" +
+                "                    __/ |                        | |    \n" +
+                "                   |___/                         |_|    \n");
     }
 
     @Override

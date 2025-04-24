@@ -2,13 +2,15 @@ package com.ruoyi.wvp.gb28181.bean;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 平台信息
  *
  * @author lin
  */
 @Data
-public class Platform {
+public class Platform implements Serializable {
 
     /**
      * 国标-数据库自增ID

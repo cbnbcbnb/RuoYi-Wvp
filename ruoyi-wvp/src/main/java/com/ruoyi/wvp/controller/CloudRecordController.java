@@ -9,7 +9,6 @@ import com.ruoyi.wvp.gb28181.service.ICloudRecordService;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.service.IMediaServerService;
 import com.ruoyi.wvp.service.bean.CloudRecordItem;
-import com.ruoyi.wvp.service.bean.DownloadFileInfo;
 import com.ruoyi.wvp.utils.DateUtil;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import com.ruoyi.wvp.vmanager.cloudRecord.bean.CloudRecordUrl;
@@ -47,15 +46,19 @@ public class CloudRecordController extends BaseController {
     @Autowired
     private IMediaServerService mediaServerService;
 
-
+    /**
+     * 查询云端录像
+     *
+     * @param app           应用名
+     * @param stream        流ID
+     * @param year          年，置空则查询当年
+     * @param month         月，置空则查询当月
+     * @param mediaServerId 流媒体ID，置空则查询全部
+     * @return
+     */
     @ResponseBody
     @GetMapping("/date/list")
-    @Parameter(name = "app", description = "应用名", required = true)
-    @Parameter(name = "stream", description = "流ID", required = true)
-    @Parameter(name = "year", description = "年，置空则查询当年", required = false)
-    @Parameter(name = "month", description = "月，置空则查询当月", required = false)
-    @Parameter(name = "mediaServerId", description = "流媒体ID，置空则查询全部", required = false)
-    public List<String> openRtpServer(@RequestParam(required = true) String app, @RequestParam(required = true) String stream, @RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestParam(required = false) String mediaServerId
+    public AjaxResult openRtpServer(@RequestParam(required = true) String app, @RequestParam(required = true) String stream, @RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestParam(required = false) String mediaServerId
 
     ) {
         log.info("[云端录像] 查询存在云端录像的日期 app->{}, stream->{}, mediaServerId->{}, year->{}, month->{}", app, stream, mediaServerId, year, month);
@@ -78,10 +81,10 @@ public class CloudRecordController extends BaseController {
             mediaServers = mediaServerService.getAllOnlineList();
         }
         if (mediaServers.isEmpty()) {
-            return new ArrayList<>();
+            return success(new ArrayList<>());
         }
 
-        return cloudRecordService.getDateList(app, stream, year, month, mediaServers);
+        return success(cloudRecordService.getDateList(app, stream, year, month, mediaServers));
     }
 
     /**

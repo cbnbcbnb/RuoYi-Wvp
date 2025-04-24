@@ -18,18 +18,25 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RecordEndEventListener implements ApplicationListener<RecordEndEvent> {
 
     private Map<String, RecordEndEventHandler> handlerMap = new ConcurrentHashMap<>();
+
+    /**
+     * 事件处理接口
+     */
     public interface RecordEndEventHandler{
         void  handler(RecordInfo recordInfo);
     }
 
+    /**
+     * 事件触发
+     *
+     * @param event
+     */
     @Override
     public void onApplicationEvent(RecordEndEvent event) {
         String deviceId = event.getRecordInfo().getDeviceId();
         String channelId = event.getRecordInfo().getChannelId();
         int count = event.getRecordInfo().getCount();
         int sumNum = event.getRecordInfo().getSumNum();
-        log.info("录像查询事件触发，deviceId：{}, channelId: {}, 录像数量{}/{}条", event.getRecordInfo().getDeviceId(),
-                event.getRecordInfo().getChannelId(), count,sumNum);
         if (!handlerMap.isEmpty()) {
             RecordEndEventHandler handler = handlerMap.get(deviceId + channelId);
             log.info("录像查询事件触发, 发送订阅，deviceId：{}, channelId: {}",

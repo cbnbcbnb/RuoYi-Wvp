@@ -65,10 +65,22 @@
             <artifactId>ruoyi-wvp</artifactId>
         </dependency>
 
+        <!-- isup模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-isup</artifactId>
+        </dependency>
+
         <!-- onvif模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-onvif</artifactId>
+        </dependency>
+
+        <!-- rtsp模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-rtsp</artifactId>
         </dependency>
 
     </dependencies>

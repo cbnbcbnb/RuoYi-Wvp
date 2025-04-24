@@ -170,12 +170,12 @@ public class WvpServerController extends BaseController {
     @Parameter(name = "mediaServerId", description = "流媒体ID", required = true)
     @GetMapping(value = "/media_server/media_info")
     @ResponseBody
-    public MediaInfo getMediaInfo(String app, String stream, String mediaServerId) {
+    public AjaxResult getMediaInfo(String app, String stream, String mediaServerId) {
         MediaServer mediaServer = mediaServerService.getOne(mediaServerId);
         if (mediaServer == null) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "流媒体不存在");
         }
-        return mediaServerService.getMediaInfo(mediaServer, app, stream);
+        return success(mediaServerService.getMediaInfo(mediaServer, app, stream));
     }
 
 

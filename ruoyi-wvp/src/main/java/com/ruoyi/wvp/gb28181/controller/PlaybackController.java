@@ -1,5 +1,7 @@
 package com.ruoyi.wvp.gb28181.controller;
 
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.wvp.common.InviteInfo;
 import com.ruoyi.wvp.common.InviteSessionType;
@@ -19,12 +21,11 @@ import com.ruoyi.wvp.service.bean.InviteErrorCode;
 import com.ruoyi.wvp.vmanager.bean.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +48,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/api/playback")
-public class PlaybackController {
+public class PlaybackController extends BaseController {
 
 	@Autowired
 	private SIPCommander cmder;
@@ -70,12 +71,23 @@ public class PlaybackController {
 	@Autowired
 	private IDeviceChannelService channelService;
 
+	/**
+	 * 开始回放
+	 *
+	 * @param request
+	 * @param deviceId 设备国标编号
+	 * @param channelId 通道国标编号
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
+	 * @return
+	 */
+	@PreAuthorize("@ss.hasPermi('gb:playback:start')")
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "startTime", description = "开始时间", required = true)
 	@Parameter(name = "endTime", description = "结束时间", required = true)
-	@GetMapping("/start/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<StreamContent>> start(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId,
+	@GetMapping("/start")
+	public DeferredResult<WVPResult<StreamContent>> start(HttpServletRequest request, String deviceId,  String channelId,
 														  String startTime, String endTime) {
 
 		if (log.isDebugEnabled()) {
@@ -136,11 +148,15 @@ public class PlaybackController {
 	}
 
 
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "channelId", description = "通道国标编号", required = true)
-	@Parameter(name = "stream", description = "流ID", required = true)
+	/**
+	 * 停止回放
+	 *
+	 * @param deviceId 设备国标编号
+	 * @param channelId 通道国标编号
+	 * @param stream 流ID
+	 */
 	@GetMapping("/stop/{deviceId}/{channelId}/{stream}")
-	public void playStop(
+	public AjaxResult playStop(
 			@PathVariable String deviceId,
 			@PathVariable String channelId,
 			@PathVariable String stream) {
@@ -156,6 +172,7 @@ public class PlaybackController {
 			throw new ControllerException(ErrorCode.ERROR400.getCode(), "通道：" + deviceChannel + " 未找到");
 		}
 		playService.stop(InviteSessionType.PLAYBACK, device, deviceChannel, stream);
+		return success();
 	}
 
 

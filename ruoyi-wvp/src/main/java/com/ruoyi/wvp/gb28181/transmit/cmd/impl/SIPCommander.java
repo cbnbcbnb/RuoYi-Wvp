@@ -1019,8 +1019,6 @@ public class SIPCommander implements ISIPCommander {
         }
         recordInfoXml.append("</Query>\r\n");
 
-
-
         Request request = headerProvider.createMessageRequest(device, recordInfoXml.toString(),
                 SipUtils.getNewViaTag(), SipUtils.getNewFromTag(), null,sipSender.getNewCallIdHeader(sipLayer.getLocalIp(device.getLocalIp()),device.getTransport()));
 
