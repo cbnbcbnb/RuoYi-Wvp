@@ -4,7 +4,7 @@
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi-Wvp</h1>
 <h4 align="center">基于ruoyi-vue的流媒体平台，开箱即用、完全开源、使用MIT许可协议</h4>
 <p align="center">
-	<a href="https://gitee.com/xiaochemgzi/RuoYi-Wvp"><img width="40" height="20" src="http://image.taimomo.top/ry-wvp.svg"></a>
+	<a href="https://gitee.com/xiaochemgzi/RuoYi-Wvp"><img width="40" height="20" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/05/07/59cbb8f48ba74ea78b7cec0a3b705410.png"></a>
 </p>
 
 ## 平台介绍
@@ -23,6 +23,17 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 * 前端基于Vue3与Element-Plus构建高效优雅前端界面。
 * 后端运用Spring Boot构建基础，结合Spring Security保障安全，辅以Redis缓存与Jwt认证，打造稳健高效服务。
 
+# 我的开源项目
+
+* [ruoyi-wvp](https://gitee.com/xiaochemgzi/RuoYi-Wvp)  基于ruoyi-vue的流媒体平台。
+* [电子签章系统](https://gitee.com/tangwenzhaoaini/ruoyi-sign)  基于SpringBoot+Vue+Flowable前后端分离的电子签章系统。
+* [RuoYi-Vue-Tenant](https://gitee.com/tangwenzhaoaini/ruo-yi-vue-tenant)  基于RuoYi-Vue的多租户管理平台。
+* [RuoYi-Vue-flowable](https://gitee.com/tangwenzhaoaini/RuoYi-Vue-flowable)  基于RuoYi-Vue + flowable 的工作流管理平台。
+* [RuoYi-Vue-Flowable-Tenant](https://gitee.com/tangwenzhaoaini/ruo-yi-vue-flowable-tenant)  基于RuoYi-Vue + flowable 的多租户工作流管理平台。
+* [ruoyi-iot](https://gitee.com/xiaochemgzi/ruoyi-iot)  基于SpringBoot+Vue3前后端分离的Java物联网平台。
+* [rtsp视频分析系统](https://gitee.com/xiaochemgzi/rtsp-video-analysis-system)  基于SpringBoot+Vue前后端分离的rtsp视频分析系统。
+* [口罩分析流媒体服务器](https://gitee.com/xiaochemgzi/rtsp-ai)  基于SpringBoot+Vue前后端分离的口罩识别系统。
+
 ## 内置功能
 
 1.  原若依全部功能：原若依全部功能,包含用户管理、角色管理、部门管理及系统监控等。
@@ -37,11 +48,32 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 10. 节点管理：实时查看ZLMediaKit节点的状态、负载及资源分配详情。
 11. 分屏监控：支持4/6/9分屏自由切换，实时掌控多区域画面，提升安防巡查效率。
 
-## 非开源功能
+## 非开源功能-onvif协议
 
 1.  onvif设备发现：内网环境下可一键扫描并查看所有开启ONVIF协议的设备信息，实现高效集中管控。
 2.  onvif设备嗅探：通过IP地址与账号密码自动探测设备，快速获取设备信息并启用实时直播功能。
 3.  onvif设备管理：实现参数配置及实时视频点播，简化多品牌设备管控。
+4.  onvif云台功能：实现绝对位置移动和连续移动。
+
+## 非开源功能-ISUP协议
+
+1.  设备管理、视频点播、云台控制。
+
+## 非开源功能-rtsp协议
+
+1.  设备管理、视频点播。
+
+## 非开源功能-大屏
+
+1. 实现大屏展示。
+
+## 非开源功能-工作台
+
+1. 实现4种协议在线分屏展示。
+
+## 非开源功能-小程序
+
+1. 实现小程序端管理。
 
 ## 前端源码
 
@@ -100,8 +132,51 @@ ruoyi-wvp是基于ruoyi-vue和wvp框架的全部开源的GB/T 28181-2016标准�
 
 <table>
     <tr>
-        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/84687cc86b934b70a5940ab44d3f1122.png"/></td>
-        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/17/fe10bf8264e3489299e9d26950a2ad24.png"/></td>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/05/07/ff16b289ad6c47899da28490ce20dd5c.png"/></td>
+    </tr>
+</table>
+
+## isup播放示例图
+<table>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/8ac1339ac5584a2090f529f61da50093.png"/></td>
+    </tr>
+</table>
+
+## rtsp播放示例图
+
+<table>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/04/24/e35fc83314c54b9a91eb6ddbe2185e7b.png"/></td>
+    </tr>
+</table>
+
+## 大屏
+
+<table>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/05/07/c0c59e92d0c74a20a9b177af2332e6d3.png"/></td>
+    </tr>
+</table>
+
+## 工作台
+
+<table>
+    <tr>
+        <td><img src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/05/07/16ae29a3eaa24471a061d7364b113ab8.png"/></td>
+    </tr>
+</table>
+
+## 小程序
+
+<table>
+    <tr>
+        <td><img width="200" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/05/07/7f4b35186a2041b1a04f4c71a534a29d.png"/></td>
+        <td><img width="200" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/05/07/fee62e3df1a8458f810a7818561a7530.png"/></td>
+    </tr>
+    <tr>
+        <td><img width="200" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/05/07/c7f62a49119f4f7cb44fc9afb2e77107.png"/></td>
+        <td><img width="200" src="https://gdhxkj.oss-cn-guangzhou.aliyuncs.com/2025/05/07/77a2f2dc4fc141c6918fe9f5df129605.png"/></td>
     </tr>
 </table>
 
