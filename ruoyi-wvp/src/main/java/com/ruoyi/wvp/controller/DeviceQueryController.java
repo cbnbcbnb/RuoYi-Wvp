@@ -86,6 +86,19 @@ public class DeviceQueryController extends BaseController {
     }
 
     /**
+     * 查询全部国标设备
+     *
+     * @param device 设备
+     * @return 国标列表
+     */
+    @PreAuthorize("@ss.hasPermi('wvp:device:list')")
+    @GetMapping("/deviceList")
+    public AjaxResult deviceList(Device device) {
+        List<Device> list = deviceService.getAll(device);
+        return success(list);
+    }
+
+    /**
      * 分页查询国标设备
      *
      * @param device 设备

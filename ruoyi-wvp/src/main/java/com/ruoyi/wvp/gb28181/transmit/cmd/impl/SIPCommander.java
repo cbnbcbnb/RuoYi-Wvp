@@ -424,7 +424,6 @@ public class SIPCommander implements ISIPCommander {
                 content.append("a=connection:new\r\n");
             }
         }
-
         //ssrc
         content.append("y=" + ssrcInfo.getSsrc() + "\r\n");
 

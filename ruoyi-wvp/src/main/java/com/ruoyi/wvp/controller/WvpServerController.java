@@ -253,10 +253,10 @@ public class WvpServerController extends BaseController {
 
     @GetMapping(value = "/system/info")
     @ResponseBody
-    public SystemAllInfo getSystemInfo() {
+    public AjaxResult getSystemInfo() {
         SystemAllInfo systemAllInfo = redisCatchStorage.getSystemInfo();
 
-        return systemAllInfo;
+        return success(systemAllInfo);
     }
 
     @GetMapping(value = "/media_server/load")

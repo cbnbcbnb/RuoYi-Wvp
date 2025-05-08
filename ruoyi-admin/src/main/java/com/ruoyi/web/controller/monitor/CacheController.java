@@ -24,7 +24,7 @@ import com.ruoyi.system.domain.SysCache;
 
 /**
  * 缓存监控
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -43,6 +43,7 @@ public class CacheController
         caches.add(new SysCache(CacheConstants.REPEAT_SUBMIT_KEY, "防重提交"));
         caches.add(new SysCache(CacheConstants.RATE_LIMIT_KEY, "限流处理"));
         caches.add(new SysCache(CacheConstants.PWD_ERR_CNT_KEY, "密码错误次数"));
+        caches.add(new SysCache(CacheConstants.SYS_WORK_LIST, "工作台数据"));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")

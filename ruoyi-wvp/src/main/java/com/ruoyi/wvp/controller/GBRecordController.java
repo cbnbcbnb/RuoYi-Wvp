@@ -1,5 +1,7 @@
 package com.ruoyi.wvp.controller;
 
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.exception.ControllerException;
@@ -39,7 +41,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/api/gb_record")
-public class GBRecordController {
+public class GBRecordController extends BaseController {
 
 	@Autowired
 	private SIPCommander cmder;
@@ -213,7 +215,7 @@ public class GBRecordController {
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "stream", description = "流ID", required = true)
 	@GetMapping("/download/progress/{deviceId}/{channelId}/{stream}")
-	public StreamContent getProgress(@PathVariable String deviceId, @PathVariable String channelId, @PathVariable String stream) {
+	public AjaxResult getProgress(@PathVariable String deviceId, @PathVariable String channelId, @PathVariable String stream) {
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		if (device == null) {
 			log.warn("[获取历史媒体下载进度] 未找到设备 deviceId: {},channelId:{}", deviceId, channelId);
@@ -229,6 +231,6 @@ public class GBRecordController {
 		if (downLoadInfo == null) {
 			throw new ControllerException(ErrorCode.ERROR404);
 		}
-		return new StreamContent(downLoadInfo);
+		return success(new StreamContent(downLoadInfo));
 	}
 }

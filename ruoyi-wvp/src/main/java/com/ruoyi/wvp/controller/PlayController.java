@@ -262,6 +262,12 @@ public class PlayController extends BaseController {
         return jsonObject;
     }
 
+    /**
+     * 创建快照 - 抓拍
+     * @param deviceId
+     * @param channelId
+     * @return
+     */
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号", required = true)
     @GetMapping("/snap")
