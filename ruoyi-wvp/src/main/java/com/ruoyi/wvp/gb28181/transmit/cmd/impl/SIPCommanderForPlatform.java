@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.ruoyi.wvp.common.InviteSessionType;
 import com.ruoyi.wvp.conf.DynamicTask;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.SsrcTransactionNotFoundException;
+import com.ruoyi.common.exception.SsrcTransactionNotFoundException;
 import com.ruoyi.wvp.gb28181.SipLayer;
 import com.ruoyi.wvp.gb28181.bean.*;
 import com.ruoyi.wvp.gb28181.event.SipSubscribe;

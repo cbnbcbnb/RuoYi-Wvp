@@ -2,12 +2,13 @@ package com.ruoyi.wvp.gb28181.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.wvp.common.CommonCallback;
 import com.ruoyi.wvp.common.VideoManagerConstants;
 import com.ruoyi.wvp.common.enums.ChannelDataType;
 import com.ruoyi.wvp.conf.DynamicTask;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.*;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
 import com.ruoyi.wvp.gb28181.service.IInviteStreamService;
@@ -26,7 +27,7 @@ import com.ruoyi.wvp.media.service.IMediaServerService;
 import com.ruoyi.wvp.service.ISendRtpServerService;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.utils.DateUtil;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.ResourceBaseInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -501,9 +502,9 @@ public class DeviceServiceImpl implements IDeviceService {
      * @return
      */
     @Override
+    @DataScope(deptAlias = "d")
     public List<Device> getAll(Device device) {
-        List<Device> list = deviceMapper.getDeviceList(ChannelDataType.GB28181.value, device);
-        return list;
+        return deviceMapper.getDeviceList(ChannelDataType.GB28181.value, device);
     }
 
     @Override

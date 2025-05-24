@@ -1,7 +1,7 @@
 package com.ruoyi.wvp.gb28181.transmit.event.request.impl.message.notify.cmd;
 
 import com.ruoyi.wvp.common.enums.ChannelDataType;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.*;
 import com.ruoyi.wvp.gb28181.service.*;
 import com.ruoyi.wvp.gb28181.session.AudioBroadcastManager;

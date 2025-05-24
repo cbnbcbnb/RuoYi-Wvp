@@ -3,7 +3,7 @@ package com.ruoyi.wvp.gb28181.transmit.event.request.impl;
 
 import com.ruoyi.wvp.conf.DynamicTask;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceChannel;
 import com.ruoyi.wvp.gb28181.bean.Platform;

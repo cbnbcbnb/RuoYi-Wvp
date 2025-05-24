@@ -7,7 +7,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.common.InviteSessionType;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceChannel;
 import com.ruoyi.wvp.gb28181.bean.SsrcTransaction;
@@ -23,12 +23,9 @@ import com.ruoyi.wvp.media.service.IMediaServerService;
 import com.ruoyi.wvp.service.bean.InviteErrorCode;
 import com.ruoyi.wvp.utils.DateUtil;
 import com.ruoyi.wvp.vmanager.bean.AudioBroadcastResult;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,9 +42,10 @@ import java.util.UUID;
 
 
 /**
+ * 国标设备点播
+ *
  * @author lin
  */
-@Tag(name = "国标设备点播")
 @Slf4j
 @RestController
 @RequestMapping("/api/play")
@@ -183,9 +181,10 @@ public class PlayController extends BaseController {
 
     /**
      * 结束转码
+     *
+     * @param key 视频流key
+     * @param mediaServerId 流媒体服务ID
      */
-    @Parameter(name = "key", description = "视频流key", required = true)
-    @Parameter(name = "mediaServerId", description = "流媒体服务ID", required = true)
     @PostMapping("/convertStop/{key}")
     public void playConvertStop(@PathVariable String key, String mediaServerId) {
         if (mediaServerId == null) {
@@ -202,9 +201,15 @@ public class PlayController extends BaseController {
         }
     }
 
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "deviceId", description = "通道国标编号", required = true)
-    @Parameter(name = "timeout", description = "推流超时时间(秒)", required = true)
+    /**
+     * 语音广播
+     *
+     * @param deviceId 设备国标编号
+     * @param channelId 通道国标编号
+     * @param timeout 推流超时时间(秒)
+     * @param broadcastMode
+     * @return
+     */
     @GetMapping("/broadcast/{deviceId}/{channelId}")
     @PostMapping("/broadcast/{deviceId}/{channelId}")
     public AudioBroadcastResult broadcastApi(@PathVariable String deviceId, @PathVariable String channelId, Integer timeout, Boolean broadcastMode) {
@@ -224,9 +229,12 @@ public class PlayController extends BaseController {
 
     }
 
-    @Operation(summary = "停止语音广播")
-    @Parameter(name = "deviceId", description = "设备Id", required = true)
-    @Parameter(name = "channelId", description = "通道Id", required = true)
+    /**
+     * 停止语音广播
+     *
+     * @param deviceId 设备Id
+     * @param channelId 通道Id
+     */
     @GetMapping("/broadcast/stop/{deviceId}/{channelId}")
     @PostMapping("/broadcast/stop/{deviceId}/{channelId}")
     public void stopBroadcast(@PathVariable String deviceId, @PathVariable String channelId) {
@@ -264,12 +272,11 @@ public class PlayController extends BaseController {
 
     /**
      * 创建快照 - 抓拍
-     * @param deviceId
-     * @param channelId
+     *
+     * @param deviceId 设备国标编号
+     * @param channelId 通道国标编号
      * @return
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号", required = true)
     @GetMapping("/snap")
     public DeferredResult<String> getSnap(String deviceId, String channelId) {
         if (log.isDebugEnabled()) {

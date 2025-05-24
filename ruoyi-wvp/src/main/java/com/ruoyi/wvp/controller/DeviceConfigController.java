@@ -9,16 +9,13 @@ package com.ruoyi.wvp.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
 import com.ruoyi.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.ruoyi.wvp.gb28181.transmit.callback.RequestMessage;
 import com.ruoyi.wvp.gb28181.transmit.cmd.impl.SIPCommander;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.ruoyi.common.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,8 +28,10 @@ import javax.sip.SipException;
 import java.text.ParseException;
 import java.util.UUID;
 
+/**
+ * 国标设备配置
+ */
 @Slf4j
-@Tag(name = "国标设备配置")
 @RestController
 @RequestMapping("/api/device/config")
 public class DeviceConfigController extends BaseController {
@@ -58,12 +57,6 @@ public class DeviceConfigController extends BaseController {
      * @return
      */
     @GetMapping("/basicParam/{deviceId}")
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号", required = true)
-    @Parameter(name = "name", description = "名称")
-    @Parameter(name = "expiration", description = "到期时间")
-    @Parameter(name = "heartBeatInterval", description = "心跳间隔")
-    @Parameter(name = "heartBeatCount", description = "心跳计数")
     public DeferredResult<String> homePositionApi(@PathVariable String deviceId,
                                                   @RequestParam(required = false) String channelId,
                                                   @RequestParam(required = false) String name,

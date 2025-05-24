@@ -3,7 +3,7 @@ package com.ruoyi.wvp.gb28181.transmit.event.request.impl;
 import com.ruoyi.wvp.common.InviteInfo;
 import com.ruoyi.wvp.common.InviteSessionType;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.SsrcTransactionNotFoundException;
+import com.ruoyi.common.exception.SsrcTransactionNotFoundException;
 import com.ruoyi.wvp.gb28181.bean.*;
 import com.ruoyi.wvp.gb28181.service.*;
 import com.ruoyi.wvp.gb28181.session.AudioBroadcastManager;

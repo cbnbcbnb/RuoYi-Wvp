@@ -1,5 +1,7 @@
 package com.ruoyi.wvp.gb28181.bean;
 
+
+import com.ruoyi.common.core.domain.WvpBaseEntity;
 import lombok.Data;
 
 /**
@@ -8,7 +10,7 @@ import lombok.Data;
  * @author lin
  */
 @Data
-public class Device {
+public class Device extends WvpBaseEntity {
 
     /**
      * 当前页码
@@ -19,6 +21,16 @@ public class Device {
      * 每页大小
      */
     private int pageSize;
+
+    /**
+     * 部门ID
+     */
+    private Long deptId;
+
+    /**
+     * 部门名称
+     */
+    private String deptName;
 
     /**
      * 国标-数据库自增ID
@@ -205,5 +217,4 @@ public class Device {
      * 控制语音对讲流程，释放收到ACK后发流
      */
     private boolean broadcastPushAfterAck;
-
 }

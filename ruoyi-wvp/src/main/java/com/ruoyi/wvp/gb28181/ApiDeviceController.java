@@ -2,8 +2,7 @@ package com.ruoyi.wvp.gb28181;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.github.pagehelper.PageInfo;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.Preset;
 import com.ruoyi.wvp.gb28181.dto.DeviceChannelExtend;
@@ -13,7 +12,7 @@ import com.ruoyi.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.ruoyi.wvp.gb28181.transmit.callback.RequestMessage;
 import com.ruoyi.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.ruoyi.wvp.vmanager.bean.DeferredResultEx;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;

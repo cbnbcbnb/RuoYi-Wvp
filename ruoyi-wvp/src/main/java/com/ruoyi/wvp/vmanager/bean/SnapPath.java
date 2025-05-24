@@ -1,17 +1,23 @@
 package com.ruoyi.wvp.vmanager.bean;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
-@Schema(description = "截图地址信息")
+/**
+ * 截图地址信息
+ */
 public class SnapPath {
 
-    @Schema(description = "相对地址")
+    /**
+     * 相对地址
+     */
     private String path;
 
-    @Schema(description = "绝对地址")
+    /**
+     * 绝对地址
+     */
     private String absoluteFilePath;
 
-    @Schema(description = "请求地址")
+    /**
+     * 请求地址
+     */
     private String url;
 
 

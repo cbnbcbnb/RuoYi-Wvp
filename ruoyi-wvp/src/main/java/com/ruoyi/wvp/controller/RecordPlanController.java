@@ -3,15 +3,13 @@ package com.ruoyi.wvp.controller;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.CommonGBChannel;
 import com.ruoyi.wvp.gb28181.service.IDeviceChannelService;
 import com.ruoyi.wvp.service.IRecordPlanService;
 import com.ruoyi.wvp.service.bean.RecordPlan;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.recordPlan.bean.RecordPlanParam;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Tag(name = "录制计划")
+/**
+ * 录制计划
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/record/plan")

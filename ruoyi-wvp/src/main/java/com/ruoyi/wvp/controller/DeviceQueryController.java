@@ -6,7 +6,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.wvp.conf.DynamicTask;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.ChangeAudio;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceChannel;
@@ -20,11 +20,8 @@ import com.ruoyi.wvp.gb28181.task.impl.MobilePositionSubscribeTask;
 import com.ruoyi.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.ruoyi.wvp.gb28181.transmit.callback.RequestMessage;
 import com.ruoyi.wvp.gb28181.transmit.cmd.ISIPCommander;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +45,9 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.*;
 
-@Tag(name = "国标设备查询", description = "国标设备查询")
+/**
+ * 国标设备查询
+ */
 @SuppressWarnings("rawtypes")
 @Slf4j
 @RestController
@@ -128,7 +127,6 @@ public class DeviceQueryController extends BaseController {
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
-        startPage();
         List<DeviceChannel> list = deviceChannelService.queryChannelsByDeviceId(deviceId, query, channelType, online, pageNum, pageSize);
         return getDataTable(list);
     }
@@ -251,6 +249,7 @@ public class DeviceQueryController extends BaseController {
      * @param deviceId   设备id
      * @param streamMode 数据流传输模式 UDP（udp传输），TCP-ACTIVE（tcp主动模式），TCP-PASSIVE（tcp被动模式）
      * @return
+     * @return
      */
     @PreAuthorize("@ss.hasPermi('wvp:device:updateTransport')")
     @PostMapping("/transport/{deviceId}/{streamMode}")
@@ -302,7 +301,6 @@ public class DeviceQueryController extends BaseController {
      *
      * @param deviceId 设备id
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @GetMapping("/devices/{deviceId}/status")
     public DeferredResult<ResponseEntity<String>> deviceStatusApi(@PathVariable String deviceId) {
         if (log.isDebugEnabled()) {
@@ -353,13 +351,6 @@ public class DeviceQueryController extends BaseController {
      * @param endTime       报警发生终止时间（可选）
      * @return true = 命令发送成功
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "startPriority", description = "报警起始级别")
-    @Parameter(name = "endPriority", description = "报警终止级别")
-    @Parameter(name = "alarmMethod", description = "报警方式条件")
-    @Parameter(name = "alarmType", description = "报警类型")
-    @Parameter(name = "startTime", description = "报警发生起始时间")
-    @Parameter(name = "endTime", description = "报警发生终止时间")
     @GetMapping("/alarm/{deviceId}")
     public DeferredResult<ResponseEntity<String>> alarmApi(@PathVariable String deviceId, @RequestParam(required = false) String startPriority, @RequestParam(required = false) String endPriority, @RequestParam(required = false) String alarmMethod, @RequestParam(required = false) String alarmType, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime) {
         if (log.isDebugEnabled()) {
@@ -415,8 +406,13 @@ public class DeviceQueryController extends BaseController {
         }
     }
 
+    /**
+     * 获取订阅信息
+     *
+     * @param deviceId 设备国标编号
+     * @return
+     */
     @GetMapping("/{deviceId}/subscribe_info")
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     public WVPResult<Map<String, Integer>> getSubscribeInfo(@PathVariable String deviceId) {
         Set<String> allKeys = dynamicTask.getAllKeys();
         Map<String, Integer> dialogStateMap = new HashMap<>();
@@ -446,7 +442,6 @@ public class DeviceQueryController extends BaseController {
      */
     @Anonymous
     @GetMapping("/snap/{deviceId}/{channelId}")
-    @Operation(summary = "请求截图")
     public void getSnap(HttpServletResponse resp, @PathVariable String deviceId, @PathVariable String channelId, @RequestParam(required = false) String mark) {
         try {
             final InputStream in = Files.newInputStream(new File("snap" + File.separator + deviceId + "_" + channelId + (mark == null ? ".jpg" : ("_" + mark + ".jpg"))).toPath());
@@ -460,9 +455,13 @@ public class DeviceQueryController extends BaseController {
         }
     }
 
+    /**
+     * 国标通道编辑时的数据回显
+     *
+     * @param id 通道的Id
+     * @return
+     */
     @GetMapping("/channel/raw")
-    @Operation(summary = "国标通道编辑时的数据回显")
-    @Parameter(name = "id", description = "通道的Id", required = true)
     public DeviceChannel getRawChannel(int id) {
         return deviceChannelService.getRawChannel(id);
     }

@@ -1,8 +1,8 @@
 package com.ruoyi.wvp.gb28181.service;
 
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.wvp.common.InviteSessionType;
 import com.ruoyi.wvp.common.StreamInfo;
-import com.ruoyi.wvp.conf.exception.ServiceException;
 import com.ruoyi.wvp.gb28181.bean.*;
 import com.ruoyi.wvp.gb28181.controller.bean.AudioBroadcastEvent;
 import com.ruoyi.wvp.media.bean.MediaInfo;

@@ -1,11 +1,11 @@
 package com.ruoyi.wvp.gb28181.service.impl;
 
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.Preset;
 import com.ruoyi.wvp.gb28181.service.IPTZService;
 import com.ruoyi.wvp.gb28181.transmit.cmd.impl.SIPCommander;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

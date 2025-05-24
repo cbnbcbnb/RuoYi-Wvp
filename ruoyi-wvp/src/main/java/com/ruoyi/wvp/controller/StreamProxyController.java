@@ -5,17 +5,15 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.wvp.common.StreamInfo;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.service.IMediaServerService;
 import com.ruoyi.wvp.streamProxy.bean.StreamProxy;
 import com.ruoyi.wvp.streamProxy.bean.StreamProxyParam;
 import com.ruoyi.wvp.streamProxy.service.IStreamProxyPlayService;
 import com.ruoyi.wvp.streamProxy.service.IStreamProxyService;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,11 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@SuppressWarnings("rawtypes")
 /**
- * 拉流代理接口
+ * 拉流代理
  */
-@Tag(name = "拉流代理", description = "")
+@SuppressWarnings("rawtypes")
 @RestController
 @Slf4j
 @RequestMapping(value = "/api/proxy")
@@ -74,8 +71,13 @@ public class StreamProxyController extends BaseController {
         return getDataTable(list);
     }
 
-    @Parameter(name = "app", description = "应用名")
-    @Parameter(name = "stream", description = "流Id")
+    /**
+     * 获取代理
+     *
+     * @param app 应用名
+     * @param stream 流Id
+     * @return
+     */
     @GetMapping(value = "/one")
     @ResponseBody
     public StreamProxy one(String app, String stream) {
@@ -173,10 +175,14 @@ public class StreamProxyController extends BaseController {
         return success(streamProxyService.getFFmpegCMDs(mediaServerItem));
     }
 
+    /**
+     * 移除代理
+     *
+     * @param app 应用名
+     * @param stream 流id
+     */
     @DeleteMapping(value = "/del")
     @ResponseBody
-    @Parameter(name = "app", description = "应用名", required = true)
-    @Parameter(name = "stream", description = "流id", required = true)
     public void del(@RequestParam String app, @RequestParam String stream) {
         log.info("移除代理： " + app + "/" + stream);
         if (app == null || stream == null) {

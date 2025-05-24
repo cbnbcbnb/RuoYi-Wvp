@@ -1,5 +1,7 @@
 package com.ruoyi.wvp.vmanager.bean;
 
+import com.ruoyi.common.enums.ErrorCode;
+
 /**
  * 统一返回结果
  * @param <T>

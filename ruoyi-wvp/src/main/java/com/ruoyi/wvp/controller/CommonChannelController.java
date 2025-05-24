@@ -20,8 +20,6 @@ import com.ruoyi.wvp.service.bean.InviteErrorCode;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +34,9 @@ import java.net.URL;
 import java.util.List;
 
 
-@Tag(name = "全局通道管理")
+/**
+ * 全局通道管理
+ */
 @RestController
 @Slf4j
 @RequestMapping(value = "/api/common/channel")
@@ -135,12 +135,17 @@ public class CommonChannelController extends BaseController {
         return success(channel);
     }
 
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "hasRecordPlan", description = "是否已设置录制计划")
-    @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
+    /**
+     * 查询通道列表
+     *
+     * @param page 当前页
+     * @param count 每页查询数量
+     * @param query 查询内容
+     * @param online 是否在线
+     * @param hasRecordPlan 是否已设置录制计划
+     * @param channelType 通道类型， 0：国标设备，1：推流设备，2：拉流代理
+     * @return
+     */
     @GetMapping("/list")
     public PageInfo<CommonGBChannel> queryList(int page, int count,
                                                @RequestParam(required = false) String query,

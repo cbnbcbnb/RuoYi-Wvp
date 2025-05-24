@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.conf.SipConfig;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Platform;
 import com.ruoyi.wvp.gb28181.bean.PlatformChannel;
 import com.ruoyi.wvp.gb28181.bean.SubscribeHolder;
@@ -13,10 +13,8 @@ import com.ruoyi.wvp.gb28181.controller.bean.UpdateChannelParam;
 import com.ruoyi.wvp.gb28181.service.IPlatformChannelService;
 import com.ruoyi.wvp.gb28181.service.IPlatformService;
 import com.ruoyi.wvp.utils.DateUtil;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +26,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 /**
  * 级联平台管理
  */
-@Tag(name = "级联平台管理")
 @Slf4j
 @RestController
 @RequestMapping("/api/platform")
@@ -62,7 +59,12 @@ public class PlatformController extends BaseController {
         return success(result);
     }
 
-    @Parameter(name = "id", description = "平台国标编号", required = true)
+    /**
+     * 获取上级平台信息
+     *
+     * @param id 平台国标编号
+     * @return
+     */
     @GetMapping("/info/{id}")
     public Platform getPlatform(@PathVariable String id) {
         Platform parentPlatform = platformService.queryPlatformByServerGBId(id);

@@ -3,7 +3,7 @@ package com.ruoyi.wvp.service.redisMsg.control;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.conf.redis.RedisRpcConfig;
 import com.ruoyi.wvp.conf.redis.bean.RedisRpcMessage;
 import com.ruoyi.wvp.conf.redis.bean.RedisRpcRequest;
@@ -17,7 +17,7 @@ import com.ruoyi.wvp.media.event.hook.HookSubscribe;
 import com.ruoyi.wvp.media.event.hook.HookType;
 import com.ruoyi.wvp.media.service.IMediaServerService;
 import com.ruoyi.wvp.service.ISendRtpServerService;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,8 +237,8 @@ public class RedisRpcController {
         try {
             mediaServerService.startSendRtp(mediaServer, sendRtpItem);
         }catch (ControllerException exception) {
-            log.info("[redis-rpc] 发流失败： {}/{}, 目标地址： {}：{}， {}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort(), exception.getMsg());
-            WVPResult wvpResult = WVPResult.fail(exception.getCode(), exception.getMsg());
+            log.info("[redis-rpc] 发流失败： {}/{}, 目标地址： {}：{}， {}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort(), exception.getMessage());
+            WVPResult wvpResult = WVPResult.fail(exception.getCode(), exception.getMessage());
             response.setBody(wvpResult);
             return response;
         }
@@ -274,8 +274,8 @@ public class RedisRpcController {
             mediaServerService.stopSendRtp(mediaServer, sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getSsrc());
         }catch (ControllerException exception) {
             log.info("[redis-rpc] 停止推流失败： {}/{}, 目标地址： {}：{}， code： {}, msg: {}", sendRtpItem.getApp(),
-                    sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort(), exception.getCode(), exception.getMsg() );
-            response.setBody(WVPResult.fail(exception.getCode(), exception.getMsg()));
+                    sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort(), exception.getCode(), exception.getMessage() );
+            response.setBody(WVPResult.fail(exception.getCode(), exception.getMessage()));
             return response;
         }
         log.info("[redis-rpc] 停止推流成功： {}/{}, 目标地址： {}：{}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort() );

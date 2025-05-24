@@ -16,7 +16,7 @@ import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.streamPush.bean.StreamPush;
 import com.ruoyi.wvp.mapper.StreamPushMapper;
 import com.ruoyi.wvp.streamPush.service.IStreamPushPlayService;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

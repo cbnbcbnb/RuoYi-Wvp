@@ -2,11 +2,11 @@ package com.ruoyi.wvp.service.impl;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.core.rolling.RollingFileAppender;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.service.ILogService;
 import com.ruoyi.wvp.service.bean.LogFileInfo;
 import com.ruoyi.wvp.utils.DateUtil;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

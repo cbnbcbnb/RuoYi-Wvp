@@ -8,7 +8,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.wvp.common.enums.ChannelDataType;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.ruoyi.wvp.gb28181.transmit.callback.RequestMessage;
 import com.ruoyi.wvp.media.service.IMediaServerService;
@@ -19,10 +19,9 @@ import com.ruoyi.wvp.streamPush.bean.StreamPushExcelDto;
 import com.ruoyi.wvp.streamPush.enent.StreamPushUploadFileHandler;
 import com.ruoyi.wvp.streamPush.service.IStreamPushPlayService;
 import com.ruoyi.wvp.streamPush.service.IStreamPushService;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +40,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Tag(name = "推流信息管理")
+/**
+ * 推流信息管理
+ */
 @RestController
 @Slf4j
 @RequestMapping(value = "/api/push")

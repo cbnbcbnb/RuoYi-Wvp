@@ -1,16 +1,23 @@
 package com.ruoyi.wvp.gb28181.bean;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
+/**
+ * 平台国标流
+ */
 public class PlatformGbStream {
 
-    @Schema(description = "ID")
+    /**
+     * ID
+     */
     private int gbStreamId;
 
-    @Schema(description = "平台ID")
+    /**
+     * 平台ID
+     */
     private String platformId;
 
-    @Schema(description = "目录ID")
+    /**
+     * 目录ID
+     */
     private String catalogId;
 
     public Integer getGbStreamId() {

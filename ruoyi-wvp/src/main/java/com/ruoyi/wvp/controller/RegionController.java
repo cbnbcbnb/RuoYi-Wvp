@@ -3,13 +3,10 @@ package com.ruoyi.wvp.controller;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Region;
 import com.ruoyi.wvp.gb28181.service.IRegionService;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.ruoyi.common.enums.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "区域管理")
+/**
+ * 区域管理
+ */
 @RestController
 @RequestMapping("/api/region")
 public class RegionController extends BaseController {
@@ -43,10 +42,14 @@ public class RegionController extends BaseController {
         return success();
     }
 
-    @Operation(summary = "查询区域")
-    @Parameter(name = "query", description = "要搜索的内容", required = true)
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
+    /**
+     * 查询区域
+     *
+     * @param query 要搜索的内容
+     * @param page 当前页
+     * @param count 每页查询数量
+     * @return
+     */
     @ResponseBody
     @GetMapping("/page/list")
     public PageInfo<Region> query(
@@ -109,8 +112,12 @@ public class RegionController extends BaseController {
         return success();
     }
 
-    @Operation(summary = "根据区域Id查询区域")
-    @Parameter(name = "regionDeviceId", description = "行政区划节点编号", required = true)
+    /**
+     * 根据区域Id查询区域
+     *
+     * @param regionDeviceId 行政区划节点编号
+     * @return
+     */
     @ResponseBody
     @GetMapping("/one")
     public Region queryRegionByDeviceId(
@@ -137,15 +144,21 @@ public class RegionController extends BaseController {
         return success(regionService.getAllChild(parent));
     }
 
-    @Operation(summary = "获取所属的行政区划下的行政区划")
-    @Parameter(name = "deviceId", description = "当前的行政区划", required = false)
+    /**
+     * 获取所属的行政区划下的行政区划
+     *
+     * @param deviceId 当前的行政区划
+     * @return
+     */
     @ResponseBody
     @GetMapping("/path")
     public List<Region> getPath(String deviceId) {
         return regionService.getPath(deviceId);
     }
 
-    @Operation(summary = "从通道中同步行政区划")
+    /**
+     * 从通道中同步行政区划
+     */
     @ResponseBody
     @GetMapping("/sync")
     public void sync() {

@@ -1,30 +1,48 @@
 package com.ruoyi.wvp.streamPush.bean;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
 public class StreamPushExcelDto {
 
+    /**
+     * 名称
+     */
     @ExcelProperty("名称")
     private String name;
 
+    /**
+     * 应用名
+     */
     @ExcelProperty("应用名")
     private String app;
 
+    /**
+     * 流ID
+     */
     @ExcelProperty("流ID")
     private String stream;
 
+    /**
+     * 国标ID
+     */
     @ExcelProperty("国标ID")
     private String gbDeviceId;
 
+    /**
+     * 在线状态
+     */
     @ExcelProperty("在线状态")
     private boolean status;
 
-    @Schema(description = "经度 WGS-84坐标系")
+    /**
+     * 经度 WGS-84坐标系
+     */
     private Double longitude;
 
-    @Schema(description = "纬度 WGS-84坐标系")
+    /**
+     * 纬度 WGS-84坐标系
+     */
     private Double latitude;
 }

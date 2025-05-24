@@ -9,7 +9,7 @@ import com.ruoyi.wvp.common.InviteSessionType;
 import com.ruoyi.wvp.common.enums.ChannelDataType;
 import com.ruoyi.wvp.common.enums.DeviceControlType;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.*;
 import com.ruoyi.wvp.gb28181.controller.bean.ChannelReduce;
 import com.ruoyi.wvp.gb28181.dto.DeviceChannelExtend;
@@ -27,7 +27,7 @@ import com.ruoyi.wvp.mapper.PlatformChannelMapper;
 import com.ruoyi.wvp.service.bean.ErrorCallback;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.utils.DateUtil;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.ResourceBaseInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
@@ -45,6 +45,7 @@ import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.util.*;
 
+import static com.ruoyi.common.utils.PageUtils.startPage;
 import static com.ruoyi.wvp.gb28181.utils.XmlUtil.getText;
 
 /**
@@ -688,6 +689,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
+        startPage();
         return channelMapper.queryChannels(device.getId(), null, null, null, query, hasSubChannel, online, null);
     }
 

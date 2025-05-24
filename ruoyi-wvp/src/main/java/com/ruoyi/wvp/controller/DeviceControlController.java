@@ -10,16 +10,14 @@ package com.ruoyi.wvp.controller;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
 import com.ruoyi.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.ruoyi.wvp.gb28181.transmit.callback.RequestMessage;
 import com.ruoyi.wvp.gb28181.transmit.cmd.ISIPCommander;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +31,9 @@ import javax.sip.SipException;
 import java.text.ParseException;
 import java.util.UUID;
 
-@Tag(name = "国标设备控制")
+/**
+ * 国标设备控制
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/device/control")
@@ -51,9 +51,8 @@ public class DeviceControlController extends BaseController {
     /**
      * 远程启动控制命令API接口
      *
-     * @param deviceId 设备ID
+     * @param deviceId 设备国标编号
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @GetMapping("/teleboot/{deviceId}")
     public void teleBootApi(@PathVariable String deviceId) {
         if (log.isDebugEnabled()) {
@@ -163,13 +162,10 @@ public class DeviceControlController extends BaseController {
      * 报警复位API接口
      *
      * @param    deviceId 设备ID
+     * @param    channelId 通道国标编号
      * @param    alarmMethod 报警方式（可选）
      * @param    alarmType 报警类型（可选）
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号", required = true)
-    @Parameter(name = "alarmMethod", description = "报警方式")
-    @Parameter(name = "alarmType", description = "报警类型")
     @GetMapping("/reset_alarm/{deviceId}")
     public DeferredResult<ResponseEntity<WVPResult<String>>> resetAlarmApi(@PathVariable String deviceId, String channelId,
                                                                            @RequestParam(required = false) String alarmMethod,
@@ -212,8 +208,6 @@ public class DeviceControlController extends BaseController {
      * @param    deviceId 设备ID
      * @param    channelId 通道ID
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号")
     @GetMapping("/i_frame/{deviceId}")
     public JSONObject iFrame(@PathVariable String deviceId,
                              @RequestParam(required = false) String channelId) {
@@ -243,11 +237,6 @@ public class DeviceControlController extends BaseController {
      * @param presetIndex 调用预置位编号（可选）
      * @param channelId   通道编码（可选）
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号", required = true)
-    @Parameter(name = "enabled", description = "是否开启看守位", required = true)
-    @Parameter(name = "presetIndex", description = "调用预置位编号")
-    @Parameter(name = "resetTime", description = "自动归位时间间隔 单位：秒")
     @GetMapping("/home_position")
     public DeferredResult<WVPResult<String>> homePositionApi(String deviceId, String channelId, Boolean enabled,
                                                              @RequestParam(required = false) Integer resetTime,
@@ -297,13 +286,6 @@ public class DeviceControlController extends BaseController {
      * @param lengthy   拉框宽度像素值
      * @return
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号", required = true)
-    @Parameter(name = "length", description = "播放窗口长度像素值", required = true)
-    @Parameter(name = "midpointx", description = "拉框中心的横轴坐标像素值", required = true)
-    @Parameter(name = "midpointy", description = "拉框中心的纵轴坐标像素值", required = true)
-    @Parameter(name = "lengthx", description = "拉框长度像素值", required = true)
-    @Parameter(name = "lengthy", description = "lengthy", required = true)
     @GetMapping("drag_zoom/zoom_in")
     public void dragZoomIn(@RequestParam String deviceId,
                            @RequestParam(required = false) String channelId,
@@ -347,14 +329,6 @@ public class DeviceControlController extends BaseController {
      * @param lengthy   拉框宽度像素值
      * @return
      */
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号")
-    @Parameter(name = "length", description = "播放窗口长度像素值", required = true)
-    @Parameter(name = "width", description = "拉框中心的横轴坐标像素值", required = true)
-    @Parameter(name = "midpointx", description = "拉框中心的横轴坐标像素值", required = true)
-    @Parameter(name = "midpointy", description = "拉框中心的纵轴坐标像素值", required = true)
-    @Parameter(name = "lengthx", description = "拉框长度像素值", required = true)
-    @Parameter(name = "lengthy", description = "拉框宽度像素值", required = true)
     @GetMapping("/drag_zoom/zoom_out")
     public void dragZoomOut(@RequestParam String deviceId,
                             @RequestParam(required = false) String channelId,

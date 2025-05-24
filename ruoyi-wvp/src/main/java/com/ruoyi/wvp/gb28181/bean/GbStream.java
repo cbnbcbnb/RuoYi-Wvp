@@ -1,36 +1,64 @@
 package com.ruoyi.wvp.gb28181.bean;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
  * 直播流关联国标上级平台
  * @author lin
  */
-@Schema(description = "直播流关联国标上级平台")
 public class GbStream extends PlatformGbStream{
 
-    @Schema(description = "ID")
+    /**
+     * ID
+     */
     private int gbStreamId;
-    @Schema(description = "应用名")
+
+    /**
+     * 应用名
+     */
     private String app;
-    @Schema(description = "流ID")
+
+    /**
+     * 流ID
+     */
     private String stream;
-    @Schema(description = "国标ID")
+
+    /**
+     * 国标ID
+     */
     private String gbId;
-    @Schema(description = "名称")
+
+    /**
+     * 名称
+     */
     private String name;
-    @Schema(description = "流媒体ID")
+
+    /**
+     * 流媒体ID
+     */
     private String mediaServerId;
-    @Schema(description = "经度")
+
+    /**
+     * 经度
+     */
     private double longitude;
-    @Schema(description = "纬度")
+
+    /**
+     * 纬度
+     */
     private double latitude;
-    @Schema(description = "流类型（拉流/推流）")
+
+    /**
+     * 流类型（拉流/推流）
+     */
     private String streamType;
-    @Schema(description = "状态")
+
+    /**
+     * 状态
+     */
     private boolean status;
 
-    @Schema(description = "创建时间")
+    /**
+     * 创建时间
+     */
     public String createTime;
 
     @Override

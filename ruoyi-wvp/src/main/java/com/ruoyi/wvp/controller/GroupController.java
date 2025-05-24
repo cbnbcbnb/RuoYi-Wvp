@@ -2,13 +2,10 @@ package com.ruoyi.wvp.controller;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.Group;
 import com.ruoyi.wvp.gb28181.service.IGroupService;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.ruoyi.common.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 分组管理
+ */
 @Slf4j
-@Tag(name = "分组管理")
 @RestController
 @RequestMapping("/api/group")
 public class GroupController extends BaseController {
@@ -92,8 +91,13 @@ public class GroupController extends BaseController {
         return success();
     }
 
-    @Operation(summary = "获取所属的行政区划下的行政区划")
-    @Parameter(name = "deviceId", description = "当前的行政区划", required = false)
+    /**
+     * 获取所属的行政区划下的行政区划
+     *
+     * @param deviceId 当前的行政区划
+     * @param businessGroup
+     * @return
+     */
     @ResponseBody
     @GetMapping("/path")
     public List<Group> getPath(String deviceId, String businessGroup) {

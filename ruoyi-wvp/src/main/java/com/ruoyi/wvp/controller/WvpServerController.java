@@ -10,10 +10,9 @@ import com.ruoyi.wvp.common.enums.ChannelDataType;
 import com.ruoyi.wvp.conf.SipConfig;
 import com.ruoyi.wvp.conf.UserSetting;
 import com.ruoyi.wvp.conf.VersionInfo;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.service.IDeviceChannelService;
 import com.ruoyi.wvp.gb28181.service.IDeviceService;
-import com.ruoyi.wvp.media.bean.MediaInfo;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.event.mediaServer.MediaServerChangeEvent;
 import com.ruoyi.wvp.media.service.IMediaServerService;
@@ -21,12 +20,10 @@ import com.ruoyi.wvp.service.bean.MediaServerLoad;
 import com.ruoyi.wvp.storager.IRedisCatchStorage;
 import com.ruoyi.wvp.streamProxy.service.IStreamProxyService;
 import com.ruoyi.wvp.streamPush.service.IStreamPushService;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.ResourceBaseInfo;
 import com.ruoyi.wvp.vmanager.bean.ResourceInfo;
 import com.ruoyi.wvp.vmanager.bean.SystemConfigInfo;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,9 +42,10 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.*;
 
+/**
+ * 服务控制
+ */
 @SuppressWarnings("rawtypes")
-@Tag(name = "服务控制")
-
 @RestController
 @RequestMapping("/api/server")
 public class WvpServerController extends BaseController {
@@ -103,31 +101,48 @@ public class WvpServerController extends BaseController {
      *
      * @return
      */
-    @PreAuthorize("@ss.hasPermi('wvp:server:listOnline')")
+    @PreAuthorize("@ss.hasPermi('wvp:server:list')")
     @GetMapping(value = "/media_server/online/list")
     @ResponseBody
     public AjaxResult getOnlineMediaServerList() {
         return success(mediaServerService.getAllOnline());
     }
 
+    /**
+     * 获取流媒体服务列表
+     *
+     * @param id 流媒体服务ID
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('wvp:server:query')")
     @GetMapping(value = "/media_server/one/{id}")
     @ResponseBody
-    @Parameter(name = "id", description = "流媒体服务ID", required = true)
-    public MediaServer getMediaServer(@PathVariable String id) {
-        return mediaServerService.getOne(id);
+    public AjaxResult getMediaServer(@PathVariable String id) {
+        return success(mediaServerService.getOne(id));
     }
 
-    @Parameter(name = "ip", description = "流媒体服务IP", required = true)
-    @Parameter(name = "port", description = "流媒体服务HTT端口", required = true)
-    @Parameter(name = "secret", description = "流媒体服务secret", required = true)
+    /**
+     * 检查流媒体服务是否可用
+     *
+     * @param ip 流媒体服务IP
+     * @param httpPort 流媒体服务HTT端口
+     * @param secret 流媒体服务secret
+     * @param type
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('wvp:server:check')")
     @GetMapping(value = "/media_server/check")
     @ResponseBody
-    public MediaServer checkMediaServer(@RequestParam String ip, @RequestParam int port, @RequestParam String secret, @RequestParam String type) {
-        return mediaServerService.checkMediaServer(ip, port, secret, type);
+    public AjaxResult checkMediaServer(@RequestParam String ip, @RequestParam int httpPort, @RequestParam String secret, @RequestParam String type) throws ControllerException{
+        return success(mediaServerService.checkMediaServer(ip, httpPort, secret, type));
     }
 
-    @Parameter(name = "ip", description = "流媒体服务IP", required = true)
-    @Parameter(name = "port", description = "流媒体服务HTT端口", required = true)
+    /**
+     * 检查流媒体服务是否可用
+     *
+     * @param ip 流媒体服务IP
+     * @param port 流媒体服务HTT端口
+     */
     @GetMapping(value = "/media_server/record/check")
     @ResponseBody
     public void checkMediaRecordServer(@RequestParam String ip, @RequestParam int port) {
@@ -137,7 +152,12 @@ public class WvpServerController extends BaseController {
         }
     }
 
-    @Parameter(name = "mediaServerItem", description = "流媒体信息", required = true)
+    /**
+     * 保存流媒体服务
+     *
+     * @param mediaServer 流媒体信息
+     */
+    @PreAuthorize("@ss.hasAnyPermi('wvp:server:add,wvp:server:edit')")
     @PostMapping(value = "/media_server/save")
     @ResponseBody
     public void saveMediaServer(@RequestBody MediaServer mediaServer) {
@@ -154,20 +174,30 @@ public class WvpServerController extends BaseController {
         }
     }
 
-    @Parameter(name = "id", description = "流媒体ID", required = true)
-    @DeleteMapping(value = "/media_server/delete")
-    @ResponseBody
-    public void deleteMediaServer(@RequestParam String id) {
+    /**
+     * 删除流媒体服务
+     *
+     * @param id 流媒体ID
+     */
+    @PreAuthorize("@ss.hasPermi('wvp:server:delete')")
+    @DeleteMapping(value = "/media_server/delete/{id}")
+    public AjaxResult deleteMediaServer(@PathVariable String id) {
         MediaServer mediaServer = mediaServerService.getOne(id);
         if (mediaServer == null) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "流媒体不存在");
         }
         mediaServerService.delete(mediaServer);
+        return success();
     }
 
-    @Parameter(name = "app", description = "应用名", required = true)
-    @Parameter(name = "stream", description = "流ID", required = true)
-    @Parameter(name = "mediaServerId", description = "流媒体ID", required = true)
+    /**
+     * 获取流媒体信息
+     *
+     * @param app 应用名
+     * @param stream 流ID
+     * @param mediaServerId 流媒体ID
+     * @return
+     */
     @GetMapping(value = "/media_server/media_info")
     @ResponseBody
     public AjaxResult getMediaInfo(String app, String stream, String mediaServerId) {
@@ -226,8 +256,13 @@ public class WvpServerController extends BaseController {
         return versionInfo.getVersion();
     }
 
+    /**
+     * 获取平台配置信息
+     *
+     * @param type 配置类型（sip, base）
+     * @return
+     */
     @GetMapping(value = "/config")
-    @Parameter(name = "type", description = "配置类型（sip, base）", required = true)
     @ResponseBody
     public JSONObject getVersion(String type) {
 

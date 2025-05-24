@@ -6,7 +6,7 @@ import com.ruoyi.wvp.common.VideoManagerConstants;
 import com.ruoyi.wvp.conf.DynamicTask;
 import com.ruoyi.wvp.conf.SipConfig;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.bean.*;
 import com.ruoyi.wvp.gb28181.service.*;
 import com.ruoyi.wvp.gb28181.session.AudioBroadcastManager;

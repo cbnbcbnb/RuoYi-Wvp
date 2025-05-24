@@ -4,17 +4,14 @@ import com.alibaba.fastjson2.JSONArray;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.wvp.conf.exception.ControllerException;
+import com.ruoyi.common.exception.ControllerException;
 import com.ruoyi.wvp.gb28181.service.ICloudRecordService;
 import com.ruoyi.wvp.media.bean.MediaServer;
 import com.ruoyi.wvp.media.service.IMediaServerService;
 import com.ruoyi.wvp.service.bean.CloudRecordItem;
 import com.ruoyi.wvp.utils.DateUtil;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.cloudRecord.bean.CloudRecordUrl;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +29,10 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 云端录像Controller
+ */
 @SuppressWarnings("rawtypes")
-@Tag(name = "云端录像接口")
 @Slf4j
 @RestController
 @RequestMapping("/api/cloud/record")
@@ -155,16 +154,21 @@ public class CloudRecordController extends BaseController {
         return getDataTable(list);
     }
 
+    /**
+     * 添加合并任务
+     *
+     * @param request
+     * @param app 应用名
+     * @param stream 流ID
+     * @param mediaServerId 流媒体ID
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param callId 鉴权ID
+     * @param remoteHost 返回地址时的远程地址
+     * @return
+     */
     @ResponseBody
     @GetMapping("/task/add")
-    @Operation(summary = "添加合并任务")
-    @Parameter(name = "app", description = "应用名", required = false)
-    @Parameter(name = "stream", description = "流ID", required = false)
-    @Parameter(name = "mediaServerId", description = "流媒体ID", required = false)
-    @Parameter(name = "startTime", description = "鉴权ID", required = false)
-    @Parameter(name = "endTime", description = "鉴权ID", required = false)
-    @Parameter(name = "callId", description = "鉴权ID", required = false)
-    @Parameter(name = "remoteHost", description = "返回地址时的远程地址", required = false)
     public String addTask(HttpServletRequest request, @RequestParam(required = false) String app, @RequestParam(required = false) String stream, @RequestParam(required = false) String mediaServerId, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) String callId, @RequestParam(required = false) String remoteHost) {
         MediaServer mediaServer;
         if (mediaServerId == null) {
@@ -182,12 +186,20 @@ public class CloudRecordController extends BaseController {
         return cloudRecordService.addTask(app, stream, mediaServer, startTime, endTime, callId, remoteHost, mediaServerId != null);
     }
 
+    /**
+     * 查询合并任务
+     *
+     * @param request
+     * @param app
+     * @param stream
+     * @param callId
+     * @param taskId 任务Id
+     * @param mediaServerId 流媒体ID
+     * @param isEnd 是否结束
+     * @return
+     */
     @ResponseBody
     @GetMapping("/task/list")
-    @Operation(summary = "查询合并任务")
-    @Parameter(name = "taskId", description = "任务Id", required = false)
-    @Parameter(name = "mediaServerId", description = "流媒体ID", required = false)
-    @Parameter(name = "isEnd", description = "是否结束", required = false)
     public JSONArray queryTaskList(HttpServletRequest request, @RequestParam(required = false) String app, @RequestParam(required = false) String stream, @RequestParam(required = false) String callId, @RequestParam(required = false) String taskId, @RequestParam(required = false) String mediaServerId, @RequestParam(required = false) Boolean isEnd) {
         if (ObjectUtils.isEmpty(mediaServerId)) {
             mediaServerId = null;
@@ -196,16 +208,20 @@ public class CloudRecordController extends BaseController {
         return cloudRecordService.queryTask(app, stream, callId, taskId, mediaServerId, isEnd, request.getScheme());
     }
 
+    /**
+     * 添加收藏
+     *
+     * @param app 应用名
+     * @param stream 流ID
+     * @param mediaServerId 流媒体ID
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param callId 鉴权ID
+     * @param recordId 录像记录的ID，用于精准收藏一个视频文件
+     * @return
+     */
     @ResponseBody
     @GetMapping("/collect/add")
-    @Operation(summary = "添加收藏")
-    @Parameter(name = "app", description = "应用名", required = false)
-    @Parameter(name = "stream", description = "流ID", required = false)
-    @Parameter(name = "mediaServerId", description = "流媒体ID", required = false)
-    @Parameter(name = "startTime", description = "鉴权ID", required = false)
-    @Parameter(name = "endTime", description = "鉴权ID", required = false)
-    @Parameter(name = "callId", description = "鉴权ID", required = false)
-    @Parameter(name = "recordId", description = "录像记录的ID，用于精准收藏一个视频文件", required = false)
     public int addCollect(@RequestParam(required = false) String app, @RequestParam(required = false) String stream, @RequestParam(required = false) String mediaServerId, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) String callId, @RequestParam(required = false) Integer recordId) {
         log.info("[云端录像] 添加收藏，app={}，stream={},mediaServerId={},startTime={},endTime={},callId={},recordId={}", app, stream, mediaServerId, startTime, endTime, callId, recordId);
         if (recordId != null) {
@@ -215,16 +231,20 @@ public class CloudRecordController extends BaseController {
         }
     }
 
+    /**
+     * 移除收藏
+     *
+     * @param app 应用名
+     * @param stream 流ID
+     * @param mediaServerId 流媒体ID
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param callId 鉴权ID
+     * @param recordId 录像记录的ID，用于精准精准移除一个视频文件的收藏
+     * @return
+     */
     @ResponseBody
     @GetMapping("/collect/delete")
-    @Operation(summary = "移除收藏")
-    @Parameter(name = "app", description = "应用名", required = false)
-    @Parameter(name = "stream", description = "流ID", required = false)
-    @Parameter(name = "mediaServerId", description = "流媒体ID", required = false)
-    @Parameter(name = "startTime", description = "鉴权ID", required = false)
-    @Parameter(name = "endTime", description = "鉴权ID", required = false)
-    @Parameter(name = "callId", description = "鉴权ID", required = false)
-    @Parameter(name = "recordId", description = "录像记录的ID，用于精准精准移除一个视频文件的收藏", required = false)
     public int deleteCollect(@RequestParam(required = false) String app, @RequestParam(required = false) String stream, @RequestParam(required = false) String mediaServerId, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) String callId, @RequestParam(required = false) Integer recordId) {
         log.info("[云端录像] 移除收藏，app={}，stream={},mediaServerId={},startTime={},endTime={},callId={},recordId={}", app, stream, mediaServerId, startTime, endTime, callId, recordId);
         if (recordId != null) {

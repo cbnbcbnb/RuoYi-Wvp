@@ -4,8 +4,8 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.wvp.common.StreamInfo;
 import com.ruoyi.wvp.conf.UserSetting;
-import com.ruoyi.wvp.conf.exception.ControllerException;
-import com.ruoyi.wvp.conf.exception.SsrcTransactionNotFoundException;
+import com.ruoyi.common.exception.ControllerException;
+import com.ruoyi.common.exception.SsrcTransactionNotFoundException;
 import com.ruoyi.wvp.gb28181.bean.Device;
 import com.ruoyi.wvp.gb28181.bean.DeviceChannel;
 import com.ruoyi.wvp.gb28181.service.IDeviceChannelService;
@@ -17,11 +17,9 @@ import com.ruoyi.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.ruoyi.wvp.media.bean.RecordInfo;
 import com.ruoyi.wvp.service.bean.InviteErrorCode;
 import com.ruoyi.wvp.utils.DateUtil;
-import com.ruoyi.wvp.vmanager.bean.ErrorCode;
+import com.ruoyi.common.enums.ErrorCode;
 import com.ruoyi.wvp.vmanager.bean.StreamContent;
 import com.ruoyi.wvp.vmanager.bean.WVPResult;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +35,9 @@ import javax.sip.SipException;
 import java.text.ParseException;
 import java.util.UUID;
 
-@Tag(name  = "国标录像")
+/**
+ * 国标录像
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/gb_record")
@@ -185,9 +185,13 @@ public class GBRecordController extends BaseController {
 		return result;
 	}
 
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "channelId", description = "通道国标编号", required = true)
-	@Parameter(name = "stream", description = "流ID", required = true)
+	/**
+	 * 停止录像下载
+	 *
+	 * @param deviceId 设备国标编号
+	 * @param channelId 通道国标编号
+	 * @param stream 流ID
+	 */
 	@GetMapping("/download/stop/{deviceId}/{channelId}/{stream}")
 	public void playStop(@PathVariable String deviceId, @PathVariable String channelId, @PathVariable String stream) {
 
@@ -211,9 +215,14 @@ public class GBRecordController extends BaseController {
 		}
 	}
 
-	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
-	@Parameter(name = "channelId", description = "通道国标编号", required = true)
-	@Parameter(name = "stream", description = "流ID", required = true)
+	/**
+	 * 获取历史媒体下载进度
+	 *
+	 * @param deviceId 设备国标编号
+	 * @param channelId 通道国标编号
+	 * @param stream 流ID
+	 * @return
+	 */
 	@GetMapping("/download/progress/{deviceId}/{channelId}/{stream}")
 	public AjaxResult getProgress(@PathVariable String deviceId, @PathVariable String channelId, @PathVariable String stream) {
 		Device device = deviceService.getDeviceByDeviceId(deviceId);

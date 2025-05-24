@@ -1,6 +1,6 @@
 package com.ruoyi.wvp.gb28181.transmit.cmd;
 
-import com.ruoyi.wvp.conf.exception.SsrcTransactionNotFoundException;
+import com.ruoyi.common.exception.SsrcTransactionNotFoundException;
 import com.ruoyi.wvp.gb28181.bean.*;
 import com.ruoyi.wvp.gb28181.event.SipSubscribe;
 import com.ruoyi.wvp.media.bean.MediaServer;
