@@ -1,7 +1,7 @@
 # 项目相关配置
 ruoyi:
   # 名称
-  name: RuoYi-Wvp
+  name: RuoYi
   # 版本
   version: 3.8.9
   # 版权年份
@@ -9,9 +9,11 @@ ruoyi:
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
   profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
-  addressEnabled: false
+  addressEnabled: true
   # 验证码类型 math 数字计算 char 字符验证
   captchaType: math
+  # 公众号code
+  publicCode: ruoyi-wvp666
 
 # 开发环境配置
 server:
@@ -144,6 +146,7 @@ xss:
 
 # 作为28181服务器的配置
 sip:
+  #  ip: 0.0.0.0
   # [可选] 28181服务监听的端口
   port: 8116
   # 根据国标6.1.2中规定，domain宜采用ID统一编码的前十位编码。国标附录D中定义前8位为中心编码（由省级、市级、区级、基层编号组成，参照GB/T 2260-2007）
@@ -160,13 +163,15 @@ sip:
 
 ##zlm 默认服务器配置
 media:
-  id: zlmediakit-local
+  id: haoxin-zlm-1
   # [必须修改] zlm服务器的内网IP
-  ip: 127.0.0.1
+  ip: 192.168.158.199
   # [必须修改] zlm服务器的http.port
   http-port: 8092
+  # [可选] zlm服务器的hook所使用的IP, 默认使用sip.ip
+  hook-ip: 192.168.158.199
   # [必选选] zlm服务器的hook.admin_params=secret
-  secret: TWSYFgYJOQWB4ftgeYut8DW4wbs7pQnj
+  secret: haoxin
   # 启用多端口模式, 多端口模式使用端口区分每路流，兼容性更好。 单端口使用流的ssrc区分， 点播超时建议使用多端口测试
   rtp:
     # [可选] 是否启用多端口模式, 开启后会在portRange范围内选择端口用于媒体流传输
@@ -175,6 +180,46 @@ media:
     port-range: 40000,40300 # 端口范围
     # [可选] 国标级联在此范围内选择端口发送媒体流,
     send-port-range: 40000,40300 # 端口范围
+
+##zlm 默认服务器配置
+#media:
+#  id: hxkj_zlm
+#  # [必须修改] zlm服务器的内网IP
+#  ip: 192.168.1.113
+#  # [必须修改] zlm服务器的http.port
+#  http-port: 8092
+#  # [可选] zlm服务器的hook所使用的IP, 默认使用sip.ip
+#  hook-ip: 192.168.1.113
+#  # [必选选] zlm服务器的hook.admin_params=secret
+#  secret: hxkj_zlm
+#  # 启用多端口模式, 多端口模式使用端口区分每路流，兼容性更好。 单端口使用流的ssrc区分， 点播超时建议使用多端口测试
+#  rtp:
+#    # [可选] 是否启用多端口模式, 开启后会在portRange范围内选择端口用于媒体流传输
+#    enable: true
+#    # [可选] 在此范围内选择端口用于媒体流传输, 必须提前在zlm上配置该属性，不然自动配置此属性可能不成功
+#    port-range: 30000,30500 # 端口范围
+#    # [可选] 国标级联在此范围内选择端口发送媒体流,
+#    send-port-range: 30000,30500 # 端口范围
+
+#zlm 默认服务器配置
+#media:
+#  id: hxkj_zlm
+#  # [必须修改] zlm服务器的内网IP
+#  ip: 192.168.158.200
+#  # [必须修改] zlm服务器的http.port
+#  http-port: 8092
+#  # [可选] zlm服务器的hook所使用的IP, 默认使用sip.ip
+#  hook-ip: 192.168.158.200
+#  # [必选选] zlm服务器的hook.admin_params=secret
+#  secret: hxkj_zlm
+#  # 启用多端口模式, 多端口模式使用端口区分每路流，兼容性更好。 单端口使用流的ssrc区分， 点播超时建议使用多端口测试
+#  rtp:
+#    # [可选] 是否启用多端口模式, 开启后会在portRange范围内选择端口用于媒体流传输
+#    enable: true
+#    # [可选] 在此范围内选择端口用于媒体流传输, 必须提前在zlm上配置该属性，不然自动配置此属性可能不成功
+#    port-range: 30000,30500 # 端口范围
+#    # [可选] 国标级联在此范围内选择端口发送媒体流,
+#    send-port-range: 30000,30500 # 端口范围
 
 
 # [根据业务需求配置]
@@ -189,3 +234,29 @@ user-settings:
   record-sip: false
   # 国标点播 按需拉流, true：有人观看拉流，无人观看释放， false：拉起后不自动释放
   stream-on-demand: true
+  # 开启sip日志
+  sip-log: true
+
+# ISUP配置
+isup:
+  #注册服务器监听地址(服务器本地地址)
+  IP: 192.168.158.200
+  route: Isup
+  cmsServer:
+    Port: 7660
+  # 取流服务器地址端口（公网对接填入公网地址和端口）
+  smsServer:
+    Port: 7665
+    #取流服务器监听地址端口(服务器本地地址)
+    ListenIP: 192.168.158.200
+    ListenPort: 7665
+  # ISUP5.0登录秘钥
+  isupKey: 12345678
+
+# 第三方登录配置
+just-auth:
+  gitee:
+    client-id: 83a7af513fefb6e95e80e4fc871c4ec6457bb9d57c5a1100bc6ffb2fc5f48d9c
+    secret: f7c53db06026179509df79ff5157eb9412771a4a58ce0385a1d840d79997af29
+    redirect-uri: http://192.168.158.200:8080/gitee-callback
+    front-url: http://localhost/login

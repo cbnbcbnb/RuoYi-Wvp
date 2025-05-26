@@ -1,5 +1,8 @@
 package com.ruoyi.web.controller.system;
 
+import cn.hutool.http.HttpUtil;
+import com.ruoyi.common.annotation.Anonymous;
+import com.ruoyi.common.config.JustAuthConfig;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -13,12 +16,21 @@ import com.ruoyi.framework.web.service.SysPermissionService;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysMenuService;
+import me.zhyd.oauth.config.AuthConfig;
+import me.zhyd.oauth.model.AuthCallback;
+import me.zhyd.oauth.model.AuthResponse;
+import me.zhyd.oauth.model.AuthUser;
+import me.zhyd.oauth.request.AuthGiteeRequest;
+import me.zhyd.oauth.request.AuthRequest;
+import me.zhyd.oauth.utils.AuthStateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +58,48 @@ public class SysLoginController {
 
     @Autowired
     private ISysConfigService configService;
+
+    @Autowired
+    private JustAuthConfig justAuthConfig;
+
+    /**
+     * 登录方法
+     *
+     * @return 结果
+     */
+    @Anonymous
+    @GetMapping("/gitee-login")
+    public AjaxResult giteeLogin() throws IOException {
+        AuthRequest authRequest = getAuthRequest();
+        return AjaxResult.success(authRequest.authorize(AuthStateUtils.createState()));
+    }
+
+    @Anonymous
+    @GetMapping("/gitee-callback")
+    public void login(AuthCallback callback,HttpServletResponse response) throws IOException {
+        AuthRequest authRequest = getAuthRequest();
+        AuthResponse<AuthUser> login = authRequest.login(callback);
+        String accessToken = login.getData().getToken().getAccessToken();
+
+        String url = "https://gitee.com/api/v5/user/starred/xiaochemgzi/RuoYi-Wvp?access_token="+accessToken;
+        //get请求有参并设置超时时间 单位为毫秒
+        String result = HttpUtil.get(url, 30000);
+        System.out.println(result);
+        if("".equals(result)){
+            System.out.println("已关注");
+            response.sendRedirect(justAuthConfig.getGiteeFrontUrl() + "?redirect=/index&code=true");
+        }else {
+            response.sendRedirect(justAuthConfig.getGiteeFrontUrl() + "?redirect=/index&code=false");
+        }
+    }
+
+    private AuthRequest getAuthRequest() {
+        return new AuthGiteeRequest(AuthConfig.builder()
+                .clientId(justAuthConfig.getGiteeClientId())
+                .clientSecret(justAuthConfig.getGiteeSecret())
+                .redirectUri(justAuthConfig.getGiteeRedirectUri())
+                .build());
+    }
 
     /**
      * 登录方法

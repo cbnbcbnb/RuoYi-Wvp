@@ -62,6 +62,18 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <!-- ruoyi-springboot2 / swagger knife4j 配置 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>me.zhyd.oauth</groupId>
+            <artifactId>JustAuth</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
